@@ -11,11 +11,10 @@ interface IssueLink {
   status?: string | null;
 }
 
-function statusColor(status: string | null | undefined) {
-  if (status === "open") return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
-  if (status === "closed") return "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400";
-  if (status === "in_progress") return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
-  return "bg-surface text-muted";
+function statusTone(status: string | null | undefined) {
+  if (status === "open") return "ui-chip-success";
+  if (status === "in_progress") return "ui-chip-info";
+  return "";
 }
 
 function providerIcon(provider: string) {
@@ -71,7 +70,7 @@ export default function IssueLinkBadge({ articleId }: Props) {
           href={link.url}
           target="_blank"
           rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium ${statusColor(link.status)}`}
+          className={`ui-chip font-medium ${statusTone(link.status)}`}
         >
           <span>{providerIcon(link.provider)}</span>
           <span>{link.issueId}</span>

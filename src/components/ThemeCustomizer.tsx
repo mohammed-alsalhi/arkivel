@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useOutsideClick } from "@/lib/useOutsideClick";
 
 const KEY = "wiki_accent_hue";
 const DEFAULT_HUE = 220; // default blue-ish
@@ -25,12 +26,9 @@ export default function ThemeCustomizer() {
     } catch {
       // ignore
     }
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
+  useOutsideClick(ref, () => setOpen(false));
 
   function onChange(h: number) {
     setHue(h);

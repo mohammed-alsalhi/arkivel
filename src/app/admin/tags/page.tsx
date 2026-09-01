@@ -1,13 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, EmptyState, Page, PageHeader } from "@/components/ui";
+import { Button, DataTable, EmptyState, Page, PageHeader } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
+import { useToast } from "@/components/Toast";
 
 export const dynamic = "force-dynamic";
 
 type Tag = { id: string; name: string; slug: string; color: string | null; _count?: { articles: number } };
 
 export default function AdminTagsPage() {
+  const { confirm, confirmDialog } = useConfirm();
+  const { addToast } = useToast();
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState<string | null>(null);
@@ -63,13 +67,13 @@ export default function AdminTagsPage() {
   }
 
   async function deleteTag(tag: Tag) {
-    if (!confirm(`Delete tag "${tag.name}"? This will remove it from all articles.`)) return;
+    if (!(await confirm(`Delete tag "${tag.name}"? This will remove it from all articles.`, { title: "Delete tag", confirmLabel: "Delete", danger: true }))) return;
     const res = await fetch(`/api/tags/${tag.id}`, { method: "DELETE" });
     if (res.ok) {
       setTags((prev) => prev.filter((t) => t.id !== tag.id));
     } else {
       const body = await res.json().catch(() => ({}));
-      alert(body.error ?? "Failed to delete tag");
+      addToast(body.error ?? "Failed to delete tag", "error");
     }
   }
 
@@ -96,23 +100,22 @@ export default function AdminTagsPage() {
       ) : filtered.length === 0 ? (
         <EmptyState title="No tags found." />
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-[13px] border-collapse">
+        <DataTable>
             <thead>
-              <tr className="border-b border-border text-left text-muted text-[11px] uppercase">
-                <th className="py-2 pr-3">Name</th>
-                <th className="py-2 pr-3">Slug</th>
-                <th className="py-2 pr-3">Color</th>
-                <th className="py-2 pr-3">Articles</th>
-                <th className="py-2">Actions</th>
+              <tr>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Color</th>
+                <th>Articles</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((tag) => (
-                <tr key={tag.id} className="border-b border-border hover:bg-surface-hover group">
+                <tr key={tag.id} className="group">
                   {editId === tag.id ? (
                     <>
-                      <td className="py-1.5 pr-3" colSpan={3}>
+                      <td colSpan={3}>
                         <div className="flex items-center gap-2">
                           <input
                             autoFocus
@@ -129,20 +132,20 @@ export default function AdminTagsPage() {
                             value={editColor || "#888888"}
                             onChange={(e) => setEditColor(e.target.value)}
                             title="Tag color"
-                            className="w-7 h-6 rounded border border-border cursor-pointer"
+                            className="w-7 h-6 pointer-coarse:w-9 pointer-coarse:h-9 rounded border border-border cursor-pointer"
                           />
                           <button
                             onClick={() => setEditColor("")}
-                            className="text-[11px] text-muted hover:text-foreground"
+                            className="text-[11px] text-muted hover:text-foreground pointer-coarse:py-2 pointer-coarse:px-2"
                             title="Clear color"
                           >
                             Clear
                           </button>
-                          {error && <span className="text-red-500 text-[11px]">{error}</span>}
+                          {error && <span className="text-danger text-[11px]">{error}</span>}
                         </div>
                       </td>
-                      <td className="py-1.5 pr-3 text-muted">{tag._count?.articles ?? "—"}</td>
-                      <td className="py-1.5">
+                      <td className="text-muted">{tag._count?.articles ?? "—"}</td>
+                      <td>
                         <div className="flex items-center gap-1">
                           <Button onClick={saveEdit} disabled={saving}>
                             Save
@@ -153,7 +156,7 @@ export default function AdminTagsPage() {
                     </>
                   ) : (
                     <>
-                      <td className="py-1.5 pr-3 font-medium">
+                      <td className="font-medium">
                         <div className="flex items-center gap-2">
                           {tag.color && (
                             <span
@@ -164,10 +167,10 @@ export default function AdminTagsPage() {
                           {tag.name}
                         </div>
                       </td>
-                      <td className="py-1.5 pr-3 text-muted font-mono text-[11px]">{tag.slug}</td>
-                      <td className="py-1.5 pr-3 text-muted">{tag.color || <span className="opacity-40 italic">none</span>}</td>
-                      <td className="py-1.5 pr-3 text-muted">{tag._count?.articles ?? "—"}</td>
-                      <td className="py-1.5">
+                      <td className="text-muted font-mono text-[11px]">{tag.slug}</td>
+                      <td className="text-muted">{tag.color || <span className="opacity-40 italic">none</span>}</td>
+                      <td className="text-muted">{tag._count?.articles ?? "—"}</td>
+                      <td>
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button onClick={() => startEdit(tag)}>Rename</Button>
                           <Button variant="danger" onClick={() => deleteTag(tag)}>
@@ -180,9 +183,9 @@ export default function AdminTagsPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+        </DataTable>
       )}
+      {confirmDialog}
     </Page>
   );
 }

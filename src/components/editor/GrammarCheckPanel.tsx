@@ -12,15 +12,15 @@ type GrammarIssue = {
 };
 
 const SEVERITY_COLOR: Record<string, string> = {
-  error: "text-red-500",
-  warning: "text-yellow-500",
-  style: "text-blue-400",
+  error: "text-danger",
+  warning: "text-warning",
+  style: "text-info",
 };
 
 const SEVERITY_BG: Record<string, string> = {
-  error: "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800",
-  warning: "bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800",
-  style: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800",
+  error: "bg-danger-soft border-danger-border",
+  warning: "bg-warning-soft border-warning-border",
+  style: "bg-info-soft border-info-border",
 };
 
 export default function GrammarCheckPanel({ editor }: { editor: Editor }) {
@@ -86,13 +86,13 @@ export default function GrammarCheckPanel({ editor }: { editor: Editor }) {
         <span>Grammar &amp; style</span>
         {checked && issues.length > 0 && (
           <span className="ml-auto flex items-center gap-1">
-            {errorCount > 0 && <span className="text-red-500 font-bold">{errorCount}e</span>}
-            {warnCount > 0 && <span className="text-yellow-500 font-bold">{warnCount}w</span>}
-            {styleCount > 0 && <span className="text-blue-400">{styleCount}s</span>}
+            {errorCount > 0 && <span className="text-danger font-bold">{errorCount}e</span>}
+            {warnCount > 0 && <span className="text-warning font-bold">{warnCount}w</span>}
+            {styleCount > 0 && <span className="text-info">{styleCount}s</span>}
           </span>
         )}
         {checked && issues.length === 0 && (
-          <span className="ml-auto text-green-500 text-[11px]">No issues</span>
+          <span className="ml-auto text-success text-[11px]">No issues</span>
         )}
         <svg
           width="10"
@@ -115,7 +115,7 @@ export default function GrammarCheckPanel({ editor }: { editor: Editor }) {
             <button
               onClick={check}
               disabled={loading}
-              className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors disabled:opacity-40"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors disabled:opacity-40"
             >
               {loading ? "Checking…" : "Check now"}
             </button>
@@ -125,7 +125,7 @@ export default function GrammarCheckPanel({ editor }: { editor: Editor }) {
           </div>
 
           {issues.length === 0 && checked && (
-            <p className="text-[12px] text-green-600 dark:text-green-400">
+            <p className="text-[12px] text-success">
               No grammar or style issues found.
             </p>
           )}

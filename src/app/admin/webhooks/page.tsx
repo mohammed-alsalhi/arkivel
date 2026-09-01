@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAdmin } from "@/components/AdminContext";
-import { Button, DataTable, EmptyState, Page, PageHeader } from "@/components/ui";
+import { Button, DataTable, EmptyState, Page, PageHeader, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type WebhookDelivery = {
   id: string;
@@ -31,6 +32,7 @@ const AVAILABLE_EVENTS = [
 ];
 
 export default function WebhooksPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const isAdmin = useAdmin();
   const [webhooks, setWebhooks] = useState<Webhook[]>([]);
   const [loading, setLoading] = useState(true);
@@ -98,7 +100,7 @@ export default function WebhooksPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this webhook?")) return;
+    if (!(await confirm("Delete this webhook?", { title: "Delete webhook", confirmLabel: "Delete", danger: true }))) return;
     await fetch(`/api/webhooks/${id}`, { method: "DELETE" });
     await fetchWebhooks();
   }
@@ -123,9 +125,7 @@ export default function WebhooksPage() {
 
       {/* Create form */}
       {showCreate && (
-        <div className="wiki-portal mb-4">
-          <div className="wiki-portal-header">New Webhook</div>
-          <div className="wiki-portal-body space-y-3">
+        <SectionPanel className="mb-4" title="New Webhook" bodyClassName="space-y-3">
             <div>
               <label className="block text-[12px] font-semibold text-muted mb-1">
                 Payload URL
@@ -144,11 +144,12 @@ export default function WebhooksPage() {
               </label>
               <div className="flex gap-3">
                 {AVAILABLE_EVENTS.map((event) => (
-                  <label key={event} className="flex items-center gap-1 text-[13px]">
+                  <label key={event} className="flex items-center gap-1 text-[13px] pointer-coarse:py-2">
                     <input
                       type="checkbox"
                       checked={newEvents.includes(event)}
                       onChange={() => toggleEvent(event)}
+                      className="pointer-coarse:h-5 pointer-coarse:w-5"
                     />
                     {event}
                   </label>
@@ -173,8 +174,7 @@ export default function WebhooksPage() {
             >
               {creating ? "Creating..." : "Create"}
             </Button>
-          </div>
-        </div>
+        </SectionPanel>
       )}
 
       {/* Webhook list */}
@@ -188,32 +188,29 @@ export default function WebhooksPage() {
       ) : (
         <div className="space-y-3">
           {webhooks.map((wh) => (
-            <div key={wh.id} className="wiki-portal">
-              <div className="wiki-portal-header flex items-center justify-between">
-                <div className="flex items-center gap-2">
+            <SectionPanel
+              key={wh.id}
+              title={
+                <span className="flex items-center gap-2">
                   <span
                     className={`inline-block w-2 h-2 rounded-full ${
-                      wh.active ? "bg-green-500" : "bg-red-500"
+                      wh.active ? "bg-success" : "bg-danger"
                     }`}
                   />
                   <span className="font-mono text-[12px]">{wh.url}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleToggle(wh.id, wh.active)}
-                    className="text-[11px] text-muted hover:text-foreground"
-                  >
+                </span>
+              }
+              actions={
+                <span className="flex items-center gap-2">
+                  <Button onClick={() => handleToggle(wh.id, wh.active)}>
                     {wh.active ? "Disable" : "Enable"}
-                  </button>
-                  <button
-                    onClick={() => handleDelete(wh.id)}
-                    className="text-[11px] text-red-600 hover:text-red-800"
-                  >
+                  </Button>
+                  <Button variant="danger" onClick={() => handleDelete(wh.id)}>
                     Delete
-                  </button>
-                </div>
-              </div>
-              <div className="wiki-portal-body">
+                  </Button>
+                </span>
+              }
+            >
                 <div className="flex items-center gap-4 text-[12px] text-muted mb-2">
                   <span>
                     Events:{" "}
@@ -237,7 +234,7 @@ export default function WebhooksPage() {
                       onClick={() =>
                         setExpandedId(expandedId === wh.id ? null : wh.id)
                       }
-                      className="text-[12px] text-wiki-link hover:underline"
+                      className="text-[12px] text-wiki-link hover:underline pointer-coarse:py-2"
                     >
                       {expandedId === wh.id
                         ? "Hide delivery log"
@@ -261,8 +258,8 @@ export default function WebhooksPage() {
                                 <span
                                   className={
                                     d.status === "success"
-                                      ? "text-green-600"
-                                      : "text-red-600"
+                                      ? "text-success"
+                                      : "text-danger"
                                   }
                                 >
                                   {d.status}
@@ -279,11 +276,11 @@ export default function WebhooksPage() {
                     )}
                   </div>
                 )}
-              </div>
-            </div>
+            </SectionPanel>
           ))}
         </div>
       )}
+      {confirmDialog}
     </Page>
   );
 }

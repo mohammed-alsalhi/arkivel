@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAdmin } from "@/components/AdminContext";
 import { Page, PageHeader, TabButton, Tabs } from "@/components/ui";
+import { useToast } from "@/components/Toast";
 
 type ChangeRequestArticle = {
   id: string;
@@ -40,10 +41,10 @@ const STATUS_MAP: Record<TabKey, string> = {
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    open: "bg-yellow-100 text-yellow-800 border border-yellow-300",
-    accepted: "bg-green-100 text-green-800 border border-green-300",
-    rejected: "bg-red-100 text-red-800 border border-red-300",
-    withdrawn: "bg-gray-100 text-gray-600 border border-gray-300",
+    open: "bg-warning-soft text-warning border border-warning-border",
+    accepted: "bg-success-soft text-success border border-success-border",
+    rejected: "bg-danger-soft text-danger border border-danger-border",
+    withdrawn: "bg-surface-hover text-muted border border-border",
   };
 
   const labels: Record<string, string> = {
@@ -53,7 +54,7 @@ function StatusBadge({ status }: { status: string }) {
     withdrawn: "Withdrawn",
   };
 
-  const cls = styles[status] ?? "bg-gray-100 text-gray-600 border border-gray-300";
+  const cls = styles[status] ?? "bg-surface-hover text-muted border border-border";
   const label = labels[status] ?? status;
 
   return (
@@ -72,6 +73,7 @@ function formatDate(dateStr: string): string {
 }
 
 export default function ChangeRequestsPage() {
+  const { addToast } = useToast();
   const isAdmin = useAdmin();
   const [activeTab, setActiveTab] = useState<TabKey>("open");
   const [items, setItems] = useState<ChangeRequestItem[]>([]);
@@ -120,7 +122,7 @@ export default function ChangeRequestsPage() {
       // Collapse if was expanded
       if (expandedId === id) setExpandedId(null);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Action failed");
+      addToast(err instanceof Error ? err.message : "Action failed", "error");
     } finally {
       setActionLoading(null);
     }
@@ -152,7 +154,7 @@ export default function ChangeRequestsPage() {
       {loading ? (
         <p className="text-[13px] text-muted italic">Loading...</p>
       ) : error ? (
-        <p className="text-[13px] text-red-600">{error}</p>
+        <p className="text-[13px] text-danger">{error}</p>
       ) : items.length === 0 ? (
         <p className="text-[13px] text-muted italic">
           No {activeTab} change requests.
@@ -216,7 +218,7 @@ export default function ChangeRequestsPage() {
                             e.stopPropagation();
                             handleStatusChange(item.id, "accepted");
                           }}
-                          className="px-2 py-0.5 text-[11px] bg-green-600 hover:bg-green-700 text-white border border-green-700 transition-colors disabled:opacity-50"
+                          className="px-2 py-0.5 text-[11px] bg-success-soft text-success border border-success-border hover:border-success transition-colors disabled:opacity-50"
                         >
                           {isActioning ? "..." : "Accept"}
                         </button>
@@ -226,7 +228,7 @@ export default function ChangeRequestsPage() {
                             e.stopPropagation();
                             handleStatusChange(item.id, "rejected");
                           }}
-                          className="px-2 py-0.5 text-[11px] bg-red-600 hover:bg-red-700 text-white border border-red-700 transition-colors disabled:opacity-50"
+                          className="px-2 py-0.5 text-[11px] bg-danger-soft text-danger border border-danger-border hover:border-danger transition-colors disabled:opacity-50"
                         >
                           {isActioning ? "..." : "Reject"}
                         </button>
@@ -249,7 +251,7 @@ export default function ChangeRequestsPage() {
                     )}
 
                     {item.reviewNote && (
-                      <div className="mt-2 p-2 bg-amber-50 border border-amber-200 text-[12px] text-amber-800">
+                      <div className="mt-2 p-2 bg-warning-soft border border-warning-border text-[12px] text-warning">
                         <span className="font-semibold">Review note:</span>{" "}
                         {item.reviewNote}
                       </div>

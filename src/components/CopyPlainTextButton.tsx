@@ -1,23 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useCopyToClipboard } from "@/lib/useCopyToClipboard";
 
 export default function CopyPlainTextButton({ html }: { html: string }) {
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useCopyToClipboard(1500);
 
-  function copy() {
+  function handleCopy() {
     const temp = document.createElement("div");
     temp.innerHTML = html;
-    const text = temp.innerText || temp.textContent || "";
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    });
+    copy(temp.innerText || temp.textContent || "");
   }
 
   return (
     <button
-      onClick={copy}
+      onClick={handleCopy}
       title="Copy article as plain text"
       className="ui-button"
     >

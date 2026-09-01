@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import GraphControls from "@/components/graph/GraphControls";
+import { LoadingState } from "@/components/ui";
 
 const ArticleGraph = dynamic(() => import("@/components/graph/ArticleGraph"), {
   ssr: false,
@@ -31,7 +32,7 @@ type GraphEdge = {
 
 export default function GraphPage() {
   return (
-    <Suspense fallback={<div className="py-8 text-center text-muted italic text-[13px]">Loading...</div>}>
+    <Suspense fallback={<LoadingState />}>
       <GraphPageContent />
     </Suspense>
   );

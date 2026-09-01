@@ -67,9 +67,9 @@ export default function NotionImportPage() {
         </button>
       </form>
 
-      {result?.error && <p className="mt-4 text-red-500 text-sm">{result.error}</p>}
+      {result?.error && <p className="mt-4 text-danger text-sm">{result.error}</p>}
       {result?.slug && (
-        <p className="mt-4 text-green-600 text-sm">
+        <p className="mt-4 text-success text-sm">
           Imported as draft:{" "}
           <a href={`/articles/${result.slug}`} className="underline">
             {result.title}

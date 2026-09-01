@@ -50,7 +50,7 @@ Every list/settings/info/admin page MUST use the shared primitives from `src/com
 - `<EmptyState title description actions>` for "nothing here" placeholders
 - `<Button>`/`<LinkButton>`/`ui-button` classes for generic actions; `<IconButton>` for icon-only
 
-Exceptions that keep bespoke designs: home portal (`/`), article reading shell (`articles/[slug]`), the Tiptap editor, and the graph/map/atlas/trails/studio/intelligence/canvas/split/present workspaces, plus chromeless `embed/`/`share/` token views.
+Exceptions that keep bespoke designs: home portal (`/`), article reading shell (`articles/[slug]`), the Tiptap editor, and the graph/map/atlas/trails/studio/intelligence/canvas/split/present workspaces, the `/ask` chat workspace, and category concept maps (`categories/[slug]/concept-map`), plus chromeless `embed/`/`share/` token views.
 
 **Breakpoints:** Tailwind boundaries only — sm 640 / md 768 / lg 1024 / xl 1280 (max-width queries use boundary − 1). Do not invent new breakpoints.
 
@@ -79,7 +79,7 @@ Exceptions that keep bespoke designs: home portal (`/`), article reading shell (
 
 **Article Status:** Articles have `status` field ("draft", "review", "published"). Non-published articles hidden from non-admins. `isPinned` boolean for featuring at top of category pages.
 
-**Semantic Links:** `ArticleLink` model with relation types (related-to, is-part-of, etc.). Defined in `src/lib/relations.ts`. Displayed via `SemanticRelations` component.
+**Semantic Links:** `ArticleLink` model with relation types (related-to, is-part-of, etc.). Defined in `src/lib/relations.ts`. Rendered directly by the article page (`src/app/articles/[slug]/page.tsx`).
 
 **Graph:** D3 force-directed graph at `/graph`. API at `/api/graph` returns nodes/edges from wiki links and ArticleLink table. Supports BFS subgraph via `?center=slug&depth=N`.
 

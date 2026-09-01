@@ -76,7 +76,7 @@ export default function SmartSuggestions({ title, getHtml }: Props) {
         type="button"
         onClick={toggle}
         disabled={!title.trim()}
-        className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors flex items-center gap-1 disabled:opacity-40"
+        className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors flex items-center gap-1 disabled:opacity-40"
         title="Smart editor suggestions"
       >
         {loading ? (
@@ -134,7 +134,7 @@ export default function SmartSuggestions({ title, getHtml }: Props) {
                     key={a.slug}
                     href={`/articles/${a.slug}`}
                     target="_blank"
-                    className="text-[11px] bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded hover:bg-blue-100"
+                    className="text-[11px] bg-info-soft text-info border border-info-border px-1.5 py-0.5 rounded hover:border-info"
                   >
                     {a.title}
                   </Link>

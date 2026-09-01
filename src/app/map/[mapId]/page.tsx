@@ -127,7 +127,7 @@ export default function MapDetailPage({ params }: { params: Promise<{ mapId: str
               onClick={() => setEditMode(!editMode)}
               className={`px-3 py-1 text-[12px] transition-colors ${
                 editMode
-                  ? "bg-accent text-white"
+                  ? "bg-accent text-accent-foreground"
                   : "border border-border bg-surface-hover text-foreground hover:bg-surface"
               }`}
             >

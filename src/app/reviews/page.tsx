@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import ReviewStatusBadge from "@/components/ReviewStatusBadge";
 import { Page, PageHeader, TabButton, Tabs } from "@/components/ui";
+import { useToast } from "@/components/Toast";
 
 type ReviewUser = {
   id: string;
@@ -46,6 +47,7 @@ type CurrentUser = {
 } | null;
 
 export default function ReviewsPage() {
+  const { addToast } = useToast();
   const [activeTab, setActiveTab] = useState<TabKey>("pending");
   const [reviews, setReviews] = useState<ReviewRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -124,7 +126,7 @@ export default function ReviewsPage() {
       }
       await fetchReviews(activeTab);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to assign review");
+      addToast(err instanceof Error ? err.message : "Failed to assign review", "error");
     } finally {
       setActionLoading(null);
     }
@@ -159,7 +161,7 @@ export default function ReviewsPage() {
       {loading ? (
         <p className="text-[13px] text-muted italic">Loading...</p>
       ) : error ? (
-        <p className="text-[13px] text-red-600">{error}</p>
+        <p className="text-[13px] text-danger">{error}</p>
       ) : reviews.length === 0 ? (
         <p className="text-[13px] text-muted italic">No reviews to show.</p>
       ) : (
@@ -243,7 +245,7 @@ export default function ReviewsPage() {
                         <button
                           disabled={isActioning}
                           onClick={() => handleAssignToMe(review.id)}
-                          className="px-2 py-0.5 text-[11px] border border-accent text-accent hover:bg-accent hover:text-white transition-colors disabled:opacity-50"
+                          className="px-2 py-0.5 text-[11px] border border-accent text-accent hover:bg-accent hover:text-accent-foreground transition-colors disabled:opacity-50"
                         >
                           {isActioning ? "..." : "Assign to me"}
                         </button>

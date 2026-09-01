@@ -89,10 +89,10 @@ export default function QuickCapture() {
         <div className="flex items-center justify-between">
           <span className="text-[11px] text-muted">Ctrl+Enter to save · Esc to dismiss</span>
           <div className="flex gap-2">
-            <button onClick={() => setOpen(false)} className="h-6 px-2 text-[11px] border border-border rounded hover:bg-muted/50">
+            <button onClick={() => setOpen(false)} className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded hover:bg-muted/50">
               Cancel
             </button>
-            <button onClick={handleSave} disabled={saving} className="h-6 px-2 text-[11px] border border-border rounded bg-accent text-white hover:bg-accent/90 disabled:opacity-50">
+            <button onClick={handleSave} disabled={saving} className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded bg-accent text-accent-foreground hover:bg-accent-hover disabled:opacity-50">
               {saving ? "Saving…" : "Capture"}
             </button>
           </div>

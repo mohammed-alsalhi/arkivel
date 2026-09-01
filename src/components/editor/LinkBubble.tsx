@@ -366,7 +366,7 @@ export default function LinkBubble({ editor }: Props) {
           <button
             type="button"
             onClick={handleSave}
-            className="px-2 py-0.5 text-[11px] font-bold bg-accent text-white hover:bg-accent-hover"
+            className="px-2 py-0.5 text-[11px] font-bold bg-accent text-accent-foreground hover:bg-accent-hover"
           >
             Save
           </button>
@@ -386,7 +386,7 @@ export default function LinkBubble({ editor }: Props) {
           <button
             type="button"
             onClick={handleRemove}
-            className="text-red-500 hover:underline whitespace-nowrap"
+            className="text-danger hover:underline whitespace-nowrap"
           >
             Remove
           </button>

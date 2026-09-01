@@ -126,7 +126,7 @@ export default function TutorButton({ articleId, articleTitle }: Props) {
                   <div
                     className={`max-w-[85%] px-3 py-2 rounded-lg text-[13px] leading-relaxed ${
                       m.role === "user"
-                        ? "bg-accent text-white rounded-br-none"
+                        ? "bg-accent text-accent-foreground rounded-br-none"
                         : "bg-surface border border-border text-foreground rounded-bl-none"
                     }`}
                   >
@@ -163,7 +163,7 @@ export default function TutorButton({ articleId, articleTitle }: Props) {
                 <button
                   onClick={send}
                   disabled={loading || !input.trim() || !started}
-                  className="px-3 bg-accent text-white rounded disabled:opacity-50 hover:bg-accent-hover transition-colors self-end py-1.5 text-[12px]"
+                  className="px-3 bg-accent text-accent-foreground rounded disabled:opacity-50 hover:bg-accent-hover transition-colors self-end py-1.5 text-[12px]"
                 >
                   Send
                 </button>

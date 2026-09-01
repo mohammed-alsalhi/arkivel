@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button, EmptyState, Page, PageHeader } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type SessionInfo = {
   id: string;
@@ -22,6 +23,7 @@ function parseUA(ua: string | null): string {
 }
 
 export default function SessionsPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const [sessions, setSessions] = useState<SessionInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [revoking, setRevoking] = useState<string | null>(null);
@@ -42,7 +44,7 @@ export default function SessionsPage() {
   }
 
   async function revokeAll() {
-    if (!confirm("Revoke all other sessions? You will need to log in again on those devices.")) return;
+    if (!(await confirm("Revoke all other sessions? You will need to log in again on those devices.", { title: "Revoke sessions", confirmLabel: "Revoke all", danger: true }))) return;
     // Revoke all except first (most recent = current session)
     const others = sessions.slice(1);
     for (const s of others) {
@@ -99,6 +101,7 @@ export default function SessionsPage() {
           )}
         </div>
       )}
+      {confirmDialog}
     </Page>
   );
 }

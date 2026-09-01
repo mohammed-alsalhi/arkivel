@@ -30,10 +30,10 @@ export default async function AdminQualityPage() {
     .sort((a, b) => a.quality.score - b.quality.score); // worst first
 
   const colorMap: Record<string, string> = {
-    Poor: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",
-    Fair: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400",
-    Good: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400",
-    Excellent: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400",
+    Poor: "bg-danger-soft text-danger",
+    Fair: "bg-warning-soft text-warning",
+    Good: "bg-info-soft text-info",
+    Excellent: "bg-success-soft text-success",
   };
 
   return (
@@ -80,7 +80,7 @@ export default async function AdminQualityPage() {
                 <td className="text-right tabular-nums text-xs">{links}</td>
                 <td className="text-right tabular-nums text-xs">{images}</td>
                 <td>
-                  <Link href={`/articles/${a.slug}/edit`} className="text-xs text-blue-600 dark:text-blue-400 hover:underline">
+                  <Link href={`/articles/${a.slug}/edit`} className="text-xs text-accent hover:underline">
                     Edit
                   </Link>
                 </td>

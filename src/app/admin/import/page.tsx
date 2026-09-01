@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useRef } from "react";
-import { Button, Page, PageHeader } from "@/components/ui";
+import { Button, Page, PageHeader, SectionPanel } from "@/components/ui";
 
 type ImportedArticle = { id: string; title: string; slug: string };
 
@@ -112,9 +112,7 @@ export default function ImportPage() {
       <PageHeader title="Import" />
 
       {/* ── Bulk JSON ───────────────────────────────────────────────────────── */}
-      <div className="wiki-portal mb-6">
-        <div className="wiki-portal-header">Bulk JSON import</div>
-        <div className="wiki-portal-body space-y-3">
+      <SectionPanel className="mb-6" title="Bulk JSON import" bodyClassName="space-y-3">
           <p className="text-[12px] text-muted">
             Import an array of articles from a <code>.json</code> file.
             Required field: <code>title</code>.
@@ -142,11 +140,11 @@ export default function ImportPage() {
             className="w-full border border-border bg-surface px-2 py-1 text-[11px] font-mono focus:border-accent focus:outline-none"
           />
 
-          {jsonError && <p className="text-[12px] text-red-600">{jsonError}</p>}
+          {jsonError && <p className="text-[12px] text-danger">{jsonError}</p>}
           {jsonResult && (
             <div className="text-[12px] space-y-0.5">
-              <p className="text-green-700">✓ Created {jsonResult.created} article{jsonResult.created !== 1 ? "s" : ""}</p>
-              {jsonResult.skipped > 0 && <p className="text-yellow-600">Skipped {jsonResult.skipped}</p>}
+              <p className="text-success">✓ Created {jsonResult.created} article{jsonResult.created !== 1 ? "s" : ""}</p>
+              {jsonResult.skipped > 0 && <p className="text-warning">Skipped {jsonResult.skipped}</p>}
               {jsonResult.errors.length > 0 && (
                 <ul className="text-muted max-h-32 overflow-y-auto space-y-0.5">
                   {jsonResult.errors.map((e, i) => <li key={i}>• {e}</li>)}
@@ -158,13 +156,10 @@ export default function ImportPage() {
           <Button variant="primary" onClick={runJsonImport} disabled={jsonLoading || !jsonText.trim()}>
             {jsonLoading ? "Importing…" : "Run JSON import"}
           </Button>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* ── Confluence ──────────────────────────────────────────────────────── */}
-      <div className="wiki-portal mb-6">
-        <div className="wiki-portal-header">Confluence HTML export</div>
-        <div className="wiki-portal-body space-y-3">
+      <SectionPanel className="mb-6" title="Confluence HTML export" bodyClassName="space-y-3">
           <p className="text-[12px] text-muted">
             Export a single page from Confluence (<strong>Space Tools → Content Tools → Export → HTML</strong>),
             then paste or upload the resulting <code>.html</code> file.
@@ -200,9 +195,9 @@ export default function ImportPage() {
             />
           </div>
 
-          {confError && <p className="text-[12px] text-red-600">{confError}</p>}
+          {confError && <p className="text-[12px] text-danger">{confError}</p>}
           {confResult && (
-            <p className="text-[12px] text-green-700">
+            <p className="text-[12px] text-success">
               Imported as draft:{" "}
               <Link href={`/articles/${confResult.slug}/edit`} className="underline font-medium">
                 {confResult.title}
@@ -213,8 +208,7 @@ export default function ImportPage() {
           <Button onClick={importConfluence} disabled={confLoading}>
             {confLoading ? "Importing…" : "Import page"}
           </Button>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* ── Other importers notice ──────────────────────────────────────────── */}
       <div className="wiki-notice text-[12px]">

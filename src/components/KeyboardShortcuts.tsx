@@ -7,6 +7,7 @@ import {
   SHORTCUT_DESTINATIONS,
   type ShortcutMap,
 } from "@/lib/shortcuts";
+import { Button, DataTable } from "@/components/ui";
 import { useScrollLock } from "@/lib/useScrollLock";
 
 function buildNavMap(shortcuts: ShortcutMap): Record<string, string> {
@@ -131,34 +132,32 @@ export default function KeyboardShortcuts() {
                 <h3 className="text-[10px] font-semibold uppercasest text-muted mb-2">
                   {category}
                 </h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-[12px]">
-                    <tbody>
-                      {items.map((s, i) => (
-                        <tr key={i} className="border-b border-border-light last:border-0">
-                          <td className="py-1.5 pr-4 whitespace-nowrap">
-                            {s.keys.map((k, j) => (
-                              <span key={j}>
-                                {j > 0 && <span className="text-muted mx-1">then</span>}
-                                <kbd>{k}</kbd>
-                              </span>
-                            ))}
-                          </td>
-                          <td className="py-1.5 text-muted">{s.description}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <DataTable className="text-[12px]">
+                  <tbody>
+                    {items.map((s, i) => (
+                      <tr key={i}>
+                        <td className="whitespace-nowrap">
+                          {s.keys.map((k, j) => (
+                            <span key={j}>
+                              {j > 0 && <span className="text-muted mx-1">then</span>}
+                              <kbd>{k}</kbd>
+                            </span>
+                          ))}
+                        </td>
+                        <td className="text-muted">{s.description}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </DataTable>
               </div>
             ))}
           </div>
         </div>
         <div className="modal-footer">
           <span className="text-[11px] text-muted mr-auto">Press <kbd>?</kbd> again to close</span>
-          <button onClick={() => setOpen(false)} className="border border-border bg-surface-hover px-3 py-1.5 text-[13px] hover:bg-surface">
+          <Button onClick={() => setOpen(false)}>
             Close
-          </button>
+          </Button>
         </div>
       </div>
     </div>

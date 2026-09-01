@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, DataTable, EmptyState, Page, PageHeader } from "@/components/ui";
+import { Button, DataTable, EmptyState, Page, PageHeader, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Term = { id: string; term: string; definition: string; aliases: string[] };
 
 export default function AdminGlossaryPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const [terms, setTerms] = useState<Term[]>([]);
   const [loading, setLoading] = useState(true);
   const [term, setTerm] = useState("");
@@ -48,7 +50,7 @@ export default function AdminGlossaryPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this term?")) return;
+    if (!(await confirm("Delete this term?", { title: "Delete term", confirmLabel: "Delete", danger: true }))) return;
     await fetch(`/api/glossary/${id}`, { method: "DELETE" });
     await load();
   }
@@ -57,9 +59,8 @@ export default function AdminGlossaryPage() {
     <Page>
       <PageHeader title="Glossary Management" />
 
-      <form onSubmit={handleSave} className="wiki-portal mb-6">
-        <div className="wiki-portal-header">{editId ? "Edit term" : "New term"}</div>
-        <div className="wiki-portal-body space-y-3">
+      <SectionPanel className="mb-6" title={editId ? "Edit term" : "New term"}>
+        <form onSubmit={handleSave} className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-[12px] text-muted mb-1">Term</label>
@@ -87,8 +88,8 @@ export default function AdminGlossaryPage() {
               </Button>
             )}
           </div>
-        </div>
-      </form>
+        </form>
+      </SectionPanel>
 
       {loading ? (
         <p className="text-[13px] text-muted italic">Loading…</p>
@@ -119,6 +120,7 @@ export default function AdminGlossaryPage() {
           </tbody>
         </DataTable>
       )}
+      {confirmDialog}
     </Page>
   );
 }

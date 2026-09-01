@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useToast } from "@/components/Toast";
-import { Button, Page, PageHeader } from "@/components/ui";
+import { Button, EmptyState, Page, PageHeader } from "@/components/ui";
 
 interface ThemeVariables {
   "--color-accent": string;
@@ -177,7 +177,7 @@ export default function ThemeBuilderPage() {
                 value={themeName}
                 onChange={(e) => setThemeName(e.target.value)}
                 placeholder="My Theme"
-                className="w-full px-2 py-1 text-[13px] border border-border bg-background text-foreground"
+                className="w-full px-2 py-1 pointer-coarse:py-2 text-[13px] border border-border bg-background text-foreground"
               />
             </div>
           </section>
@@ -195,7 +195,7 @@ export default function ThemeBuilderPage() {
                       type="color"
                       value={variables[cssVar]}
                       onChange={(e) => updateVariable(cssVar, e.target.value)}
-                      className="w-8 h-8 border border-border cursor-pointer rounded-sm"
+                      className="w-8 h-8 pointer-coarse:w-10 pointer-coarse:h-10 border border-border cursor-pointer rounded-sm"
                       title={CSS_VAR_LABELS[cssVar]}
                     />
                     <div className="flex-1">
@@ -207,7 +207,7 @@ export default function ThemeBuilderPage() {
                         value={variables[cssVar]}
                         onChange={(e) => updateVariable(cssVar, e.target.value)}
                         placeholder="#000000"
-                        className="w-full px-2 py-0.5 text-[11px] border border-border bg-background text-foreground font-mono"
+                        className="w-full px-2 py-0.5 pointer-coarse:py-2 text-[11px] border border-border bg-background text-foreground font-mono"
                       />
                     </div>
                   </div>
@@ -225,12 +225,12 @@ export default function ThemeBuilderPage() {
               {loading ? (
                 <div className="skeleton skeleton-text w-full" />
               ) : savedThemes.length === 0 ? (
-                <p className="text-[12px] text-muted">No saved themes yet.</p>
+                <EmptyState title="No saved themes yet." />
               ) : (
                 <select
                   value={selectedThemeId}
                   onChange={(e) => handleLoadTheme(e.target.value)}
-                  className="w-full px-2 py-1 text-[13px] border border-border bg-background text-foreground"
+                  className="w-full px-2 py-1 pointer-coarse:py-2 text-[13px] border border-border bg-background text-foreground"
                 >
                   <option value="">Select a theme…</option>
                   {savedThemes.map((t) => (

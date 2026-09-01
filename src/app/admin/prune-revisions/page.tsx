@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Button, Page, PageHeader } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 export default function PruneRevisionsPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const [keep, setKeep] = useState(50);
   const [preview, setPreview] = useState<{ totalWouldDelete: number; affectedArticles: number } | null>(null);
   const [result, setResult] = useState<{ deleted: number } | null>(null);
@@ -19,7 +21,7 @@ export default function PruneRevisionsPage() {
   }
 
   async function handlePrune() {
-    if (!confirm(`Delete ${preview?.totalWouldDelete} revisions? This cannot be undone.`)) return;
+    if (!(await confirm(`Delete ${preview?.totalWouldDelete} revisions? This cannot be undone.`, { title: "Prune revisions", confirmLabel: "Delete", danger: true }))) return;
     setPruning(true);
     const res = await fetch("/api/admin/prune-revisions", {
       method: "POST",
@@ -69,7 +71,7 @@ export default function PruneRevisionsPage() {
         </div>
 
         {preview && (
-          <div className={`rounded px-3 py-2 text-[12px] ${preview.totalWouldDelete === 0 ? "bg-green-500/10 border border-green-500/30 text-green-700 dark:text-green-400" : "bg-yellow-500/10 border border-yellow-500/30 text-yellow-700 dark:text-yellow-400"}`}>
+          <div className={`rounded px-3 py-2 text-[12px] ${preview.totalWouldDelete === 0 ? "bg-success-soft border border-success-border text-success" : "bg-warning-soft border border-warning-border text-warning"}`}>
             {preview.totalWouldDelete === 0
               ? "No revisions to prune — all articles are within the threshold."
               : `${preview.totalWouldDelete} revisions across ${preview.affectedArticles} article(s) would be deleted.`}
@@ -77,11 +79,12 @@ export default function PruneRevisionsPage() {
         )}
 
         {result && (
-          <div className="rounded bg-green-500/10 border border-green-500/30 px-3 py-2 text-[12px] text-green-700 dark:text-green-400">
+          <div className="rounded bg-success-soft border border-success-border px-3 py-2 text-[12px] text-success">
             Pruned {result.deleted} revision(s) successfully.
           </div>
         )}
       </div>
+      {confirmDialog}
     </Page>
   );
 }

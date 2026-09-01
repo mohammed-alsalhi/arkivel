@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { clsx } from "clsx";
+import { useOutsideClick } from "@/lib/useOutsideClick";
 
 type User = {
   id: string;
@@ -43,15 +44,7 @@ export default function UserMenu() {
   }, [pathname]);
 
   // Close on outside click
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [open]);
+  useOutsideClick(ref, () => setOpen(false), open);
 
   async function handleLogout() {
     setOpen(false);

@@ -9,8 +9,10 @@ import {
   SectionPanel,
   Textarea,
 } from "@/components/ui";
+import { useToast } from "@/components/Toast";
 
 export default function BookmarkletPage() {
+  const { addToast } = useToast();
   const [copied, setCopied] = useState(false);
 
   // Build the bookmarklet code with the current origin baked in
@@ -58,7 +60,7 @@ fetch("${origin}/api/bookmarklet",{
           href={bookmarkletCode}
           onClick={(e) => {
             e.preventDefault();
-            alert("Drag this button to your bookmarks bar — don't click it here.");
+            addToast("Drag this button to your bookmarks bar — don't click it here.", "info");
           }}
           title="Drag me to your bookmarks bar"
           variant="primary"

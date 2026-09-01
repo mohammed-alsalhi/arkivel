@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAdmin } from "@/components/AdminContext";
+import { Button, DataTable, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Tag = {
   id: string;
@@ -16,6 +18,7 @@ type Tag = {
 };
 
 export default function TagManager() {
+  const { confirm, confirmDialog } = useConfirm();
   const isAdmin = useAdmin();
   const router = useRouter();
   const [tags, setTags] = useState<Tag[]>([]);
@@ -134,7 +137,7 @@ export default function TagManager() {
       return;
     }
 
-    if (!confirm(`Delete "${tag.name}"? This cannot be undone.`)) return;
+    if (!(await confirm(`Delete "${tag.name}"? This cannot be undone.`, { title: "Delete tag", confirmLabel: "Delete", danger: true }))) return;
 
     setError("");
     const res = await fetch(`/api/tags/${tag.id}`, { method: "DELETE" });
@@ -151,69 +154,65 @@ export default function TagManager() {
   const presetColors = ["#36c", "#2a7", "#c33", "#e90", "#808", "#069", "#666", "#333"];
 
   return (
-    <div className="wiki-portal max-w-2xl">
-      <div className="wiki-portal-header">Manage Tags</div>
-      <div className="wiki-portal-body">
+    <SectionPanel className="max-w-2xl" title="Manage Tags">
         {/* Tag list with edit/delete controls */}
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-[13px] mb-3">
-            <thead>
-              <tr className="text-left text-[11px] text-muted">
-                <th className="pb-1 pr-2">Tag</th>
-                <th className="pb-1 pr-2">Color</th>
-                <th className="pb-1 pr-2 text-center">Articles</th>
-                <th className="pb-1 w-24"></th>
+        <DataTable className="text-[13px] mb-3">
+          <thead>
+            <tr className="text-[11px]">
+              <th>Tag</th>
+              <th>Color</th>
+              <th className="text-center">Articles</th>
+              <th className="w-24"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {flatTags.map(({ tag, depth }) => (
+              <tr key={tag.id}>
+                <td style={{ paddingLeft: `${12 + depth * 16}px` }}>
+                  {depth > 0 && <span className="text-muted text-[11px] mr-1">{"\u2514"}</span>}
+                  {tag.name}
+                </td>
+                <td>
+                  {tag.color ? (
+                    <span className="inline-flex items-center gap-1">
+                      <span
+                        className="inline-block w-3 h-3 rounded-full border border-border-light"
+                        style={{ backgroundColor: tag.color }}
+                      />
+                      <span className="text-[11px] text-muted">{tag.color}</span>
+                    </span>
+                  ) : (
+                    <span className="text-muted text-[12px]">{"\u2014"}</span>
+                  )}
+                </td>
+                <td className="text-center text-muted">
+                  {tag._count?.articles ?? 0}
+                </td>
+                <td className="text-right">
+                  <button
+                    onClick={() => startEdit(tag)}
+                    className="text-[11px] text-accent hover:underline mr-2 pointer-coarse:py-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(tag)}
+                    className="text-[11px] text-wiki-link-broken hover:underline pointer-coarse:py-2"
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {flatTags.map(({ tag, depth }) => (
-                <tr key={tag.id} className="border-t border-border-light hover:bg-surface-hover">
-                  <td className="py-1 pr-2" style={{ paddingLeft: `${depth * 16}px` }}>
-                    {depth > 0 && <span className="text-muted text-[11px] mr-1">{"\u2514"}</span>}
-                    {tag.name}
-                  </td>
-                  <td className="py-1 pr-2">
-                    {tag.color ? (
-                      <span className="inline-flex items-center gap-1">
-                        <span
-                          className="inline-block w-3 h-3 rounded-full border border-border-light"
-                          style={{ backgroundColor: tag.color }}
-                        />
-                        <span className="text-[11px] text-muted">{tag.color}</span>
-                      </span>
-                    ) : (
-                      <span className="text-muted text-[12px]">{"\u2014"}</span>
-                    )}
-                  </td>
-                  <td className="py-1 pr-2 text-center text-muted">
-                    {tag._count?.articles ?? 0}
-                  </td>
-                  <td className="py-1 text-right">
-                    <button
-                      onClick={() => startEdit(tag)}
-                      className="text-[11px] text-accent hover:underline mr-2"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(tag)}
-                      className="text-[11px] text-wiki-link-broken hover:underline"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {flatTags.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="py-2 text-center text-muted text-[12px] italic">
-                    No tags yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+            ))}
+            {flatTags.length === 0 && (
+              <tr>
+                <td colSpan={4} className="text-center text-muted text-[12px] italic">
+                  No tags yet.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </DataTable>
 
         {/* Success/error messages */}
         {error && <p className="text-[12px] text-wiki-link-broken mb-2">{error}</p>}
@@ -292,31 +291,21 @@ export default function TagManager() {
               <p className="text-[12px] text-wiki-link-broken">{error}</p>
             )}
             <div className="flex gap-2">
-              <button
-                type="submit"
-                className="bg-accent px-3 py-1 text-[13px] font-bold text-white hover:bg-accent-hover"
-              >
+              <Button type="submit" variant="primary">
                 {editingId ? "Save" : "Create"}
-              </button>
-              <button
-                type="button"
-                onClick={cancelForm}
-                className="px-3 py-1 text-[13px] text-muted border border-border hover:bg-surface-hover"
-              >
+              </Button>
+              <Button type="button" onClick={cancelForm}>
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         ) : (
-          <button
-            onClick={startCreate}
-            className="bg-accent px-3 py-1 text-[13px] font-bold text-white hover:bg-accent-hover"
-          >
+          <Button onClick={startCreate} variant="primary">
             + New Tag
-          </button>
+          </Button>
         )}
-      </div>
-    </div>
+      {confirmDialog}
+    </SectionPanel>
   );
 }
 

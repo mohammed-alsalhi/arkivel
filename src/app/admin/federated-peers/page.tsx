@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, EmptyState, Page, PageHeader } from "@/components/ui";
+import { Button, DataTable, EmptyState, Page, PageHeader, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Peer = {
   id: string;
@@ -12,6 +13,7 @@ type Peer = {
 };
 
 export default function FederatedPeersPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const [peers, setPeers] = useState<Peer[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -62,7 +64,7 @@ export default function FederatedPeersPage() {
   }
 
   async function deletePeer(id: string) {
-    if (!confirm("Remove this federated peer?")) return;
+    if (!(await confirm("Remove this federated peer?", { title: "Remove peer", confirmLabel: "Remove", danger: true }))) return;
     await fetch(`/api/federated-peers/${id}`, { method: "DELETE" });
     load();
   }
@@ -91,9 +93,11 @@ export default function FederatedPeersPage() {
       />
 
       {(creating || editing) && (
-        <div className="wiki-portal mb-4">
-          <div className="wiki-portal-header">{editing ? `Edit: ${editing.name}` : "Add federated peer"}</div>
-          <div className="wiki-portal-body space-y-2">
+        <SectionPanel
+          className="mb-4"
+          title={editing ? `Edit: ${editing.name}` : "Add federated peer"}
+          bodyClassName="space-y-2"
+        >
             <div>
               <label className="block text-[11px] text-muted font-bold mb-0.5">Display name</label>
               <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -109,11 +113,11 @@ export default function FederatedPeersPage() {
               <input type="password" value={form.apiKey} onChange={(e) => setForm({ ...form, apiKey: e.target.value })}
                 className="w-full border border-border bg-surface px-2 py-1 text-[12px] font-mono focus:border-accent focus:outline-none" placeholder="Leave blank for public wikis" />
             </div>
-            <label className="flex items-center gap-1.5 text-[12px]">
-              <input type="checkbox" checked={form.enabled} onChange={(e) => setForm({ ...form, enabled: e.target.checked })} />
+            <label className="flex items-center gap-1.5 text-[12px] pointer-coarse:py-2">
+              <input type="checkbox" checked={form.enabled} onChange={(e) => setForm({ ...form, enabled: e.target.checked })} className="pointer-coarse:h-5 pointer-coarse:w-5" />
               Enabled
             </label>
-            {error && <p className="text-[12px] text-red-600">{error}</p>}
+            {error && <p className="text-[12px] text-danger">{error}</p>}
             <div className="flex gap-2">
               <Button variant="primary" onClick={save} disabled={saving}>
                 {saving ? "Saving…" : "Save"}
@@ -122,8 +126,7 @@ export default function FederatedPeersPage() {
                 Cancel
               </Button>
             </div>
-          </div>
-        </div>
+        </SectionPanel>
       )}
 
       {loading ? (
@@ -131,39 +134,37 @@ export default function FederatedPeersPage() {
       ) : peers.length === 0 ? (
         <EmptyState title="No federated peers configured yet." />
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse border border-border bg-surface text-[13px]">
-            <thead>
-              <tr className="bg-surface-hover">
-                <th className="border border-border px-3 py-1.5 text-left font-bold text-heading">Name</th>
-                <th className="border border-border px-3 py-1.5 text-left font-bold text-heading">URL</th>
-                <th className="border border-border px-3 py-1.5 text-left font-bold text-heading w-20">Status</th>
-                <th className="border border-border px-3 py-1.5 text-left font-bold text-heading w-28">Actions</th>
+        <DataTable>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>URL</th>
+              <th className="w-20">Status</th>
+              <th className="w-28">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {peers.map((p) => (
+              <tr key={p.id}>
+                <td className="font-medium">{p.name}</td>
+                <td className="text-muted text-[12px] font-mono">{p.baseUrl}</td>
+                <td>
+                  <Button aria-pressed={p.enabled} onClick={() => toggleEnabled(p)}>
+                    {p.enabled ? "Active" : "Off"}
+                  </Button>
+                </td>
+                <td>
+                  <span className="flex gap-1">
+                    <Button onClick={() => startEdit(p)}>Edit</Button>
+                    <Button variant="danger" onClick={() => deletePeer(p.id)}>Del</Button>
+                  </span>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {peers.map((p) => (
-                <tr key={p.id} className="hover:bg-surface-hover">
-                  <td className="border border-border px-3 py-1.5 font-medium">{p.name}</td>
-                  <td className="border border-border px-3 py-1.5 text-muted text-[12px] font-mono">{p.baseUrl}</td>
-                  <td className="border border-border px-3 py-1.5">
-                    <button onClick={() => toggleEnabled(p)}
-                      className={`h-5 px-1.5 text-[10px] rounded border ${p.enabled ? "border-green-500 text-green-600" : "border-border text-muted"}`}>
-                      {p.enabled ? "Active" : "Off"}
-                    </button>
-                  </td>
-                  <td className="border border-border px-3 py-1.5">
-                    <span className="flex gap-1">
-                      <Button onClick={() => startEdit(p)}>Edit</Button>
-                      <Button onClick={() => deletePeer(p.id)} className="text-red-600">Del</Button>
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </DataTable>
       )}
+      {confirmDialog}
     </Page>
   );
 }

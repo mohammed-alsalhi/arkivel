@@ -40,7 +40,7 @@ export default function SearchHistory({ currentQuery }: { currentQuery: string }
         <span className="text-[11px] text-muted uppercase">Recent searches</span>
         <button
           onClick={() => { clearSearchHistory(); setHistory([]); }}
-          className="text-[10px] text-muted hover:text-foreground"
+          className="text-[10px] text-muted hover:text-foreground pointer-coarse:py-2"
         >
           Clear
         </button>
@@ -50,7 +50,7 @@ export default function SearchHistory({ currentQuery }: { currentQuery: string }
           <Link
             key={i}
             href={`/search?q=${encodeURIComponent(q)}`}
-            className="px-2 py-0.5 text-[11px] border border-border rounded text-muted hover:text-foreground hover:border-accent transition-colors"
+            className="px-2 py-0.5 pointer-coarse:py-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:border-accent transition-colors"
           >
             {q}
           </Link>

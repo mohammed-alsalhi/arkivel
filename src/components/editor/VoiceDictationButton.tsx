@@ -70,7 +70,7 @@ export default function VoiceDictationButton({ editor }: Props) {
       onClick={toggleRecording}
       title={recording ? "Stop dictation" : "Voice dictation"}
       className={`px-2 py-1 text-[12px] rounded transition-colors ${
-        recording ? "bg-red-500 text-white" : "text-muted hover:text-foreground hover:bg-surface-hover"
+        recording ? "bg-danger-soft text-danger" : "text-muted hover:text-foreground hover:bg-surface-hover"
       }`}
     >
       {recording ? (

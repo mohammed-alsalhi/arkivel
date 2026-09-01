@@ -31,7 +31,7 @@ export default function MapSelector({ maps }: { maps: MapConfig[] }) {
             className={clsx(
               "px-2 py-0.5 text-[12px] border transition-colors",
               isActive
-                ? "bg-accent text-white border-accent"
+                ? "bg-accent text-accent-foreground border-accent"
                 : "border-border bg-surface-hover text-foreground hover:bg-surface"
             )}
           >

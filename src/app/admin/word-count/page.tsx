@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Page, PageHeader, StatCard, StatGrid } from "@/components/ui";
+import { DataTable, Page, PageHeader, SectionPanel, StatCard, StatGrid } from "@/components/ui";
 
 type Bucket = { label: string; count: number };
 type ArticleEntry = { id: string; title: string; slug: string; wordCount: number };
@@ -56,9 +56,7 @@ export default function WordCountPage() {
       </StatGrid>
 
       {/* Bar chart */}
-      <div className="wiki-portal mb-6">
-        <div className="wiki-portal-header">Distribution</div>
-        <div className="wiki-portal-body">
+      <SectionPanel className="mb-6" title="Distribution">
           <div className="space-y-2">
             {data.distribution.map((b) => {
               const pct = Math.round((b.count / maxCount) * 100);
@@ -76,54 +74,43 @@ export default function WordCountPage() {
               );
             })}
           </div>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Top + shortest articles */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="wiki-portal">
-          <div className="wiki-portal-header">Longest articles</div>
-          <div className="wiki-portal-body">
-            <div className="overflow-x-auto">
-              <table className="w-full text-[13px]">
-                <tbody>
-                  {data.topArticles.map((a) => (
-                    <tr key={a.id} className="border-t border-border-light">
-                      <td className="py-1 pr-2">
-                        <Link href={`/articles/${a.slug}`} className="text-accent hover:underline line-clamp-1">
-                          {a.title}
-                        </Link>
-                      </td>
-                      <td className="py-1 text-right text-muted whitespace-nowrap">{a.wordCount.toLocaleString()} w</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <SectionPanel title="Longest articles">
+            <DataTable>
+              <tbody>
+                {data.topArticles.map((a) => (
+                  <tr key={a.id}>
+                    <td>
+                      <Link href={`/articles/${a.slug}`} className="text-accent hover:underline line-clamp-1">
+                        {a.title}
+                      </Link>
+                    </td>
+                    <td className="text-right text-muted whitespace-nowrap">{a.wordCount.toLocaleString()} w</td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+        </SectionPanel>
 
-        <div className="wiki-portal">
-          <div className="wiki-portal-header">Shortest articles</div>
-          <div className="wiki-portal-body">
-            <div className="overflow-x-auto">
-              <table className="w-full text-[13px]">
-                <tbody>
-                  {data.shortArticles.map((a) => (
-                    <tr key={a.id} className="border-t border-border-light">
-                      <td className="py-1 pr-2">
-                        <Link href={`/articles/${a.slug}`} className="text-accent hover:underline line-clamp-1">
-                          {a.title}
-                        </Link>
-                      </td>
-                      <td className="py-1 text-right text-muted whitespace-nowrap">{a.wordCount.toLocaleString()} w</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <SectionPanel title="Shortest articles">
+            <DataTable>
+              <tbody>
+                {data.shortArticles.map((a) => (
+                  <tr key={a.id}>
+                    <td>
+                      <Link href={`/articles/${a.slug}`} className="text-accent hover:underline line-clamp-1">
+                        {a.title}
+                      </Link>
+                    </td>
+                    <td className="text-right text-muted whitespace-nowrap">{a.wordCount.toLocaleString()} w</td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+        </SectionPanel>
       </div>
     </Page>
   );

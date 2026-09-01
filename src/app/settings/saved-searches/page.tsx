@@ -93,7 +93,7 @@ export default function SavedSearchesPage() {
                 <td>
                   <button
                     onClick={() => deleteSearch(s.id)}
-                    className="text-[11px] text-muted hover:text-red-500 transition-colors"
+                    className="text-[11px] text-muted hover:text-danger transition-colors"
                   >
                     Delete
                   </button>

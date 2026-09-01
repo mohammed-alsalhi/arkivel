@@ -67,7 +67,7 @@ export default function BookmarksPage() {
                 </div>
                 <button
                   onClick={() => removeBookmark(b.article.id)}
-                  className="text-[11px] text-red-500 hover:underline shrink-0"
+                  className="text-[11px] text-red-500 hover:underline shrink-0 pointer-coarse:py-2"
                 >
                   Remove
                 </button>

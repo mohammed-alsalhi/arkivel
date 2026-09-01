@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useOutsideClick } from "@/lib/useOutsideClick";
 
 type Width = "narrow" | "reading" | "default" | "wide";
 const KEY = "wiki_article_width";
@@ -14,6 +15,9 @@ const WIDTHS: { value: Width; label: string; style: string }[] = [
 export default function ArticleWidthPreference() {
   const [current, setCurrent] = useState<Width>("default");
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(ref, () => setOpen(false), open);
 
   useEffect(() => {
     try {
@@ -44,7 +48,7 @@ export default function ArticleWidthPreference() {
   }
 
   return (
-    <div className="relative">
+    <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
         title="Article width"

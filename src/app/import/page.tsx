@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAdmin } from "@/components/AdminContext";
-import { Page, PageHeader } from "@/components/ui";
+import { Page, PageHeader, SectionPanel } from "@/components/ui";
 
 type ImportResult = {
   filename: string;
@@ -206,9 +206,7 @@ export default function ImportPage() {
     <Page>
       <PageHeader title="Import Articles" />
 
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Upload Files</div>
-        <div className="wiki-portal-body">
+      <SectionPanel className="mb-4" title="Upload Files">
           {/* Drop zone */}
           <div
             onDragOver={(e) => {
@@ -294,16 +292,11 @@ export default function ImportPage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Results */}
       {results && (
-        <div className="wiki-portal">
-          <div className="wiki-portal-header">
-            Import Results
-          </div>
-          <div className="wiki-portal-body p-0">
+        <SectionPanel title="Import Results" bodyClassName="p-0">
             <ul className="divide-y divide-border text-[13px]">
               {results.map((result, i) => (
                 <li
@@ -313,7 +306,7 @@ export default function ImportPage() {
                   <span className="flex items-center gap-2">
                     <span
                       className={
-                        result.success ? "text-green-600" : "text-red-600"
+                        result.success ? "text-success" : "text-danger"
                       }
                     >
                       {result.success ? "\u2713" : "\u2717"}
@@ -331,7 +324,7 @@ export default function ImportPage() {
                       View article
                     </Link>
                   ) : (
-                    <span className="text-[12px] text-red-600">
+                    <span className="text-[12px] text-danger">
                       {result.error}
                     </span>
                   )}
@@ -342,14 +335,11 @@ export default function ImportPage() {
               {results.filter((r) => r.success).length} of {results.length}{" "}
               imported successfully
             </div>
-          </div>
-        </div>
+        </SectionPanel>
       )}
 
       {/* URL Import */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Import from URL</div>
-        <div className="wiki-portal-body space-y-3">
+      <SectionPanel className="mb-4" title="Import from URL" bodyClassName="space-y-3">
           <p className="text-[12px] text-muted">
             Paste any public URL — article, Wikipedia page, documentation, blog post — and AI will extract and reformat the content as a wiki article draft.
           </p>
@@ -372,7 +362,7 @@ export default function ImportPage() {
           </div>
 
           {urlError && (
-            <div className="text-red-500 text-[13px] p-3 bg-red-50 border border-red-200 rounded">
+            <div className="text-danger text-[13px] p-3 bg-danger-soft border border-danger-border rounded">
               {urlError}
             </div>
           )}
@@ -411,13 +401,10 @@ export default function ImportPage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* YouTube Import */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Import from YouTube</div>
-        <div className="wiki-portal-body space-y-3">
+      <SectionPanel className="mb-4" title="Import from YouTube" bodyClassName="space-y-3">
           <p className="text-[12px] text-muted">
             Paste a YouTube URL. AI fetches the video transcript and formats it as a structured wiki article.
             Works with any video that has auto-generated or manual captions.
@@ -448,7 +435,7 @@ export default function ImportPage() {
           </div>
 
           {ytError && (
-            <div className="text-red-500 text-[13px] p-3 bg-red-50 border border-red-200 rounded">{ytError}</div>
+            <div className="text-danger text-[13px] p-3 bg-danger-soft border border-danger-border rounded">{ytError}</div>
           )}
 
           {ytResult && (
@@ -478,13 +465,10 @@ export default function ImportPage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Image Import */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Import from Image</div>
-        <div className="wiki-portal-body space-y-3">
+      <SectionPanel className="mb-4" title="Import from Image" bodyClassName="space-y-3">
           <p className="text-[12px] text-muted">
             Upload a photo of handwritten notes, a whiteboard, a book page, or a screenshot. Claude Vision will extract and structure the content as a wiki article.
           </p>
@@ -513,7 +497,7 @@ export default function ImportPage() {
                 </div>
                 <button
                   onClick={(e) => { e.stopPropagation(); setImageFile(null); setImageResult(null); }}
-                  className="text-[11px] text-muted hover:text-red-500 ml-2"
+                  className="text-[11px] text-muted hover:text-danger ml-2 pointer-coarse:py-2"
                 >
                   Remove
                 </button>
@@ -555,7 +539,7 @@ export default function ImportPage() {
           )}
 
           {imageError && (
-            <div className="text-red-500 text-[13px] p-3 bg-red-50 border border-red-200 rounded">{imageError}</div>
+            <div className="text-danger text-[13px] p-3 bg-danger-soft border border-danger-border rounded">{imageError}</div>
           )}
 
           {imageResult && (
@@ -584,8 +568,7 @@ export default function ImportPage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Other import sources */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-4">

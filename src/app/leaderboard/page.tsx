@@ -49,9 +49,9 @@ export default async function LeaderboardPage() {
             {rows.map((row, i) => (
               <tr key={row.user?.id ?? i}>
                 <td className="text-muted font-medium">
-                  {i === 0 && <span className="text-yellow-500">1</span>}
-                  {i === 1 && <span className="text-slate-400">2</span>}
-                  {i === 2 && <span className="text-orange-400">3</span>}
+                  {i === 0 && <span className="text-warning">1</span>}
+                  {i === 1 && <span className="text-muted">2</span>}
+                  {i === 2 && <span className="text-warning">3</span>}
                   {i > 2 && <span>{i + 1}</span>}
                 </td>
                 <td>

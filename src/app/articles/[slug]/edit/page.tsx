@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { LoadingState } from "@/components/ui";
 import TiptapEditor, { type TiptapEditorHandle } from "@/components/editor/TiptapEditor";
 import CollaborativeEditor from "@/components/editor/CollaborativeEditor";
 import TagPicker from "@/components/TagPicker";
@@ -14,6 +15,8 @@ import FocalPointPicker from "@/components/FocalPointPicker";
 import ZenModeToggle from "@/components/editor/ZenModeToggle";
 import SmartSuggestions from "@/components/editor/SmartSuggestions";
 import { getSearchResults } from "@/lib/search-response";
+import { useConfirm } from "@/lib/useConfirm";
+import { useToast } from "@/components/Toast";
 
 type CategoryItem = { id: string; name: string; slug: string; parentId: string | null; children?: CategoryItem[] };
 
@@ -34,6 +37,8 @@ export default function EditArticlePage() {
   const isAdmin = useAdmin();
   const router = useRouter();
   const params = useParams();
+  const { confirm, confirmDialog } = useConfirm();
+  const { addToast } = useToast();
   const editorRef = useRef<TiptapEditorHandle>(null);
   const [article, setArticle] = useState<Article | null>(null);
   const [title, setTitle] = useState("");
@@ -194,7 +199,7 @@ export default function EditArticlePage() {
     } else {
       const err = await res.json().catch(() => null);
       setSaving(false);
-      alert(err?.error || "Failed to update article");
+      addToast(err?.error || "Failed to update article", "error");
     }
   }
 
@@ -232,9 +237,9 @@ export default function EditArticlePage() {
       if (Array.isArray(data.tags) && data.tags.length > 0) {
         const newIds = data.tags.map((t: { id: string }) => t.id).filter((id: string) => !tagIds.includes(id));
         if (newIds.length > 0) setTagIds([...tagIds, ...newIds]);
-        else alert("No new tag suggestions found (all suggested tags are already applied).");
+        else addToast("No new tag suggestions found (all suggested tags are already applied).", "info");
       } else {
-        alert("No tag suggestions available for this content.");
+        addToast("No tag suggestions available for this content.", "info");
       }
     }
     setSuggestingTags(false);
@@ -253,7 +258,7 @@ export default function EditArticlePage() {
       if (data.suggestion) {
         setCategoryId(data.suggestion.id);
       } else {
-        alert("Could not determine a suitable category for this article.");
+        addToast("Could not determine a suitable category for this article.", "info");
       }
     }
     setSuggestingCategory(false);
@@ -273,7 +278,7 @@ export default function EditArticlePage() {
       if (Array.isArray(data.suggestions) && data.suggestions.length > 0) {
         setTitleSuggestions(data.suggestions);
       } else {
-        alert("No title suggestions available.");
+        addToast("No title suggestions available.", "info");
       }
     }
     setSuggestingTitle(false);
@@ -294,7 +299,7 @@ export default function EditArticlePage() {
 
   async function handleDelete() {
     if (!article) return;
-    if (!confirm(`Are you sure you want to delete "${article.title}"? This cannot be undone.`)) return;
+    if (!(await confirm(`Are you sure you want to delete "${article.title}"? This cannot be undone.`, { title: "Delete article", confirmLabel: "Delete", danger: true }))) return;
 
     setDeleting(true);
     const res = await fetch(`/api/articles/${article.id}`, { method: "DELETE" });
@@ -302,7 +307,7 @@ export default function EditArticlePage() {
       router.push("/articles");
     } else {
       setDeleting(false);
-      alert("Failed to delete article");
+      addToast("Failed to delete article", "error");
     }
   }
 
@@ -315,7 +320,7 @@ export default function EditArticlePage() {
   }
 
   if (loading) {
-    return <div className="py-8 text-center text-muted italic text-[13px]">Loading...</div>;
+    return <LoadingState />;
   }
 
   if (!article) {
@@ -452,7 +457,7 @@ export default function EditArticlePage() {
                 {metadataFields.map((f) => (
                   <div key={f.name}>
                     <label className="block text-[12px] text-muted font-bold mb-0.5">
-                      {f.label}{f.required && <span className="text-red-500 ml-0.5">*</span>}
+                      {f.label}{f.required && <span className="text-danger ml-0.5">*</span>}
                     </label>
                     {f.type === "boolean" ? (
                       <input
@@ -491,10 +496,10 @@ export default function EditArticlePage() {
               <label className="text-[13px] font-bold text-heading">Content:</label>
               <div className="flex items-center gap-2">
                 {autoSaveStatus === "unsaved" && (
-                  <span className="text-[11px] text-yellow-600 dark:text-yellow-400">Unsaved changes</span>
+                  <span className="text-[11px] text-warning">Unsaved changes</span>
                 )}
                 {autoSaveStatus === "saved" && (
-                  <span className="text-[11px] text-green-600 dark:text-green-400">Draft saved</span>
+                  <span className="text-[11px] text-success">Draft saved</span>
                 )}
                 <SmartSuggestions
                   title={title}
@@ -666,7 +671,7 @@ export default function EditArticlePage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="bg-accent px-4 py-1.5 text-[13px] font-bold text-white hover:bg-accent-hover disabled:opacity-50"
+                className="bg-accent px-4 py-1.5 text-[13px] font-bold text-accent-foreground hover:bg-accent-hover disabled:opacity-50"
               >
                 {saving ? "Saving..." : "Save changes"}
               </button>
@@ -682,13 +687,14 @@ export default function EditArticlePage() {
               type="button"
               onClick={handleDelete}
               disabled={deleting}
-              className="border border-red-300 bg-surface px-4 py-1.5 text-[13px] text-red-600 hover:bg-red-50 disabled:opacity-50"
+              className="border border-danger-border bg-surface px-4 py-1.5 text-[13px] text-danger hover:bg-danger-soft disabled:opacity-50"
             >
               {deleting ? "Deleting..." : "Delete article"}
             </button>
           </div>
         </form>
       </div>
+      {confirmDialog}
     </div>
   );
 }

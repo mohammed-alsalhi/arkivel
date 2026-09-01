@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { LinkButton, Page, PageHeader } from "@/components/ui";
+import { LinkButton, Page, PageHeader, SectionPanel } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Features",
@@ -28,9 +28,7 @@ export default function FeaturesPage() {
       />
 
       {/* Writing & Editing */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Writing &amp; Editing</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Writing & Editing" bodyClassName="text-[13px]">
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>Rich text editor</strong> — Tiptap-based WYSIWYG editor with a calm icon-first toolbar, reusable feature trays, selection actions, claim marking, contextual table controls, slash commands, collapsed-border tables, and drag-and-drop block reordering</li>
             <li><strong>Markdown mode</strong> — toggle between rich text and raw Markdown at any time</li>
@@ -68,13 +66,10 @@ export default function FeaturesPage() {
             <li><strong>Image upload</strong> — drag-and-drop or toolbar insert; stored via Vercel Blob; optional caption displayed as styled <code className="bg-surface-hover px-1 text-[12px]">&lt;figcaption&gt;</code> below the image</li>
             <li><strong>Auto-revisions</strong> — every save snapshots the previous state automatically</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Knowledge Organization */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Knowledge Organization</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Knowledge Organization" bodyClassName="text-[13px]">
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>Wiki links</strong> — <code className="bg-surface-hover px-1 text-[12px]">[[Article Name]]</code> syntax with autocomplete; broken links shown in red</li>
             <li><strong>Backlinks</strong> — every article shows which other articles link to it</li>
@@ -96,13 +91,10 @@ export default function FeaturesPage() {
             <li><strong>Article graph</strong> — D3 force-directed graph of all wiki-link connections at <Link href="/graph">/graph</Link></li>
             <li><strong>Tag synonyms</strong> — define alternate aliases per tag (e.g. &ldquo;JS&rdquo; → &ldquo;JavaScript&rdquo;) at <code className="bg-surface-hover px-1 text-[12px]">/api/tags/[id]/synonyms</code></li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Discovery & Navigation */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Discovery &amp; Navigation</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Discovery & Navigation" bodyClassName="text-[13px]">
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>Full-text search</strong> — AND-logic multi-word search with relevance v2 ranking, facets, synonym/stemming expansion, stale/review/verification signals, and admin explain mode</li>
             <li><strong>Unified search surfaces</strong> — header search, the search page, command palette, wiki-link autocomplete, split view pickers, and edit fallback all consume the same search result contract</li>
@@ -153,13 +145,10 @@ export default function FeaturesPage() {
             <li><strong>Hot articles widget</strong> — &ldquo;Trending this week&rdquo; panel on the homepage sidebar showing the top-5 most-viewed articles in the last 7 days</li>
             <li><strong>Scroll position memory</strong> — article scroll position saved to browser storage; restored automatically on return visits</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Article Page */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Article Page</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Article Page" bodyClassName="text-[13px]">
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>Article hero header</strong> — title, category, excerpt, freshness, verification, reading metrics, return-visit badge, and co-authors are grouped into a single scannable header</li>
             <li><strong>Grouped action panel</strong> — Navigate, Workflow, Collect, and Share stay in a slim action rail, while dense Read and Tools controls open from disclosure menus</li>
@@ -188,13 +177,10 @@ export default function FeaturesPage() {
             <li><strong>In Brief summary</strong> — when an article has a short summary, it is displayed as a highlighted callout at the top of the content</li>
             <li><strong>Heading permalink links</strong> — hovering over any heading reveals a ¶ link that copies the anchor URL to the clipboard</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Personal Dashboard */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Personal Dashboard</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Personal Dashboard" bodyClassName="text-[13px]">
           <p className="mb-2">
             A personalizable homepage at <Link href="/dashboard">/dashboard</Link> with a draggable widget grid.
           </p>
@@ -203,13 +189,10 @@ export default function FeaturesPage() {
             <li>Toggle widgets on/off and reorder via &ldquo;Customize&rdquo; mode</li>
             <li>Layout saved to your user preferences and restored on next visit</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Learning & Retention */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Learning &amp; Retention</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Learning & Retention" bodyClassName="text-[13px]">
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>Learning paths</strong> — curated ordered sequences of articles with per-path progress tracking at <Link href="/learning-paths">/learning-paths</Link></li>
             <li><strong>Flashcards</strong> — create decks from articles; SM-2 spaced repetition with 0–5 grading at <Link href="/flashcards">/flashcards</Link></li>
@@ -223,13 +206,10 @@ export default function FeaturesPage() {
             <li><strong>Presentation mode</strong> — any article opens as a full-screen slideshow at <code className="bg-surface-hover px-1 text-[12px]">/present/[slug]</code>; each H2/H3 is a slide, and long content scrolls within the slide stage rather than covering controls</li>
             <li><strong>Watchlist digest</strong> — optional daily email summary of watched article changes at <Link href="/watchlist/digest">/watchlist/digest</Link></li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Collaboration */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Collaboration</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Collaboration" bodyClassName="text-[13px]">
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>Real-time co-editing</strong> — simultaneous editing with cursor presence, named participant indicators, connection states, conflict warnings, reconnect states, and last-saved copy via Yjs/y-prosemirror</li>
             <li><strong>Discussions</strong> — threaded comments on every article; <code className="bg-surface-hover px-1 text-[12px]">@mention</code> triggers notifications, and admins can moderate reported, hidden, removed, or reviewer-only threads</li>
@@ -243,13 +223,10 @@ export default function FeaturesPage() {
             <li><strong>Article certification</strong> — &ldquo;Verified by experts&rdquo; badge after review by 2+ experts</li>
             <li><strong>Contributor achievements</strong> — First edit, 10/100 edits, streak badges, category expert; unlocked with toast notification</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* AI Features */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">AI Features</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="AI Features" bodyClassName="text-[13px]">
           <p className="mb-2">AI features degrade gracefully when API keys are absent.</p>
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>Writing coach</strong> — Review tray disclosure with Flesch-Kincaid score, passive-voice count, sentence-length stats, and AI suggestions</li>
@@ -267,13 +244,10 @@ export default function FeaturesPage() {
             <li><strong>AI revision summary</strong> — automatically generates an edit summary when saving changes</li>
             <li><strong>Import from URL / Image / YouTube</strong> — AI converts web pages, photos of notes, and video transcripts into wiki articles</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Whiteboards */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Whiteboards</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Whiteboards" bodyClassName="text-[13px]">
           <p className="mb-2">
             Standalone Excalidraw canvases at <Link href="/whiteboards">/whiteboards</Link> — separate from article-embedded drawings.
           </p>
@@ -282,26 +256,20 @@ export default function FeaturesPage() {
             <li>Edit titles inline; full Excalidraw toolkit (shapes, text, arrows, images)</li>
             <li>Embed any whiteboard in an article via the Excalidraw slash command</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Web Clipping */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Web Clipping</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Web Clipping" bodyClassName="text-[13px]">
           <p className="mb-2">Capture content from the web directly into the wiki without switching context.</p>
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>Browser extension</strong> — Manifest V3 Chrome/Edge/Brave extension; popup pre-fills title and selected text, lets you set category, saves as draft via the API. Install guide at <Link href="/clipper-extension">/clipper-extension</Link>.</li>
             <li><strong>Bookmarklet</strong> — drag-to-install JavaScript bookmark; clips any page URL + title (or selected text) as a draft article. Install at <Link href="/bookmarklet">/bookmarklet</Link>.</li>
             <li>Selected text is wrapped in a blockquote with a source link; page HTML has nav/scripts stripped automatically</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Import & Export */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Import &amp; Export</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Import & Export" bodyClassName="text-[13px]">
           <p className="mb-1 font-bold text-heading">Import</p>
           <ul className="list-disc pl-5 mb-3 space-y-0.5">
             <li><strong>File upload</strong> — drag-and-drop <code className="bg-surface-hover px-1 text-[12px]">.md</code>, <code className="bg-surface-hover px-1 text-[12px]">.txt</code>, <code className="bg-surface-hover px-1 text-[12px]">.html</code>, or <code className="bg-surface-hover px-1 text-[12px]">.json</code> at <Link href="/import">/import</Link></li>
@@ -315,13 +283,10 @@ export default function FeaturesPage() {
             <li>Category export — entire category as multi-chapter ePub or zip from the admin area</li>
             <li><strong>Bulk ZIP export</strong> — download the entire wiki (or a single category) as a <code className="bg-surface-hover px-1 text-[12px]">.zip</code> of Markdown files, one per article, organised in category subfolders with YAML front-matter</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* APIs & Integrations */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">APIs &amp; Integrations</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="APIs & Integrations" bodyClassName="text-[13px]">
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>REST API v1</strong> — <code className="bg-surface-hover px-1 text-[12px]">/api/v1/</code> with <code className="bg-surface-hover px-1 text-[12px]">X-API-Key</code> auth, frozen contract metadata at <code className="bg-surface-hover px-1 text-[12px]">/api/v1/contract</code>, OpenAPI JSON at <code className="bg-surface-hover px-1 text-[12px]">/api/v1/openapi.json</code>, standard v1 headers, fixture responses, and a pre-v5 migration guide. See <Link href="/api-docs">API Documentation</Link>.</li>
             <li><strong>SDK types</strong> — <code className="bg-surface-hover px-1 text-[12px]">/api/v1/sdk</code> and <code className="bg-surface-hover px-1 text-[12px]">docs/sdk-types.md</code> publish REST payload, webhook event, customization, marketplace pack, plugin manifest, export bundle, API key scope, generated client example, and sample script metadata.</li>
@@ -368,13 +333,10 @@ export default function FeaturesPage() {
             <li><strong>Issue links</strong> — link GitHub, Jira, or Linear issues to articles with inline status badges</li>
             <li><strong>Federated peers</strong> — configure peer wiki instances for cross-wiki search at <Link href="/admin/federated-peers">/admin/federated-peers</Link></li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Interactive Map */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Interactive Map</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Interactive Map" bodyClassName="text-[13px]">
           <p className="mb-2">Optional feature. Enable with <code className="bg-surface-hover px-1 text-[12px]">NEXT_PUBLIC_MAP_ENABLED=true</code>.</p>
           <ul className="list-disc pl-5 space-y-0.5">
             <li>Multiple maps with custom background images and named layers</li>
@@ -382,13 +344,10 @@ export default function FeaturesPage() {
             <li>Different marker detail levels per zoom tier</li>
             <li>Admin edit mode: draw, reshape, recolor, link to articles</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Accessibility */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Accessibility &amp; Reading Comfort</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Accessibility & Reading Comfort" bodyClassName="text-[13px]">
           <ul className="list-disc pl-5 space-y-0.5">
             <li><strong>Dyslexia mode</strong> — OpenDyslexic font, increased spacing, warm background tint (persists across sessions)</li>
             <li><strong>RTL toggle</strong> — switch article content to right-to-left reading direction</li>
@@ -399,13 +358,10 @@ export default function FeaturesPage() {
             <li><strong>Keyboard shortcut customization</strong> — remap navigation chords at <Link href="/settings/shortcuts">/settings/shortcuts</Link>; overrides saved in browser localStorage</li>
             <li><strong>Article lock</strong> — editor page acquires a 10-minute lock; other users see a &ldquo;Being edited by X&rdquo; warning with admin force-unlock option</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       {/* Administration */}
-      <div className="wiki-portal mb-4">
-        <div className="wiki-portal-header">Administration</div>
-        <div className="wiki-portal-body text-[13px]">
+      <SectionPanel className="mb-4" title="Administration" bodyClassName="text-[13px]">
           <ul className="list-disc pl-5 space-y-1">
             <li><strong>Roles</strong> — Viewer (read only), Editor (create/edit), Admin (full access)</li>
             <li><strong>Multi-user accounts</strong> — registration, profiles at <code className="bg-surface-hover px-1 text-[12px]">/users/[username]</code>, settings at <Link href="/settings">/settings</Link></li>
@@ -515,8 +471,7 @@ export default function FeaturesPage() {
             <li><strong>Analytics CSV export</strong> — <Link href="/api/export/analytics">/api/export/analytics</Link> downloads all published articles with read counts, reactions, revisions, and dates (admin only)</li>
             <li><strong>Custom branding</strong> — name, tagline, welcome text, footer, logo, logo mark, and app icon via <code className="bg-surface-hover px-1 text-[12px]">NEXT_PUBLIC_*</code> environment variables</li>
           </ul>
-        </div>
-      </div>
+      </SectionPanel>
 
       <div className="wiki-notice">
         For detailed usage instructions and keyboard shortcuts, see the <Link href="/help">Help &amp; Features Guide</Link>.

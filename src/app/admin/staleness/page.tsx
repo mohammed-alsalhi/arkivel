@@ -62,7 +62,7 @@ export default async function StalenessPage() {
                   <td className="text-muted text-xs">{formatDate(a.updatedAt)}</td>
                   <td>
                     <span
-                      className={`text-xs font-medium ${daysStale > 365 ? "text-red-500" : "text-yellow-600"}`}
+                      className={`text-xs font-medium ${daysStale > 365 ? "text-danger" : "text-warning"}`}
                     >
                       {daysStale}d
                     </span>

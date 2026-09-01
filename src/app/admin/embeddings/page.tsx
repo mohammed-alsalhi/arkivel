@@ -58,8 +58,8 @@ export default function EmbeddingsAdminPage() {
         <>
           <StatGrid>
             <StatCard label="Total articles" value={stats.total} />
-            <StatCard label="With embeddings" value={<span className="text-green-600">{stats.embedded}</span>} />
-            <StatCard label="Missing" value={<span className="text-yellow-600">{stats.missing.length}</span>} />
+            <StatCard label="With embeddings" value={<span className="text-success">{stats.embedded}</span>} />
+            <StatCard label="Missing" value={<span className="text-warning">{stats.missing.length}</span>} />
           </StatGrid>
 
           <div className="mb-4">
@@ -80,7 +80,7 @@ export default function EmbeddingsAdminPage() {
           ) : (
             <>
               {!process.env.NEXT_PUBLIC_OPENAI_ENABLED && (
-                <div className="text-sm text-yellow-700 bg-yellow-50 border border-yellow-200 rounded p-3 mb-4">
+                <div className="text-sm text-warning bg-warning-soft border border-warning-border rounded p-3 mb-4">
                   Set <code>OPENAI_API_KEY</code> to enable semantic embeddings.
                 </div>
               )}

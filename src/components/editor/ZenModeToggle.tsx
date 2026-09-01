@@ -62,8 +62,8 @@ export default function ZenModeToggle() {
       type="button"
       onClick={() => toggle()}
       title={active ? "Exit zen mode (Esc)" : "Zen mode — hide chrome, widen editor"}
-      className={`h-6 px-2 text-[11px] border border-border rounded transition-colors ${
-        active ? "bg-accent text-white border-accent" : "text-muted hover:text-foreground hover:bg-surface-hover"
+      className={`h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded transition-colors ${
+        active ? "bg-accent text-accent-foreground border-accent" : "text-muted hover:text-foreground hover:bg-surface-hover"
       }`}
     >
       {active ? (

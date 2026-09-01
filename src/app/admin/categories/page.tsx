@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Button, Page, PageHeader, Section } from "@/components/ui";
+import { Button, Page, PageHeader, Section, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Category = {
   id: string;
@@ -64,6 +65,7 @@ const emptyForm: FormState = {
 };
 
 export default function AdminCategoriesPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const [categories, setCategories] = useState<Category[]>([]);
   const [sourceId, setSourceId] = useState("");
   const [targetId, setTargetId] = useState("");
@@ -150,9 +152,10 @@ export default function AdminCategoriesPage() {
     const source = categories.find((category) => category.id === sourceId);
     const target = categories.find((category) => category.id === targetId);
     if (
-      !confirm(
-        `Merge "${source?.name}" into "${target?.name}"?\n\nAll articles and sub-categories from "${source?.name}" will be reassigned to "${target?.name}", and "${source?.name}" will be permanently deleted.`
-      )
+      !(await confirm(
+        `Merge "${source?.name}" into "${target?.name}"?\n\nAll articles and sub-categories from "${source?.name}" will be reassigned to "${target?.name}", and "${source?.name}" will be permanently deleted.`,
+        { title: "Merge categories", confirmLabel: "Merge", danger: true }
+      ))
     )
       return;
 
@@ -335,7 +338,7 @@ export default function AdminCategoriesPage() {
               </div>
 
               {warnings.length > 0 && (
-                <div className="mt-4 border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] text-amber-800">
+                <div className="mt-4 border border-warning-border bg-warning-soft px-3 py-2 text-[12px] text-warning">
                   {warnings.map((warning) => (
                     <p key={warning}>{warning}</p>
                   ))}
@@ -356,9 +359,7 @@ export default function AdminCategoriesPage() {
 
         {resolved && (
           <div className="mt-4 grid gap-4 xl:grid-cols-[1fr_360px]">
-            <div className="border border-border bg-surface p-4">
-              <div className="wiki-portal-header mb-3">Inherited Preview</div>
-              <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+            <SectionPanel title="Inherited Preview" bodyClassName="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
                 {fields.map((field) => (
                   <div key={field.key} className="border border-border-light bg-background p-3">
                     <div className="flex items-center justify-between gap-2">
@@ -372,17 +373,15 @@ export default function AdminCategoriesPage() {
                     </p>
                   </div>
                 ))}
-              </div>
-            </div>
+            </SectionPanel>
 
-            <div className="border border-border bg-surface p-4">
-              <div className="wiki-portal-header mb-3">Responsive QA</div>
+            <SectionPanel title="Responsive QA">
               <ul className="space-y-2 text-[12px] text-muted">
                 <li><strong className="text-foreground">Phone:</strong> navigation collapses cleanly and article cards keep category/status text readable.</li>
                 <li><strong className="text-foreground">Tablet:</strong> metadata schema and right-rail content stack without overlapping article summaries.</li>
                 <li><strong className="text-foreground">Desktop:</strong> layout, theme, and component pack previews preserve scan-friendly category lists.</li>
               </ul>
-            </div>
+            </SectionPanel>
           </div>
         )}
 
@@ -417,7 +416,7 @@ export default function AdminCategoriesPage() {
           <form onSubmit={handleMerge} className="max-w-md space-y-4">
             <div>
               <label className="block text-[12px] text-muted mb-1">
-                Source category <span className="text-red-500">(will be deleted)</span>
+                Source category <span className="text-danger">(will be deleted)</span>
               </label>
               <select
                 value={sourceId}
@@ -438,7 +437,7 @@ export default function AdminCategoriesPage() {
 
             <div>
               <label className="block text-[12px] text-muted mb-1">
-                Target category <span className="text-green-600">(articles merged into this)</span>
+                Target category <span className="text-success">(articles merged into this)</span>
               </label>
               <select
                 value={targetId}
@@ -465,11 +464,12 @@ export default function AdminCategoriesPage() {
       </Section>
 
       {result && (
-        <p className="text-[13px] text-green-700 border border-green-200 bg-green-50 px-3 py-2 rounded">{result}</p>
+        <p className="text-[13px] text-success border border-success-border bg-success-soft px-3 py-2 rounded">{result}</p>
       )}
       {error && (
-        <p className="text-[13px] text-red-700 border border-red-200 bg-red-50 px-3 py-2 rounded">{error}</p>
+        <p className="text-[13px] text-danger border border-danger-border bg-danger-soft px-3 py-2 rounded">{error}</p>
       )}
+      {confirmDialog}
     </Page>
   );
 }
@@ -530,10 +530,9 @@ function TextField({
 
 function PreviewPanel({ children, title }: { children: React.ReactNode; title: string }) {
   return (
-    <div className="border border-border bg-surface p-4">
-      <div className="wiki-portal-header mb-2">{title}</div>
-      <div className="space-y-1 text-[12px] text-muted">{children}</div>
-    </div>
+    <SectionPanel title={title} bodyClassName="space-y-1 text-[12px] text-muted">
+      {children}
+    </SectionPanel>
   );
 }
 

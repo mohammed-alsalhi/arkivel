@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCopyToClipboard } from "@/lib/useCopyToClipboard";
 
 interface Props {
   markdown: string | null | undefined;
@@ -8,32 +8,13 @@ interface Props {
 }
 
 export default function CopyMarkdownButton({ markdown, title }: Props) {
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useCopyToClipboard();
 
   if (!markdown) return null;
 
-  async function handleCopy() {
-    const text = `# ${title}\n\n${markdown}`;
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // Fallback for browsers without clipboard API
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
   return (
     <button
-      onClick={handleCopy}
+      onClick={() => copy(`# ${title}\n\n${markdown}`)}
       title="Copy article as Markdown"
       className="ui-button"
     >

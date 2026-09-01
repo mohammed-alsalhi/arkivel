@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { EmptyState } from "@/components/ui";
 
 type GraphNode = { id: string; title: string; slug: string };
 type GraphEdge = { source: string; target: string; type: string };
@@ -82,7 +83,7 @@ export default function LocalGraph({ slug }: { slug: string }) {
   }
 
   if (!data || data.nodes.length <= 1) {
-    return <div className="text-[11px] text-muted py-2">No connections found.</div>;
+    return <EmptyState description="No connections found." />;
   }
 
   const others = data.nodes.filter((n) => n.slug !== slug);

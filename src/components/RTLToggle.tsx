@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PreferenceToggle from "./PreferenceToggle";
 
 interface Props {
   defaultDir: string;
@@ -18,14 +19,14 @@ export default function RTLToggle({ defaultDir }: Props) {
   }
 
   return (
-    <button
-      onClick={toggle}
-      title={dir === "rtl" ? "Switch to LTR reading" : "Switch to RTL reading"}
-      className="ui-button"
+    <PreferenceToggle
+      active={dir === "rtl"}
+      onToggle={toggle}
+      titleOn="Switch to LTR reading"
+      titleOff="Switch to RTL reading"
       aria-label="Toggle text direction"
-      aria-pressed={dir === "rtl"}
     >
       {dir === "rtl" ? "LTR" : "RTL"}
-    </button>
+    </PreferenceToggle>
   );
 }

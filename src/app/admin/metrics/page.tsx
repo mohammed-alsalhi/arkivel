@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Page, PageHeader, Section, StatCard, StatGrid } from "@/components/ui";
+import { EmptyState, LoadingState, Page, PageHeader, Section, StatCard, StatGrid } from "@/components/ui";
 
 interface MetricsSummary {
   totalArticles: number;
@@ -47,9 +47,7 @@ export default function MetricsPage() {
 
   if (loading) {
     return (
-      <div className="py-8 text-center text-muted italic text-[13px]">
-        Loading metrics...
-      </div>
+      <LoadingState label="Loading metrics..." />
     );
   }
 
@@ -95,7 +93,7 @@ export default function MetricsPage() {
       <Section title="Top Categories by Article Count">
         <div className="space-y-2">
           {metrics.topCategories.length === 0 && (
-            <p className="text-[12px] text-muted italic">No categories yet.</p>
+            <EmptyState title="No categories yet." />
           )}
           {metrics.topCategories.map((cat) => (
             <div key={cat.slug} className="flex items-center gap-2">

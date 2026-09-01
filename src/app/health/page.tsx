@@ -196,7 +196,7 @@ export default function WikiHealthPage() {
                 </div>
                 <Link
                   href={`/articles/${a.slug}/edit`}
-                  className="flex-shrink-0 h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors"
+                  className="flex-shrink-0 h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors"
                 >
                   Fix
                 </Link>

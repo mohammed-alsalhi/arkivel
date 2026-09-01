@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useAdmin } from "@/components/AdminContext";
-import { Button, EmptyState, Page, PageHeader, Section } from "@/components/ui";
+import { Button, EmptyState, LoadingState, Page, PageHeader, Section } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Discussion = {
   id: string;
@@ -76,7 +77,7 @@ function CommentForm({
           <button
             type="button"
             onClick={onCancel}
-            className="text-[13px] text-muted hover:text-foreground"
+            className="text-[13px] text-muted hover:text-foreground pointer-coarse:py-2"
           >
             cancel
           </button>
@@ -123,7 +124,7 @@ function Comment({
             {hasReplies && (
               <button
                 onClick={() => setCollapsed((v) => !v)}
-                className="text-[11px] text-muted hover:text-foreground"
+                className="text-[11px] text-muted hover:text-foreground pointer-coarse:py-2"
               >
                 {collapsed ? `show ${d.replies.length} repl${d.replies.length === 1 ? "y" : "ies"}` : "collapse"}
               </button>
@@ -131,7 +132,7 @@ function Comment({
             {depth < 3 && (
               <button
                 onClick={() => setReplying((v) => !v)}
-                className="text-[11px] text-accent hover:underline"
+                className="text-[11px] text-accent hover:underline pointer-coarse:py-2"
               >
                 reply
               </button>
@@ -139,7 +140,7 @@ function Comment({
             {isAdmin && (
               <button
                 onClick={() => onDelete(d.id)}
-                className="text-[11px] text-red-500 hover:underline"
+                className="text-[11px] text-red-500 hover:underline pointer-coarse:py-2"
               >
                 delete
               </button>
@@ -191,6 +192,7 @@ function Comment({
 }
 
 export default function DiscussionPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const isAdmin = useAdmin();
   const params = useParams();
   const slug = params.slug as string;
@@ -253,7 +255,7 @@ export default function DiscussionPage() {
 
   async function handleDelete(discussionId: string) {
     if (!article) return;
-    if (!confirm("Delete this comment and all its replies?")) return;
+    if (!(await confirm("Delete this comment and all its replies?", { title: "Delete comment", confirmLabel: "Delete", danger: true }))) return;
     const res = await fetch(
       `/api/articles/${article.id}/discussions?discussionId=${discussionId}`,
       { method: "DELETE" }
@@ -269,7 +271,7 @@ export default function DiscussionPage() {
       .map((d) => ({ ...d, replies: removeComment(d.replies, id) }));
   }
 
-  if (loading) return <div className="py-8 text-center text-muted italic text-[13px]">Loading...</div>;
+  if (loading) return <LoadingState />;
   if (!article) return <div className="py-8 text-center text-muted italic text-[13px]">Article not found.</div>;
 
   const totalCount = (list: Discussion[]): number =>
@@ -319,6 +321,7 @@ export default function DiscussionPage() {
           <CommentForm onSubmit={handlePost} />
         </Section>
       </Page>
+      {confirmDialog}
     </div>
   );
 }

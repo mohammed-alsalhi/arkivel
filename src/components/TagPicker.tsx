@@ -52,7 +52,7 @@ export default function TagPicker({ selectedTagIds, onChange }: Props) {
             onClick={() => toggle(tag.id)}
             className={`border px-2 py-0.5 text-[12px] transition-colors ${
               selectedTagIds.includes(tag.id)
-                ? "border-accent bg-accent text-white"
+                ? "border-accent bg-accent text-accent-foreground"
                 : "border-border bg-surface-hover text-foreground hover:border-accent"
             }`}
           >

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Button, Page, PageHeader } from "@/components/ui";
+import { Button, EmptyState, LoadingState, Page, PageHeader } from "@/components/ui";
 
 type ArticleInfo = {
   id: string;
@@ -58,7 +58,7 @@ export default function DiffPage() {
   }, [slug, fromId, toId]);
 
   if (loading) {
-    return <div className="py-8 text-center text-muted italic text-[13px]">Loading diff...</div>;
+    return <LoadingState label="Loading diff..." />;
   }
 
   if (!fromData || !toData || !article) {
@@ -117,7 +117,7 @@ export default function DiffPage() {
               </div>
             ))}
             {diffLines.length === 0 && (
-              <div className="px-3 py-2 text-muted italic">No differences found.</div>
+              <EmptyState description="No differences found." />
             )}
           </div>
         ) : (
@@ -137,7 +137,7 @@ export default function DiffPage() {
               </span>
             ))}
             {inlineParts.length === 0 && (
-              <span className="text-muted italic">No differences found.</span>
+              <EmptyState description="No differences found." />
             )}
           </div>
         )}

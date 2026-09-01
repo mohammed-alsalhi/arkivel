@@ -240,7 +240,7 @@ export default function AskPage() {
             {messages.map((msg, i) => (
               <div key={i} className={msg.role === "user" ? "flex justify-end" : "flex justify-start"}>
                 {msg.role === "user" ? (
-                  <div className="max-w-[85%] bg-accent text-white px-4 py-2.5 rounded rounded-tr-sm text-[14px]">
+                  <div className="max-w-[85%] bg-accent text-accent-foreground px-4 py-2.5 rounded rounded-tr-sm text-[14px]">
                     {msg.content}
                   </div>
                 ) : (
@@ -309,7 +309,7 @@ export default function AskPage() {
           <button
             onClick={() => send()}
             disabled={!input.trim() || streaming}
-            className="h-[42px] w-[42px] rounded bg-accent text-white flex items-center justify-center hover:bg-accent-hover disabled:opacity-40 transition-colors shrink-0"
+            className="h-[42px] w-[42px] rounded bg-accent text-accent-foreground flex items-center justify-center hover:bg-accent-hover disabled:opacity-40 transition-colors shrink-0"
             title="Send (Enter)"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

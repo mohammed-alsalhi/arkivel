@@ -30,12 +30,12 @@ export default function ArticleStatsPanel({
     qualityScore === null
       ? "text-muted-foreground"
       : qualityScore >= 80
-      ? "text-green-600 dark:text-green-400"
+      ? "text-success"
       : qualityScore >= 60
-      ? "text-blue-600 dark:text-blue-400"
+      ? "text-info"
       : qualityScore >= 40
-      ? "text-yellow-600 dark:text-yellow-400"
-      : "text-red-600 dark:text-red-400";
+      ? "text-warning"
+      : "text-danger";
 
   return (
     <div className="border border-border rounded-lg overflow-hidden my-3">

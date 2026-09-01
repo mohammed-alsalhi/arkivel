@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, DataTable, EmptyState, Page, PageHeader } from "@/components/ui";
+import { Button, DataTable, EmptyState, Page, PageHeader, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Announcement = {
   id: string;
@@ -15,13 +16,14 @@ type Announcement = {
 const TYPES = ["info", "warning", "success", "error"] as const;
 
 const TYPE_BADGE: Record<string, string> = {
-  info:    "bg-blue-100 text-blue-800",
-  warning: "bg-yellow-100 text-yellow-800",
-  success: "bg-green-100 text-green-800",
-  error:   "bg-red-100 text-red-800",
+  info:    "bg-info-soft text-info",
+  warning: "bg-warning-soft text-warning",
+  success: "bg-success-soft text-success",
+  error:   "bg-danger-soft text-danger",
 };
 
 export default function AnnouncementsPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const [list, setList] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -67,7 +69,7 @@ export default function AnnouncementsPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this announcement?")) return;
+    if (!(await confirm("Delete this announcement?", { title: "Delete announcement", confirmLabel: "Delete", danger: true }))) return;
     await fetch(`/api/admin/announcements/${id}`, { method: "DELETE" });
     await load();
   }
@@ -77,9 +79,8 @@ export default function AnnouncementsPage() {
       <PageHeader title="Announcements" />
 
       {/* Create form */}
-      <form onSubmit={handleCreate} className="wiki-portal mb-6">
-        <div className="wiki-portal-header">New announcement</div>
-        <div className="wiki-portal-body space-y-3">
+      <SectionPanel className="mb-6" title="New announcement">
+        <form onSubmit={handleCreate} className="space-y-3">
           <div>
             <label className="block text-[12px] text-muted mb-1">Message</label>
             <textarea
@@ -127,8 +128,8 @@ export default function AnnouncementsPage() {
               </Button>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </SectionPanel>
 
       {/* List */}
       {loading ? (
@@ -161,16 +162,9 @@ export default function AnnouncementsPage() {
                   {a.expiresAt ? new Date(a.expiresAt).toLocaleDateString() : "—"}
                 </td>
                 <td>
-                  <button
-                    onClick={() => toggleActive(a.id, a.active)}
-                    className={`h-6 px-2 text-[11px] border rounded transition-colors ${
-                      a.active
-                        ? "border-green-400 bg-green-50 text-green-700 hover:bg-green-100"
-                        : "border-border text-muted hover:bg-surface-hover"
-                    }`}
-                  >
+                  <Button aria-pressed={a.active} onClick={() => toggleActive(a.id, a.active)}>
                     {a.active ? "Active" : "Inactive"}
-                  </button>
+                  </Button>
                 </td>
                 <td className="text-right">
                   <Button onClick={() => handleDelete(a.id)}>Delete</Button>
@@ -180,6 +174,7 @@ export default function AnnouncementsPage() {
           </tbody>
         </DataTable>
       )}
+      {confirmDialog}
     </Page>
   );
 }

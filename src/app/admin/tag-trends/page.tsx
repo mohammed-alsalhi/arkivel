@@ -2,7 +2,7 @@ import { isAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { Page, PageHeader } from "@/components/ui";
+import { DataTable, Page, PageHeader } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -78,28 +78,27 @@ export default async function TagTrendsPage() {
         description="New published articles per tag per month, last 12 months. Top 30 tags by total article count."
       />
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-[11px] border-collapse">
+      <DataTable className="text-[11px]">
           <thead>
-            <tr className="text-muted border-b border-border">
-              <th className="text-left pb-1 pr-3 font-medium text-[12px]">Tag</th>
-              <th className="text-right pb-1 pr-3 font-medium w-12">Total</th>
+            <tr>
+              <th className="text-[12px]">Tag</th>
+              <th className="text-right w-12">Total</th>
               {shortMonths.map((m, i) => (
-                <th key={i} className="text-center pb-1 px-0.5 font-medium w-8">{m}</th>
+                <th key={i} className="text-center w-8">{m}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.id} className="border-t border-border-light hover:bg-surface-hover">
-                <td className="py-1 pr-3">
+              <tr key={row.id}>
+                <td>
                   <Link href={`/tags/${row.slug}`} className="text-wiki-link hover:underline font-medium">
                     {row.name}
                   </Link>
                 </td>
-                <td className="py-1 pr-3 text-right tabular-nums text-muted">{row.total}</td>
+                <td className="text-right tabular-nums text-muted">{row.total}</td>
                 {row.monthlyCounts.map((c, i) => (
-                  <td key={i} className="py-1 px-0.5 text-center">
+                  <td key={i} className="text-center">
                     {c > 0 ? (
                       <span
                         className="inline-block rounded-sm text-[10px] font-mono"
@@ -121,8 +120,7 @@ export default async function TagTrendsPage() {
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+      </DataTable>
     </Page>
   );
 }

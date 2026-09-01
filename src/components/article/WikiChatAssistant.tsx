@@ -63,7 +63,7 @@ export default function WikiChatAssistant({ articleTitle }: { articleTitle: stri
       <button
         onClick={() => setOpen((o) => !o)}
         title={open ? "Close wiki assistant" : "Ask the wiki assistant"}
-        className="fixed bottom-16 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-accent text-white shadow-lg transition-opacity hover:opacity-90"
+        className="fixed bottom-16 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-lg transition-opacity hover:opacity-90"
         aria-label="Wiki chat assistant"
       >
         {open ? (
@@ -109,7 +109,7 @@ export default function WikiChatAssistant({ articleTitle }: { articleTitle: stri
                 <div
                   className={`max-w-[85%] rounded-lg px-2.5 py-1.5 whitespace-pre-wrap leading-relaxed ${
                     m.role === "user"
-                      ? "bg-accent text-white"
+                      ? "bg-accent text-accent-foreground"
                       : "bg-surface border border-border text-foreground"
                   }`}
                 >
@@ -141,7 +141,7 @@ export default function WikiChatAssistant({ articleTitle }: { articleTitle: stri
             <button
               onClick={send}
               disabled={!input.trim() || loading}
-              className="h-6 px-2 text-[11px] border border-border rounded bg-accent text-white disabled:opacity-40 hover:opacity-90"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded bg-accent text-accent-foreground disabled:opacity-40 hover:opacity-90"
             >
               Send
             </button>

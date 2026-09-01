@@ -12,6 +12,7 @@ import { useAdmin } from "@/components/AdminContext";
 import type { ArticleTemplate } from "@/lib/templates";
 import { getCategoryTemplate } from "@/lib/category-templates";
 import SmartSuggestions from "@/components/editor/SmartSuggestions";
+import { useToast } from "@/components/Toast";
 
 type CategoryItem = { id: string; name: string; slug: string; parentId: string | null; children?: CategoryItem[] };
 
@@ -66,6 +67,7 @@ function DraftLoader({
 export default function NewArticlePage() {
   const isAdmin = useAdmin();
   const router = useRouter();
+  const { addToast } = useToast();
   const editorRef = useRef<TiptapEditorHandle>(null);
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState("");
@@ -155,7 +157,7 @@ export default function NewArticlePage() {
       router.push(`/articles/${article.slug}`);
     } else {
       setSaving(false);
-      alert("Failed to create article");
+      addToast("Failed to create article", "error");
     }
   }
 
@@ -219,7 +221,7 @@ export default function NewArticlePage() {
                 type="button"
                 onClick={handleAutofill}
                 disabled={autofillLoading}
-                className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors disabled:opacity-50 flex items-center gap-1"
+                className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors disabled:opacity-50 flex items-center gap-1"
               >
                 {autofillLoading ? (
                   <>

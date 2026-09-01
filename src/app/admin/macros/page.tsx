@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, DataTable, EmptyState, Page, PageHeader } from "@/components/ui";
+import { Button, DataTable, EmptyState, Page, PageHeader, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Macro = {
   id: string;
@@ -27,6 +28,7 @@ const DEFAULT_TEMPLATES: Record<string, { description: string; template: string 
 };
 
 export default function MacrosPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const [macros, setMacros] = useState<Macro[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Macro | null>(null);
@@ -82,7 +84,7 @@ export default function MacrosPage() {
   }
 
   async function deleteMacro(id: string, name: string) {
-    if (!confirm(`Delete macro "{{${name}}}"?`)) return;
+    if (!(await confirm(`Delete macro "{{${name}}}"?`, { title: "Delete macro", confirmLabel: "Delete", danger: true }))) return;
     await fetch(`/api/macros/${id}`, { method: "DELETE" });
     load();
   }
@@ -115,9 +117,11 @@ export default function MacrosPage() {
 
       {/* Form */}
       {(creating || editing) && (
-        <div className="wiki-portal mb-4">
-          <div className="wiki-portal-header">{editing ? `Edit macro: ${editing.name}` : "New macro"}</div>
-          <div className="wiki-portal-body space-y-2">
+        <SectionPanel
+          className="mb-4"
+          title={editing ? `Edit macro: ${editing.name}` : "New macro"}
+          bodyClassName="space-y-2"
+        >
             {!editing && (
               <div>
                 <label className="block text-[11px] text-muted font-bold mb-0.5">Name (no spaces)</label>
@@ -162,7 +166,7 @@ export default function MacrosPage() {
                 />
               </div>
             )}
-            {error && <p className="text-[12px] text-red-600">{error}</p>}
+            {error && <p className="text-[12px] text-danger">{error}</p>}
             <div className="flex gap-2">
               <Button onClick={save} disabled={saving}>
                 {saving ? "Saving…" : "Save"}
@@ -171,8 +175,7 @@ export default function MacrosPage() {
                 Cancel
               </Button>
             </div>
-          </div>
-        </div>
+        </SectionPanel>
       )}
 
       {/* Macro list */}
@@ -211,6 +214,7 @@ export default function MacrosPage() {
           </tbody>
         </DataTable>
       )}
+      {confirmDialog}
     </Page>
   );
 }

@@ -461,6 +461,12 @@
   color: var(--color-info);
 }
 
+.ui-chip-special {
+  border-color: var(--color-special-border);
+  background: var(--color-special-soft);
+  color: var(--color-special);
+}
+
 .ui-table {
   width: 100%;
   max-width: 100%;
@@ -539,6 +545,14 @@
   padding: 1.35rem;
   text-align: center;
   color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.ui-loading-state {
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--color-muted);
+  font-style: italic;
   font-size: 0.8125rem;
 }
 

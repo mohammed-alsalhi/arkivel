@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAdmin } from "@/components/AdminContext";
+import { Button, DataTable, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Category = {
   id: string;
@@ -16,6 +18,7 @@ type Category = {
 };
 
 export default function CategoryManager() {
+  const { confirm, confirmDialog } = useConfirm();
   const isAdmin = useAdmin();
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -143,7 +146,7 @@ export default function CategoryManager() {
       return;
     }
 
-    if (!confirm(msg)) return;
+    if (!(await confirm(msg, { title: "Delete category", confirmLabel: "Delete", danger: true }))) return;
 
     setError("");
     const res = await fetch(`/api/categories/${cat.id}`, { method: "DELETE" });
@@ -158,52 +161,48 @@ export default function CategoryManager() {
   }
 
   return (
-    <div className="wiki-portal max-w-2xl">
-      <div className="wiki-portal-header">Manage Categories</div>
-      <div className="wiki-portal-body">
+    <SectionPanel className="max-w-2xl" title="Manage Categories">
         {/* Category list with edit/delete controls */}
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-[13px] mb-3">
-            <thead>
-              <tr className="text-left text-[11px] text-muted">
-                <th className="pb-1 pr-2">Category</th>
-                <th className="pb-1 pr-2">Description</th>
-                <th className="pb-1 pr-2 text-center">Articles</th>
-                <th className="pb-1 w-24"></th>
+        <DataTable className="text-[13px] mb-3">
+          <thead>
+            <tr className="text-[11px]">
+              <th>Category</th>
+              <th>Description</th>
+              <th className="text-center">Articles</th>
+              <th className="w-24"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {flatCategories.map(({ category, depth }) => (
+              <tr key={category.id}>
+                <td style={{ paddingLeft: `${12 + depth * 16}px` }}>
+                  {depth > 0 && <span className="text-muted text-[11px] mr-1">{"\u2514"}</span>}
+                  {category.name}
+                </td>
+                <td className="text-muted text-[12px] max-w-48 truncate">
+                  {category.description || "\u2014"}
+                </td>
+                <td className="text-center text-muted">
+                  {category._count?.articles ?? 0}
+                </td>
+                <td className="text-right">
+                  <button
+                    onClick={() => startEdit(category)}
+                    className="text-[11px] text-accent hover:underline mr-2 pointer-coarse:py-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(category)}
+                    className="text-[11px] text-wiki-link-broken hover:underline pointer-coarse:py-2"
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {flatCategories.map(({ category, depth }) => (
-                <tr key={category.id} className="border-t border-border-light hover:bg-surface-hover">
-                  <td className="py-1 pr-2" style={{ paddingLeft: `${depth * 16}px` }}>
-                    {depth > 0 && <span className="text-muted text-[11px] mr-1">{"\u2514"}</span>}
-                    {category.name}
-                  </td>
-                  <td className="py-1 pr-2 text-muted text-[12px] max-w-48 truncate">
-                    {category.description || "\u2014"}
-                  </td>
-                  <td className="py-1 pr-2 text-center text-muted">
-                    {category._count?.articles ?? 0}
-                  </td>
-                  <td className="py-1 text-right">
-                    <button
-                      onClick={() => startEdit(category)}
-                      className="text-[11px] text-accent hover:underline mr-2"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(category)}
-                      className="text-[11px] text-wiki-link-broken hover:underline"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </DataTable>
 
         {/* Success/error messages */}
         {error && <p className="text-[12px] text-wiki-link-broken mb-2">{error}</p>}
@@ -271,31 +270,21 @@ export default function CategoryManager() {
               <p className="text-[12px] text-wiki-link-broken">{error}</p>
             )}
             <div className="flex gap-2">
-              <button
-                type="submit"
-                className="bg-accent px-3 py-1 text-[13px] font-bold text-white hover:bg-accent-hover"
-              >
+              <Button type="submit" variant="primary">
                 {editingId ? "Save" : "Create"}
-              </button>
-              <button
-                type="button"
-                onClick={cancelForm}
-                className="px-3 py-1 text-[13px] text-muted border border-border hover:bg-surface-hover"
-              >
+              </Button>
+              <Button type="button" onClick={cancelForm}>
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         ) : (
-          <button
-            onClick={startCreate}
-            className="bg-accent px-3 py-1 text-[13px] font-bold text-white hover:bg-accent-hover"
-          >
+          <Button onClick={startCreate} variant="primary">
             + New Category
-          </button>
+          </Button>
         )}
-      </div>
-    </div>
+      {confirmDialog}
+    </SectionPanel>
   );
 }
 

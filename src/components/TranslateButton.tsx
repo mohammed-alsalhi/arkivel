@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useOutsideClick } from "@/lib/useOutsideClick";
 
 const LOCALES = [
   { code: "ar", label: "Arabic" },
@@ -22,6 +23,9 @@ export default function TranslateButton({ articleId }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ id?: string; error?: string } | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(ref, () => setOpen(false), open);
 
   async function translate(locale: string) {
     setOpen(false);
@@ -43,7 +47,7 @@ export default function TranslateButton({ articleId }: Props) {
   }
 
   return (
-    <div className="relative inline-block">
+    <div ref={ref} className="relative inline-block">
       <button
         onClick={() => setOpen((o) => !o)}
         disabled={loading}

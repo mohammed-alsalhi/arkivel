@@ -29,6 +29,9 @@
   --color-info: #2f5fa8;
   --color-info-soft: rgba(47, 95, 168, 0.1);
   --color-info-border: #8da8cf;
+  --color-special: #6b4ba1;
+  --color-special-soft: rgba(107, 75, 161, 0.1);
+  --color-special-border: #ab97cf;
 
   /* Standard wiki link colors */
   --color-wiki-link: #0645ad;
@@ -96,6 +99,9 @@ html[data-theme="dark"] {
   --color-info: #9dbdff;
   --color-info-soft: rgba(157, 189, 255, 0.12);
   --color-info-border: #526990;
+  --color-special: #c8b6ff;
+  --color-special-soft: rgba(200, 182, 255, 0.12);
+  --color-special-border: #6a5a96;
   --color-wiki-link: #8ab4f8;
   --color-wiki-link-visited: #c8b6ff;
   --color-wiki-link-broken: #ff8b8b;

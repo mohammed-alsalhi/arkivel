@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAdmin } from "@/components/AdminContext";
-import { Button, Page, PageHeader, TabButton, Tabs } from "@/components/ui";
+import { Button, DataTable, Page, PageHeader, TabButton, Tabs } from "@/components/ui";
 
 type LintResult = {
   level: "error" | "warning" | "info";
@@ -34,9 +34,9 @@ type LintResponse = {
 type FilterLevel = "all" | "error" | "warning" | "info";
 
 const LEVEL_STYLES: Record<string, { bg: string; text: string; label: string }> = {
-  error: { bg: "bg-red-100 dark:bg-red-900/30", text: "text-red-700 dark:text-red-400", label: "Error" },
-  warning: { bg: "bg-yellow-100 dark:bg-yellow-900/30", text: "text-yellow-700 dark:text-yellow-400", label: "Warning" },
-  info: { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-700 dark:text-blue-400", label: "Info" },
+  error: { bg: "bg-danger-soft", text: "text-danger", label: "Error" },
+  warning: { bg: "bg-warning-soft", text: "text-warning", label: "Warning" },
+  info: { bg: "bg-info-soft", text: "text-info", label: "Info" },
 };
 
 export default function LintPage() {
@@ -105,7 +105,7 @@ export default function LintPage() {
       {loading ? (
         <p className="text-[13px] text-muted italic">Analyzing articles...</p>
       ) : error ? (
-        <div className="wiki-notice text-red-600">{error}</div>
+        <div className="wiki-notice text-danger">{error}</div>
       ) : data ? (
         <>
           {/* Summary cards */}
@@ -114,17 +114,17 @@ export default function LintPage() {
               <div className="text-[22px] font-bold text-heading">{data.summary.total}</div>
               <div className="text-[12px] text-muted">Total Issues</div>
             </div>
-            <div className="border border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800 p-3 text-center">
-              <div className="text-[22px] font-bold text-red-700 dark:text-red-400">{data.summary.errors}</div>
-              <div className="text-[12px] text-red-600 dark:text-red-400">Errors</div>
+            <div className="border border-danger-border bg-danger-soft p-3 text-center">
+              <div className="text-[22px] font-bold text-danger">{data.summary.errors}</div>
+              <div className="text-[12px] text-danger">Errors</div>
             </div>
-            <div className="border border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800 p-3 text-center">
-              <div className="text-[22px] font-bold text-yellow-700 dark:text-yellow-400">{data.summary.warnings}</div>
-              <div className="text-[12px] text-yellow-600 dark:text-yellow-400">Warnings</div>
+            <div className="border border-warning-border bg-warning-soft p-3 text-center">
+              <div className="text-[22px] font-bold text-warning">{data.summary.warnings}</div>
+              <div className="text-[12px] text-warning">Warnings</div>
             </div>
-            <div className="border border-blue-300 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-800 p-3 text-center">
-              <div className="text-[22px] font-bold text-blue-700 dark:text-blue-400">{data.summary.info}</div>
-              <div className="text-[12px] text-blue-600 dark:text-blue-400">Info</div>
+            <div className="border border-info-border bg-info-soft p-3 text-center">
+              <div className="text-[22px] font-bold text-info">{data.summary.info}</div>
+              <div className="text-[12px] text-info">Info</div>
             </div>
           </div>
 
@@ -162,22 +162,13 @@ export default function LintPage() {
                 Showing {filteredTotal} issue{filteredTotal !== 1 ? "s" : ""} across{" "}
                 {filteredReports.length} article{filteredReports.length !== 1 ? "s" : ""}
               </p>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-border bg-surface text-[13px]">
+              <DataTable>
                   <thead>
-                    <tr className="bg-surface-hover">
-                      <th className="border border-border px-3 py-1.5 text-left font-bold text-heading w-16">
-                        Level
-                      </th>
-                      <th className="border border-border px-3 py-1.5 text-left font-bold text-heading">
-                        Article
-                      </th>
-                      <th className="border border-border px-3 py-1.5 text-left font-bold text-heading w-36">
-                        Rule
-                      </th>
-                      <th className="border border-border px-3 py-1.5 text-left font-bold text-heading">
-                        Message
-                      </th>
+                    <tr>
+                      <th className="w-16">Level</th>
+                      <th>Article</th>
+                      <th className="w-36">Rule</th>
+                      <th>Message</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -185,15 +176,15 @@ export default function LintPage() {
                       report.results.map((result, idx) => {
                         const style = LEVEL_STYLES[result.level];
                         return (
-                          <tr key={`${report.articleId}-${idx}`} className="hover:bg-surface-hover">
-                            <td className="border border-border px-3 py-1.5">
+                          <tr key={`${report.articleId}-${idx}`}>
+                            <td>
                               <span
                                 className={`inline-block px-1.5 py-0.5 text-[11px] font-semibold ${style.bg} ${style.text}`}
                               >
                                 {style.label}
                               </span>
                             </td>
-                            <td className="border border-border px-3 py-1.5">
+                            <td>
                               <Link
                                 href={`/articles/${report.articleSlug}`}
                                 className="text-wiki-link hover:underline font-medium"
@@ -201,12 +192,12 @@ export default function LintPage() {
                                 {report.articleTitle}
                               </Link>
                             </td>
-                            <td className="border border-border px-3 py-1.5">
+                            <td>
                               <code className="text-[11px] bg-surface-hover px-1 py-0.5">
                                 {result.rule}
                               </code>
                             </td>
-                            <td className="border border-border px-3 py-1.5 text-muted">
+                            <td className="text-muted">
                               {result.message}
                             </td>
                           </tr>
@@ -214,8 +205,7 @@ export default function LintPage() {
                       })
                     )}
                   </tbody>
-                </table>
-              </div>
+              </DataTable>
             </div>
           )}
         </>

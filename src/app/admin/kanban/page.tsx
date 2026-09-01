@@ -14,9 +14,9 @@ type Article = {
 };
 
 const COLUMNS: { key: string; label: string; colour: string }[] = [
-  { key: "draft",     label: "Draft",     colour: "bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800" },
-  { key: "review",    label: "In Review", colour: "bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800" },
-  { key: "published", label: "Published", colour: "bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800" },
+  { key: "draft",     label: "Draft",     colour: "bg-warning-soft border-warning-border" },
+  { key: "review",    label: "In Review", colour: "bg-info-soft border-info-border" },
+  { key: "published", label: "Published", colour: "bg-success-soft border-success-border" },
 ];
 
 export default function KanbanPage() {

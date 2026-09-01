@@ -67,13 +67,13 @@ export default function WritingSessionGoal({ editor }: Props) {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") startSession(); }}
           placeholder="word goal"
-          className="h-6 w-20 px-2 text-[11px] border border-border rounded bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-accent"
+          className="h-6 pointer-coarse:h-9 w-20 px-2 text-[11px] border border-border rounded bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-accent"
         />
         <button
           type="button"
           onClick={startSession}
           disabled={!input || parseInt(input, 10) < 1}
-          className="h-6 px-2 text-[11px] border border-border rounded hover:bg-surface-hover disabled:opacity-40 transition-colors"
+          className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded hover:bg-surface-hover disabled:opacity-40 transition-colors"
         >
           Start
         </button>
@@ -90,7 +90,7 @@ export default function WritingSessionGoal({ editor }: Props) {
   return (
     <div className="flex items-center gap-2">
       <div className="flex items-center gap-1 text-[11px]">
-        <span className={done ? "text-green-600 dark:text-green-400 font-bold" : "text-foreground"}>
+        <span className={done ? "text-success font-bold" : "text-foreground"}>
           {wordCount}/{goal}
         </span>
         <span className="text-muted">words</span>
@@ -99,7 +99,7 @@ export default function WritingSessionGoal({ editor }: Props) {
       </div>
       <div className="w-24 h-1.5 bg-surface-hover rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all ${done ? "bg-green-500" : "bg-accent"}`}
+          className={`h-full rounded-full transition-all ${done ? "bg-success" : "bg-accent"}`}
           style={{ width: `${pct}%` }}
         />
       </div>

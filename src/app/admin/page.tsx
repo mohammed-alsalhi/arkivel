@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import ArticleStatusBadge from "@/components/ArticleStatusBadge";
-import { DataTable, EmptyState, LinkButton, Page, PageHeader, Section } from "@/components/ui";
+import { DataTable, EmptyState, LinkButton, LoadingState, Page, PageHeader, Section } from "@/components/ui";
 
 type ReviewArticle = {
   id: string;
@@ -147,7 +147,7 @@ export default function AdminPage() {
   }, []);
 
   if (loading) {
-    return <div className="py-8 text-center text-muted italic text-[13px]">Loading...</div>;
+    return <LoadingState />;
   }
 
   return (

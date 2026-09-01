@@ -33,7 +33,7 @@ export default function MermaidBlock({ code }: Props) {
 
   if (error) {
     return (
-      <div className="border border-red-200 bg-red-50 rounded p-3 text-red-700 text-sm">
+      <div className="border border-danger-border bg-danger-soft rounded p-3 text-danger text-sm">
         <strong>Diagram error:</strong> {error}
         <pre className="mt-2 text-xs overflow-auto">{code}</pre>
       </div>

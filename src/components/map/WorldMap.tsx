@@ -40,7 +40,7 @@ function createVertexIcon(color: string): L.DivIcon {
     className: "",
     html: `<div style="
       width: 10px; height: 10px;
-      background: white;
+      background: var(--color-surface);
       border: 2px solid ${color};
       border-radius: 50%;
       cursor: grab;
@@ -133,7 +133,7 @@ function ColorPickerField({
           type="color"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-7 w-7 cursor-pointer border border-border bg-transparent p-0"
+          className="h-7 w-7 pointer-coarse:h-9 pointer-coarse:w-9 cursor-pointer border border-border bg-transparent p-0"
         />
         <div className="flex gap-1">
           {PRESET_COLORS.map((c) => (
@@ -504,7 +504,7 @@ export default function WorldMap({ mapImage, editMode = false }: Props) {
                 setShowForm(false);
                 setIsDrawing(true);
               }}
-              className="bg-accent px-3 py-1 text-[12px] font-bold text-white shadow hover:bg-accent-hover"
+              className="bg-accent px-3 py-1 text-[12px] font-bold text-accent-foreground shadow hover:bg-accent-hover"
             >
               Draw area
             </button>
@@ -513,7 +513,7 @@ export default function WorldMap({ mapImage, editMode = false }: Props) {
               <button
                 onClick={handleFinishDrawing}
                 disabled={drawingPoints.length < 3}
-                className="bg-accent px-3 py-1 text-[12px] font-bold text-white shadow hover:bg-accent-hover disabled:opacity-40"
+                className="bg-accent px-3 py-1 text-[12px] font-bold text-accent-foreground shadow hover:bg-accent-hover disabled:opacity-40"
               >
                 Finish ({drawingPoints.length} points)
               </button>
@@ -566,7 +566,7 @@ export default function WorldMap({ mapImage, editMode = false }: Props) {
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="bg-accent px-3 py-1 text-[12px] font-bold text-white hover:bg-accent-hover"
+                className="bg-accent px-3 py-1 text-[12px] font-bold text-accent-foreground hover:bg-accent-hover"
               >
                 Create
               </button>
@@ -623,7 +623,7 @@ export default function WorldMap({ mapImage, editMode = false }: Props) {
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="bg-accent px-3 py-1 text-[12px] font-bold text-white hover:bg-accent-hover"
+                className="bg-accent px-3 py-1 text-[12px] font-bold text-accent-foreground hover:bg-accent-hover"
               >
                 Save
               </button>
@@ -637,7 +637,7 @@ export default function WorldMap({ mapImage, editMode = false }: Props) {
               <button
                 type="button"
                 onClick={() => handleDeleteArea(editingAreaId)}
-                className="ml-auto text-[12px] text-red-600 hover:underline"
+                className="ml-auto text-[12px] text-danger hover:underline"
               >
                 Delete
               </button>

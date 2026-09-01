@@ -37,7 +37,7 @@ export default function HighlightColorPicker({ editor }: Props) {
         title="Highlight text"
         onClick={() => setOpen((o) => !o)}
         className={`px-1.5 py-0.5 text-[11px] font-medium transition-colors ${
-          isHighlighted ? "bg-accent text-white" : "text-foreground hover:bg-surface hover:text-accent"
+          isHighlighted ? "bg-accent text-accent-foreground" : "text-foreground hover:bg-surface hover:text-accent"
         }`}
       >
         <span style={{ background: "#fef08a", padding: "0 2px" }}>A</span>

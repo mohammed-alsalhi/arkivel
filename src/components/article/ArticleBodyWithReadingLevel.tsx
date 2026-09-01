@@ -9,9 +9,9 @@ import HeadingPermalinks from "@/components/HeadingPermalinks";
 type Level = "standard" | "beginner" | "technical" | "eli5";
 
 const LEVEL_BANNER: Record<Exclude<Level, "standard">, { label: string; color: string }> = {
-  beginner: { label: "Beginner mode — simplified for easier reading", color: "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400" },
-  technical: { label: "Technical mode — expert depth and detail", color: "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400" },
-  eli5: { label: "ELI5 mode — explained like you're 5", color: "bg-green-500/10 border-green-500/30 text-green-600 dark:text-green-400" },
+  beginner: { label: "Beginner mode — simplified for easier reading", color: "bg-info-soft border-info-border text-info" },
+  technical: { label: "Technical mode — expert depth and detail", color: "bg-special-soft border-special-border text-special" },
+  eli5: { label: "ELI5 mode — explained like you're 5", color: "bg-success-soft border-success-border text-success" },
 };
 
 type Props = {

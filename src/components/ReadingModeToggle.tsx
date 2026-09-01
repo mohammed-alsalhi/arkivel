@@ -1,18 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import PreferenceToggle from "./PreferenceToggle";
+import { usePersistedToggle } from "@/lib/usePersistedToggle";
+
+function apply(active: boolean) {
+  if (active) document.documentElement.setAttribute("data-reading-mode", "1");
+  else document.documentElement.removeAttribute("data-reading-mode");
+}
 
 export default function ReadingModeToggle() {
-  const [active, setActive] = useState(false);
-
-  // Restore from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem("readingMode");
-    if (stored === "1") {
-      setActive(true);
-      document.documentElement.setAttribute("data-reading-mode", "1");
-    }
-  }, []);
+  const [active, toggle] = usePersistedToggle("readingMode", apply);
 
   // Keyboard shortcut: R (when not in input/editor)
   useEffect(() => {
@@ -25,29 +23,16 @@ export default function ReadingModeToggle() {
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active]);
-
-  function toggle() {
-    const next = !active;
-    setActive(next);
-    if (next) {
-      document.documentElement.setAttribute("data-reading-mode", "1");
-      localStorage.setItem("readingMode", "1");
-    } else {
-      document.documentElement.removeAttribute("data-reading-mode");
-      localStorage.removeItem("readingMode");
-    }
-  }
+  }, [toggle]);
 
   return (
-    <button
-      onClick={toggle}
-      title={active ? "Exit reading mode (R)" : "Enter reading mode (R)"}
-      aria-pressed={active}
-      className="ui-button"
+    <PreferenceToggle
+      active={active}
+      onToggle={toggle}
+      titleOn="Exit reading mode (R)"
+      titleOff="Enter reading mode (R)"
     >
       {active ? "Exit reading mode" : "Reading mode"}
-    </button>
+    </PreferenceToggle>
   );
 }

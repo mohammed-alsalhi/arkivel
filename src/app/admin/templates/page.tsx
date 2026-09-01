@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAdmin } from "@/components/AdminContext";
-import { Button, EmptyState, Page, PageHeader } from "@/components/ui";
+import { Button, EmptyState, Page, PageHeader, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Template = {
   id: string;
@@ -22,6 +23,7 @@ type Category = {
 };
 
 export default function TemplatesPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const isAdmin = useAdmin();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -144,7 +146,7 @@ export default function TemplatesPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this template? This cannot be undone.")) return;
+    if (!(await confirm("Delete this template? This cannot be undone.", { title: "Delete template", confirmLabel: "Delete", danger: true }))) return;
 
     try {
       const res = await fetch(`/api/templates/${id}`, { method: "DELETE" });
@@ -191,11 +193,11 @@ export default function TemplatesPage() {
 
       {/* Create / Edit form */}
       {showCreate && (
-        <div className="wiki-portal mb-5">
-          <div className="wiki-portal-header">
-            {editId ? "Edit Template" : "New Template"}
-          </div>
-          <div className="wiki-portal-body space-y-3">
+        <SectionPanel
+          className="mb-5"
+          title={editId ? "Edit Template" : "New Template"}
+          bodyClassName="space-y-3"
+        >
             <div>
               <label className="block text-[12px] font-semibold text-muted mb-1">
                 Template Name
@@ -256,13 +258,14 @@ export default function TemplatesPage() {
                     type="checkbox"
                     checked={formIsPublic}
                     onChange={(e) => setFormIsPublic(e.target.checked)}
+                    className="pointer-coarse:h-5 pointer-coarse:w-5"
                   />
                   Public template (visible to all editors)
                 </label>
               </div>
             </div>
             {formError && (
-              <p className="text-[12px] text-red-600">{formError}</p>
+              <p className="text-[12px] text-danger">{formError}</p>
             )}
             <Button
               onClick={handleSave}
@@ -270,8 +273,7 @@ export default function TemplatesPage() {
             >
               {saving ? "Saving..." : editId ? "Update Template" : "Create Template"}
             </Button>
-          </div>
-        </div>
+        </SectionPanel>
       )}
 
       {/* Template list */}
@@ -282,12 +284,13 @@ export default function TemplatesPage() {
       ) : (
         <div className="space-y-3">
           {templates.map((template) => (
-            <div key={template.id} className="wiki-portal">
-              <div className="wiki-portal-header flex items-center justify-between">
-                <div className="flex items-center gap-2">
+            <SectionPanel
+              key={template.id}
+              title={
+                <span className="flex items-center gap-2">
                   <span className="font-medium">{template.name}</span>
                   {template.builtin && (
-                    <span className="text-[10px] px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold">
+                    <span className="text-[10px] px-1.5 py-0.5 bg-info-soft text-info font-semibold">
                       BUILT-IN
                     </span>
                   )}
@@ -296,35 +299,28 @@ export default function TemplatesPage() {
                       PRIVATE
                     </span>
                   )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
+                </span>
+              }
+              actions={
+                <span className="flex items-center gap-2">
+                  <Button
                     onClick={() =>
                       setPreviewId(previewId === template.id ? null : template.id)
                     }
-                    className="text-[11px] text-wiki-link hover:underline"
                   >
                     {previewId === template.id ? "Hide preview" : "Preview"}
-                  </button>
+                  </Button>
                   {!template.builtin && (
                     <>
-                      <button
-                        onClick={() => handleEdit(template)}
-                        className="text-[11px] text-muted hover:text-foreground"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(template.id)}
-                        className="text-[11px] text-red-600 hover:text-red-800"
-                      >
+                      <Button onClick={() => handleEdit(template)}>Edit</Button>
+                      <Button variant="danger" onClick={() => handleDelete(template.id)}>
                         Delete
-                      </button>
+                      </Button>
                     </>
                   )}
-                </div>
-              </div>
-              <div className="wiki-portal-body">
+                </span>
+              }
+            >
                 <p className="text-[12px] text-muted">
                   {template.description}
                 </p>
@@ -339,11 +335,11 @@ export default function TemplatesPage() {
                     />
                   </div>
                 )}
-              </div>
-            </div>
+            </SectionPanel>
           ))}
         </div>
       )}
+      {confirmDialog}
     </Page>
   );
 }

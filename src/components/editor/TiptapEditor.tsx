@@ -49,6 +49,8 @@ import { editorBlockTemplates, getEditorBlockTemplate } from "@/lib/editor-contr
 import { useWikiLinkSuggester } from "./useWikiLinkSuggester";
 import { useRef, useState, useEffect, useCallback, useImperativeHandle, forwardRef } from "react";
 import styles from "./TiptapEditor.module.css";
+import { useConfirm } from "@/lib/useConfirm";
+import { useToast } from "@/components/Toast";
 
 export type TiptapEditorHandle = {
   getHTML: () => string;
@@ -241,6 +243,8 @@ function collectEditorTelemetry(editor: Editor | null): EditorTelemetry {
 
 const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
   function TiptapEditor({ content = "", placeholder = "Start writing...", articleTitle = "", onUpdate }, ref) {
+    const { confirm, confirmDialog } = useConfirm();
+    const { addToast } = useToast();
     const [markdownMode, setMarkdownMode] = useState(false);
     const [markdownText, setMarkdownText] = useState("");
     const [detectedCount, setDetectedCount] = useState(0);
@@ -640,7 +644,7 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
       if (!editor) return;
       const { from, to } = editor.state.selection;
       if (from === to) {
-        window.alert("Select some text first, then click AI Rewrite.");
+        addToast("Select some text first, then click AI Rewrite.", "warning");
         return;
       }
       const selectedText = editor.state.doc.textBetween(from, to, " ");
@@ -652,7 +656,7 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: "Request failed" }));
-        window.alert(err.error ?? "AI rewrite failed.");
+        addToast(err.error ?? "AI rewrite failed.", "error");
         return;
       }
       const { result } = await res.json();
@@ -665,7 +669,7 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
       if (!editor) return;
       const { from, to } = editor.state.selection;
       if (from === to) {
-        window.alert("Select a paragraph first, then click AI Expand.");
+        addToast("Select a paragraph first, then click AI Expand.", "warning");
         return;
       }
       const selectedText = editor.state.doc.textBetween(from, to, " ");
@@ -692,18 +696,18 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
         }
       });
       if (headings.length === 0) {
-        window.alert("Add some headings first. AI Generate fills in content under each heading.");
+        addToast("Add some headings first. AI Generate fills in content under each heading.", "warning");
         return;
       }
       const title = articleTitle || "Article";
-      if (!window.confirm(`Generate content for ${headings.length} section(s)? This will replace text below each heading.`)) return;
+      if (!(await confirm(`Generate content for ${headings.length} section(s)? This will replace text below each heading.`, { title: "AI Generate", confirmLabel: "Generate", danger: true }))) return;
       const res = await fetch("/api/ai/generate-article", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, headings }),
       });
       if (!res.ok) {
-        window.alert("AI generation failed. Check that AI_API_KEY is configured.");
+        addToast("AI generation failed. Check that AI_API_KEY is configured.", "error");
         return;
       }
       const { html } = await res.json();
@@ -724,7 +728,7 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
       });
 
       if (headings.length === 0) {
-        window.alert("No headings found. Add some headings first.");
+        addToast("No headings found. Add some headings first.", "warning");
         return;
       }
 
@@ -1080,6 +1084,7 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
 
         {!markdownMode && <LinkBubble editor={editor} />}
 
+        {confirmDialog}
       </div>
     );
   }

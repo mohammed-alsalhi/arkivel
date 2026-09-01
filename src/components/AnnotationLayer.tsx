@@ -157,13 +157,13 @@ export default function AnnotationLayer({ articleId, isLoggedIn }: Props) {
             <button
               onClick={saveAnnotation}
               disabled={saving || !noteText.trim()}
-              className="h-6 px-2 text-[11px] border border-border rounded hover:bg-muted disabled:opacity-50"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded hover:bg-muted disabled:opacity-50"
             >
               {saving ? "Saving…" : "Save"}
             </button>
             <button
               onClick={() => { setPendingSelector(null); setPopoverPos(null); }}
-              className="h-6 px-2 text-[11px] border border-border rounded hover:bg-muted"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded hover:bg-muted"
             >
               Cancel
             </button>
@@ -193,7 +193,7 @@ export default function AnnotationLayer({ articleId, isLoggedIn }: Props) {
             <span>
               {activeAnnotation.user.displayName || activeAnnotation.user.username}
               {activeAnnotation.isShared && (
-                <span className="ml-1 text-[10px] bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-1 rounded">shared</span>
+                <span className="ml-1 text-[10px] bg-info-soft text-info px-1 rounded">shared</span>
               )}
             </span>
             <button
@@ -233,7 +233,7 @@ function highlightTextInElement(el: HTMLElement, text: string, annotationId: str
   const after = target.textContent!.slice(idx + text.length);
   const highlight = document.createElement("mark");
   highlight.className =
-    "annotation-highlight bg-yellow-200/70 dark:bg-yellow-700/40 cursor-pointer rounded-sm";
+    "annotation-highlight bg-warning/30 cursor-pointer rounded-sm";
   highlight.dataset.annotationId = annotationId;
   highlight.textContent = text;
   const parent = target.parentNode!;

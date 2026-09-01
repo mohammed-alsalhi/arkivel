@@ -107,7 +107,7 @@ export default function RedirectsManager({ initialRedirects }: { initialRedirect
                 <td className="text-right">
                   <button
                     onClick={() => handleDelete(r.id)}
-                    className="text-xs text-destructive hover:underline"
+                    className="text-xs text-destructive hover:underline pointer-coarse:py-2 pointer-coarse:px-2"
                   >
                     Delete
                   </button>

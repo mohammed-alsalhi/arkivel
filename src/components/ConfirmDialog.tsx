@@ -12,6 +12,7 @@ type Props = {
   confirmLabel?: string;
   cancelLabel?: string;
   danger?: boolean;
+  hideCancel?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 };
@@ -23,6 +24,7 @@ export default function ConfirmDialog({
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
   danger = false,
+  hideCancel = false,
   onConfirm,
   onCancel,
 }: Props) {
@@ -57,9 +59,9 @@ export default function ConfirmDialog({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">{title}</div>
-        <div className="modal-body">{message}</div>
+        <div className="modal-body whitespace-pre-line">{message}</div>
         <div className="modal-footer">
-          <Button onClick={onCancel}>{cancelLabel}</Button>
+          {!hideCancel && <Button onClick={onCancel}>{cancelLabel}</Button>}
           <button
             ref={confirmRef}
             onClick={onConfirm}

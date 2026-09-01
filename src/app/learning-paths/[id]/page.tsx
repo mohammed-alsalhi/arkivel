@@ -71,7 +71,7 @@ export default async function LearningPathPage({ params }: Props) {
         {path.articles.map(({ article }, i) => (
           <li key={article.id} className="flex items-start gap-3">
             <span className={`mt-0.5 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${
-              completed.has(article.id) ? "bg-green-500 text-white" : "bg-surface-hover text-muted"
+              completed.has(article.id) ? "bg-success-soft text-success" : "bg-surface-hover text-muted"
             }`}>
               {completed.has(article.id) ? "✓" : i + 1}
             </span>

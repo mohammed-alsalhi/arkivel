@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { getSearchResults } from "@/lib/search-response";
+import { useOutsideClick } from "@/lib/useOutsideClick";
 
 type SearchResult = {
   id: string;
@@ -55,16 +56,10 @@ export default function SearchBar() {
     return () => clearTimeout(timer);
   }, [query]);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-        if (!query.trim()) setExpanded(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [query]);
+  useOutsideClick(ref, () => {
+    setOpen(false);
+    if (!query.trim()) setExpanded(false);
+  });
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {

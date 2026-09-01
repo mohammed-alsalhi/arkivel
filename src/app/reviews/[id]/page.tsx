@@ -196,7 +196,7 @@ export default function ReviewDetailPage() {
   }
 
   if (error && !review) {
-    return <p className="py-8 text-[13px] text-red-600">{error}</p>;
+    return <p className="py-8 text-[13px] text-danger">{error}</p>;
   }
 
   if (!review) {
@@ -359,7 +359,7 @@ export default function ReviewDetailPage() {
               )}
 
               {error && (
-                <p className="mt-2 text-[12px] text-red-600">{error}</p>
+                <p className="mt-2 text-[12px] text-danger">{error}</p>
               )}
             </Section>
 

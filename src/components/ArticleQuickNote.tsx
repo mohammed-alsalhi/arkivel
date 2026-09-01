@@ -38,7 +38,7 @@ export default function ArticleQuickNote({ articleId }: { articleId: string }) {
     <div className="mt-4">
       <button
         onClick={() => setOpen((v) => !v)}
-        className={`h-6 px-2 text-[11px] border rounded transition-colors ${
+        className={`h-6 pointer-coarse:h-9 px-2 text-[11px] border rounded transition-colors ${
           hasNote
             ? "border-accent bg-accent/10 text-accent"
             : "border-border text-muted hover:text-foreground"
@@ -63,14 +63,14 @@ export default function ArticleQuickNote({ articleId }: { articleId: string }) {
           <div className="flex gap-2 items-center">
             <button
               onClick={save}
-              className="h-6 px-2 text-[11px] border border-border rounded bg-accent text-white hover:opacity-90"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded bg-accent text-accent-foreground hover:opacity-90"
             >
               {saved ? "Saved!" : "Save"}
             </button>
             {hasNote && (
               <button
                 onClick={() => { setNote(""); localStorage.removeItem(key); }}
-                className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-red-500"
+                className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-danger"
               >
                 Delete note
               </button>

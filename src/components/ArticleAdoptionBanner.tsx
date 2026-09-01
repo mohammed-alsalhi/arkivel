@@ -28,7 +28,7 @@ export default function ArticleAdoptionBanner({
   }
 
   return (
-    <div className="wiki-notice border-l-3 border-l-orange-400 flex items-start gap-2">
+    <div className="wiki-notice border-l-3 border-l-warning flex items-start gap-2">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5" aria-hidden="true">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
         <polyline points="9 22 9 12 15 12 15 22" />
@@ -42,7 +42,7 @@ export default function ArticleAdoptionBanner({
           <button
             onClick={adopt}
             disabled={loading}
-            className="ml-3 h-5 px-2 text-[11px] border border-orange-400 rounded text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
+            className="ml-3 h-5 px-2 text-[11px] border border-warning-border rounded text-warning hover:bg-warning-soft transition-colors"
           >
             {loading ? "Adopting…" : "Adopt this article"}
           </button>

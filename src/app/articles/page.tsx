@@ -5,11 +5,13 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAdmin } from "@/components/AdminContext";
 import ArticleStatusBadge from "@/components/ArticleStatusBadge";
-import { DataTable, EmptyState, LinkButton, Page, PageHeader, SectionPanel } from "@/components/ui";
+import { DataTable, EmptyState, LinkButton, LoadingState, Page, PageHeader, SectionPanel } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
+import { useToast } from "@/components/Toast";
 
 export default function ArticlesPageWrapper() {
   return (
-    <Suspense fallback={<div className="py-8 text-center text-muted italic text-[13px]">Loading...</div>}>
+    <Suspense fallback={<LoadingState />}>
       <ArticlesPageContent />
     </Suspense>
   );
@@ -41,6 +43,8 @@ type Tag = {
 
 function ArticlesPageContent() {
   const isAdmin = useAdmin();
+  const { confirm, confirmDialog } = useConfirm();
+  const { addToast } = useToast();
   const searchParams = useSearchParams();
   const category = searchParams.get("category") || "";
   const tag = searchParams.get("tag") || "";
@@ -128,7 +132,7 @@ function ArticlesPageContent() {
     const ids = Array.from(selected);
 
     if (batchAction === "delete") {
-      if (!confirm(`Delete ${ids.length} article${ids.length > 1 ? "s" : ""}? This cannot be undone.`)) return;
+      if (!(await confirm(`Delete ${ids.length} article${ids.length > 1 ? "s" : ""}? This cannot be undone.`, { title: "Delete articles", confirmLabel: "Delete", danger: true }))) return;
       setBatchWorking(true);
       const res = await fetch("/api/articles/batch", {
         method: "DELETE",
@@ -139,7 +143,7 @@ function ArticlesPageContent() {
         await loadData();
         setBatchAction("");
       } else {
-        alert("Failed to delete articles");
+        addToast("Failed to delete articles", "error");
       }
       setBatchWorking(false);
       return;
@@ -156,7 +160,7 @@ function ArticlesPageContent() {
         await loadData();
         setBatchAction("");
       } else {
-        alert("Failed to update category");
+        addToast("Failed to update category", "error");
       }
       setBatchWorking(false);
       return;
@@ -173,7 +177,7 @@ function ArticlesPageContent() {
         await loadData();
         setBatchAction("");
       } else {
-        alert("Failed to update articles");
+        addToast("Failed to update articles", "error");
       }
       setBatchWorking(false);
       return;
@@ -192,7 +196,7 @@ function ArticlesPageContent() {
         setBatchAction("");
         setBatchTagId("");
       } else {
-        alert("Failed to update tags");
+        addToast("Failed to update tags", "error");
       }
       setBatchWorking(false);
       return;
@@ -267,7 +271,7 @@ function ArticlesPageContent() {
 
       {/* Article list */}
       {loading ? (
-        <div className="py-8 text-center text-muted italic text-[13px]">Loading...</div>
+        <LoadingState />
       ) : articles.length === 0 ? (
         <EmptyState>
           No articles found. <Link href="/articles/new">Create one.</Link>
@@ -411,6 +415,7 @@ function ArticlesPageContent() {
           ))}
         </div>
       )}
+      {confirmDialog}
     </Page>
   );
 }

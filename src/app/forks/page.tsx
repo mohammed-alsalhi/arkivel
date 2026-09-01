@@ -46,7 +46,7 @@ export default async function ForksPage() {
                     <form action={`/api/forks/${fork.id}`} method="POST">
                       <button
                         formAction={`/api/forks/${fork.id}`}
-                        className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700"
+                        className="ui-button ui-button-primary"
                         onClick={async (e) => {
                           e.preventDefault();
                           await fetch(`/api/forks/${fork.id}`, {
@@ -61,7 +61,7 @@ export default async function ForksPage() {
                       </button>
                     </form>
                     <button
-                      className="px-2 py-1 text-xs border border-red-300 text-red-600 rounded hover:bg-red-50"
+                      className="ui-button ui-button-danger"
                       onClick={async () => {
                         const note = prompt("Rejection note (optional):");
                         await fetch(`/api/forks/${fork.id}`, {

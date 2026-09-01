@@ -12,10 +12,10 @@ type ClaimResult = {
 type Props = { html: string };
 
 const VERDICT_STYLE: Record<ClaimResult["verdict"], { color: string; bg: string; border: string; label: string }> = {
-  verified: { color: "text-green-700", bg: "bg-green-50", border: "border-green-200", label: "Verified" },
-  plausible: { color: "text-blue-700", bg: "bg-blue-50", border: "border-blue-200", label: "Plausible" },
-  uncertain: { color: "text-yellow-700", bg: "bg-yellow-50", border: "border-yellow-200", label: "Uncertain" },
-  questionable: { color: "text-red-700", bg: "bg-red-50", border: "border-red-200", label: "Questionable" },
+  verified: { color: "text-success", bg: "bg-success-soft", border: "border-success-border", label: "Verified" },
+  plausible: { color: "text-info", bg: "bg-info-soft", border: "border-info-border", label: "Plausible" },
+  uncertain: { color: "text-warning", bg: "bg-warning-soft", border: "border-warning-border", label: "Uncertain" },
+  questionable: { color: "text-danger", bg: "bg-danger-soft", border: "border-danger-border", label: "Questionable" },
 };
 
 export default function FactCheckPanel({ html }: Props) {
@@ -52,7 +52,7 @@ export default function FactCheckPanel({ html }: Props) {
         <button
           onClick={open ? () => setOpen(false) : results ? () => setOpen(true) : run}
           disabled={loading}
-          className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors flex items-center gap-1 disabled:opacity-50"
+          className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors flex items-center gap-1 disabled:opacity-50"
           title="Check factual claims in this article using AI"
         >
           {loading ? (
@@ -80,7 +80,7 @@ export default function FactCheckPanel({ html }: Props) {
         )}
       </div>
 
-      {error && <p className="text-[11px] text-red-500 mt-1">{error}</p>}
+      {error && <p className="text-[11px] text-danger mt-1">{error}</p>}
 
       {open && results && results.length > 0 && (
         <div className="mt-3 border border-border rounded bg-surface p-3 space-y-2">
@@ -104,10 +104,10 @@ export default function FactCheckPanel({ html }: Props) {
                 </div>
                 <p className="text-[11px] text-muted mt-1 leading-relaxed">{r.explanation}</p>
                 <div className="flex items-center gap-1.5 mt-1.5">
-                  <div className="flex-1 h-1 bg-white/60 rounded-full overflow-hidden border border-border/30">
+                  <div className="flex-1 h-1 bg-background/60 rounded-full overflow-hidden border border-border/30">
                     <div
                       className={`h-full rounded-full ${
-                        r.confidence >= 80 ? "bg-green-500" : r.confidence >= 50 ? "bg-yellow-500" : "bg-red-400"
+                        r.confidence >= 80 ? "bg-success" : r.confidence >= 50 ? "bg-warning" : "bg-danger"
                       }`}
                       style={{ width: `${r.confidence}%` }}
                     />

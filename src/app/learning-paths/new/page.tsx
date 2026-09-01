@@ -55,7 +55,7 @@ export default function NewLearningPathPage() {
           <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
           Make this path public
         </label>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
         <button
           type="submit" disabled={saving}
           className="ui-button ui-button-primary"

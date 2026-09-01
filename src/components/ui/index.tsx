@@ -61,7 +61,7 @@ export function PageHeader({
 }
 
 type ButtonVariant = "default" | "primary" | "danger";
-type Tone = "default" | "success" | "warning" | "danger" | "info";
+type Tone = "default" | "success" | "warning" | "danger" | "info" | "special";
 
 export function buttonClassName(variant: ButtonVariant = "default", className?: string) {
   return clsx(
@@ -443,6 +443,18 @@ export function DefinitionItem({ className, label, value, ...props }: Definition
     <div className={clsx("ui-definition-item", className)} {...props}>
       <dt>{label}</dt>
       <dd>{value}</dd>
+    </div>
+  );
+}
+
+type LoadingStateProps = HTMLAttributes<HTMLDivElement> & {
+  label?: ReactNode;
+};
+
+export function LoadingState({ className, label = "Loading...", ...props }: LoadingStateProps) {
+  return (
+    <div className={clsx("ui-loading-state", className)} {...props}>
+      {label}
     </div>
   );
 }

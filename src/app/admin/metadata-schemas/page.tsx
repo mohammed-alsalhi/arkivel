@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, DataTable, EmptyState, Page, PageHeader } from "@/components/ui";
+import { Button, DataTable, EmptyState, IconButton, Page, PageHeader, SectionPanel } from "@/components/ui";
 
 type FieldType = "text" | "number" | "date" | "boolean" | "select";
 
@@ -117,11 +117,11 @@ export default function MetadataSchemasPage() {
 
       {/* Form */}
       {(creating || editing) && (
-        <div className="wiki-portal mb-4">
-          <div className="wiki-portal-header">
-            {editing ? `Edit schema: ${editing.category.name}` : "New schema"}
-          </div>
-          <div className="wiki-portal-body space-y-3">
+        <SectionPanel
+          className="mb-4"
+          title={editing ? `Edit schema: ${editing.category.name}` : "New schema"}
+          bodyClassName="space-y-3"
+        >
             {!editing && (
               <div>
                 <label className="block text-[11px] text-muted font-bold mb-0.5">Category</label>
@@ -183,22 +183,24 @@ export default function MetadataSchemasPage() {
                           type="checkbox"
                           checked={f.required ?? false}
                           onChange={(e) => updateField(i, { required: e.target.checked })}
+                          className="pointer-coarse:h-5 pointer-coarse:w-5"
                         />
                         Required
                       </label>
                     </div>
-                    <button
+                    <IconButton
+                      label="Remove field"
                       onClick={() => removeField(i)}
-                      className="text-[11px] text-red-500 hover:underline mt-1"
+                      className="text-danger mt-1"
                     >
                       ✕
-                    </button>
+                    </IconButton>
                   </div>
                 ))}
               </div>
             </div>
 
-            {error && <p className="text-[12px] text-red-600">{error}</p>}
+            {error && <p className="text-[12px] text-danger">{error}</p>}
             <div className="flex gap-2">
               <Button onClick={save} disabled={saving}>
                 {saving ? "Saving…" : "Save schema"}
@@ -207,8 +209,7 @@ export default function MetadataSchemasPage() {
                 Cancel
               </Button>
             </div>
-          </div>
-        </div>
+        </SectionPanel>
       )}
 
       {/* Schema list */}

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { config } from "@/lib/config";
+import { useOutsideClick } from "@/lib/useOutsideClick";
 
 interface Props {
   articleId: string;
@@ -15,13 +16,7 @@ export default function ArticleExportMenu({ articleId, articleSlug, articleTitle
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    function onClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, []);
+  useOutsideClick(ref, () => setOpen(false));
 
   function exportPdf() {
     setOpen(false);

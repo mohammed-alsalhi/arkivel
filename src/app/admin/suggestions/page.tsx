@@ -62,12 +62,12 @@ export default function AdminSuggestionsPage() {
   }
 
   const statusColors = {
-    pending: "text-yellow-700 bg-yellow-50 border-yellow-200",
-    accepted: "text-green-700 bg-green-50 border-green-200",
-    rejected: "text-red-700 bg-red-50 border-red-200",
-    commented: "text-blue-700 bg-blue-50 border-blue-200",
-    assigned: "text-purple-700 bg-purple-50 border-purple-200",
-    converted: "text-slate-700 bg-slate-50 border-slate-200",
+    pending: "text-warning bg-warning-soft border-warning-border",
+    accepted: "text-success bg-success-soft border-success-border",
+    rejected: "text-danger bg-danger-soft border-danger-border",
+    commented: "text-info bg-info-soft border-info-border",
+    assigned: "text-special bg-special-soft border-special-border",
+    converted: "text-foreground bg-surface border-border-light",
   };
 
   return (
@@ -127,70 +127,49 @@ export default function AdminSuggestionsPage() {
                     value={noteInputs[s.id] ?? ""}
                     onChange={(e) => setNoteInputs((p) => ({ ...p, [s.id]: e.target.value }))}
                     placeholder="Optional admin note…"
-                    className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none"
+                    className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none pointer-coarse:h-9"
                   />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                     <input
                       value={assigneeInputs[s.id] ?? ""}
                       onChange={(e) => setAssigneeInputs((p) => ({ ...p, [s.id]: e.target.value }))}
                       placeholder="Assignee user id"
-                      className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none"
+                      className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none pointer-coarse:h-9"
                     />
                     <input
                       value={taskInputs[s.id] ?? ""}
                       onChange={(e) => setTaskInputs((p) => ({ ...p, [s.id]: e.target.value }))}
                       placeholder="Task URL or id"
-                      className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none"
+                      className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none pointer-coarse:h-9"
                     />
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => reviewSuggestion(s.id, "accept", noteInputs[s.id])}
-                      className="h-6 px-2 text-[11px] border border-green-300 rounded text-green-700 hover:bg-green-50"
-                    >
+                    <Button variant="primary" onClick={() => reviewSuggestion(s.id, "accept", noteInputs[s.id])}>
                       Accept
-                    </button>
-                    <button
-                      onClick={() => reviewSuggestion(s.id, "reject", noteInputs[s.id])}
-                      className="h-6 px-2 text-[11px] border border-red-200 rounded text-red-600 hover:bg-red-50"
-                    >
+                    </Button>
+                    <Button variant="danger" onClick={() => reviewSuggestion(s.id, "reject", noteInputs[s.id])}>
                       Reject
-                    </button>
-                    <button
-                      onClick={() => reviewSuggestion(s.id, "comment", noteInputs[s.id])}
-                      className="h-6 px-2 text-[11px] border border-blue-200 rounded text-blue-700 hover:bg-blue-50"
-                    >
+                    </Button>
+                    <Button onClick={() => reviewSuggestion(s.id, "comment", noteInputs[s.id])}>
                       Comment
-                    </button>
-                    <button
-                      onClick={() => reviewSuggestion(s.id, "assign", noteInputs[s.id])}
-                      className="h-6 px-2 text-[11px] border border-purple-200 rounded text-purple-700 hover:bg-purple-50"
-                    >
+                    </Button>
+                    <Button onClick={() => reviewSuggestion(s.id, "assign", noteInputs[s.id])}>
                       Assign
-                    </button>
-                    <button
-                      onClick={() => reviewSuggestion(s.id, "convert-to-task", noteInputs[s.id])}
-                      className="h-6 px-2 text-[11px] border border-border rounded text-foreground hover:bg-surface-hover"
-                    >
+                    </Button>
+                    <Button onClick={() => reviewSuggestion(s.id, "convert-to-task", noteInputs[s.id])}>
                       Convert
-                    </button>
-                    <button
-                      onClick={() => deleteSuggestion(s.id)}
-                      className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover"
-                    >
+                    </Button>
+                    <Button onClick={() => deleteSuggestion(s.id)}>
                       Delete
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
 
               {s.status !== "pending" && (
-                <button
-                  onClick={() => deleteSuggestion(s.id)}
-                  className="text-[11px] text-muted hover:text-foreground hover:underline"
-                >
+                <Button onClick={() => deleteSuggestion(s.id)}>
                   Delete
-                </button>
+                </Button>
               )}
             </div>
           ))}

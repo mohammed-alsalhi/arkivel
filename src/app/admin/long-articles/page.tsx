@@ -64,7 +64,7 @@ export default async function LongArticlesPage({
               min={500}
               step={500}
               defaultValue={threshold}
-              className="h-6 w-24 px-2 text-[11px] border border-border rounded bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-accent"
+              className="h-6 w-24 px-2 text-[11px] border border-border rounded bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-accent pointer-coarse:h-9"
             />
             <Button type="submit">Update</Button>
           </form>

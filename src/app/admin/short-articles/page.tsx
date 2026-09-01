@@ -71,7 +71,7 @@ export default async function AdminShortArticlesPage() {
                     <Link href={`/articles/${stub.slug}`} className="font-medium hover:underline">
                       {stub.title}
                     </Link>
-                    <span className="text-[11px] px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400 font-medium">
+                    <span className="text-[11px] px-1.5 py-0.5 rounded bg-warning-soft text-warning font-medium">
                       {stub.wc} words
                     </span>
                     {stub.category && (

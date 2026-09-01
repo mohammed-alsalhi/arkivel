@@ -6,6 +6,7 @@ import VoiceDictationButton from "./VoiceDictationButton";
 import HighlightColorPicker from "./HighlightColorPicker";
 import type { ClaimLevel } from "./ClaimMarkExtension";
 import styles from "./EditorToolbar.module.css";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Props = {
   editor: Editor | null;
@@ -101,6 +102,7 @@ export default function EditorToolbar({
   onTypewriterToggle,
 }: Props) {
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const { confirm, confirmDialog } = useConfirm();
 
   if (!editor) return null;
   const activeEditor = editor;
@@ -301,7 +303,7 @@ export default function EditorToolbar({
               <VoiceDictationButton editor={activeEditor} />
               <button
                 type="button"
-                onClick={() => alert("Editor shortcuts:\n\nCtrl+B - Bold\nCtrl+I - Italic\nCtrl+Z - Undo\nCtrl+Y - Redo\nCtrl+H - Find and replace\nCtrl+Shift+L - Wiki link\nCtrl+Shift+F - Footnote\n[[...]] - Wiki link search\n/ - Command menu")}
+                onClick={() => void confirm("Ctrl+B - Bold\nCtrl+I - Italic\nCtrl+Z - Undo\nCtrl+Y - Redo\nCtrl+H - Find and replace\nCtrl+Shift+L - Wiki link\nCtrl+Shift+F - Footnote\n[[...]] - Wiki link search\n/ - Command menu", { title: "Editor shortcuts", confirmLabel: "Close", hideCancel: true })}
                 title="Editor keyboard shortcuts"
                 aria-label="Editor keyboard shortcuts"
                 className={styles.toolButton}
@@ -319,6 +321,7 @@ export default function EditorToolbar({
           <EditorTableControls actions={tableActions} />
         </div>
       )}
+      {confirmDialog}
     </div>
   );
 }

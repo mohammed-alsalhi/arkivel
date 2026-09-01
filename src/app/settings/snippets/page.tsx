@@ -10,12 +10,15 @@ import {
   Input,
   Page,
   PageHeader,
+  SectionPanel,
   Textarea,
 } from "@/components/ui";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Snippet = { id: string; name: string; content: string; createdAt: string };
 
 export default function SnippetsPage() {
+  const { confirm, confirmDialog } = useConfirm();
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
@@ -64,7 +67,7 @@ export default function SnippetsPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this snippet?")) return;
+    if (!(await confirm("Delete this snippet?", { title: "Delete snippet", confirmLabel: "Delete", danger: true }))) return;
     await fetch(`/api/snippets/${id}`, { method: "DELETE" });
     await load();
   }
@@ -81,9 +84,8 @@ export default function SnippetsPage() {
         }
       />
 
-      <form onSubmit={handleSave} className="wiki-portal mb-6">
-        <div className="wiki-portal-header">{editId ? "Edit snippet" : "New snippet"}</div>
-        <div className="wiki-portal-body space-y-3">
+      <SectionPanel className="mb-6" title={editId ? "Edit snippet" : "New snippet"}>
+        <form onSubmit={handleSave} className="space-y-3">
           <Field
             htmlFor="snippet-name"
             label={
@@ -129,8 +131,8 @@ export default function SnippetsPage() {
               </Button>
             )}
           </div>
-        </div>
-      </form>
+        </form>
+      </SectionPanel>
 
       {loading ? (
         <div className="text-muted text-[13px] italic">Loading…</div>
@@ -174,6 +176,7 @@ export default function SnippetsPage() {
           </tbody>
         </DataTable>
       )}
+      {confirmDialog}
     </Page>
   );
 }

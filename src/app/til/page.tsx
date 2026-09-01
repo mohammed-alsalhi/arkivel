@@ -112,9 +112,9 @@ export default function TILPage() {
               <button
                 key={tag}
                 onClick={() => handleTagClick(tag)}
-                className={`text-[11px] px-2 py-0.5 rounded border transition-colors ${
+                className={`text-[11px] px-2 py-0.5 pointer-coarse:py-2 rounded border transition-colors ${
                   activeTag === tag
-                    ? "bg-accent text-white border-accent"
+                    ? "bg-accent text-accent-foreground border-accent"
                     : "border-border text-muted hover:border-accent/40"
                 }`}
               >
@@ -146,7 +146,7 @@ export default function TILPage() {
                     <button
                       key={t}
                       onClick={() => handleTagClick(t)}
-                      className="text-[10px] bg-surface border border-border rounded px-1.5 py-0.5 hover:border-accent/40"
+                      className="text-[10px] bg-surface border border-border rounded px-1.5 py-0.5 pointer-coarse:py-2 hover:border-accent/40"
                     >
                       {t}
                     </button>
@@ -157,7 +157,7 @@ export default function TILPage() {
                   </span>
                   <button
                     onClick={() => deletePost(post.id)}
-                    className="text-[10px] text-red-500 hover:underline"
+                    className="text-[10px] text-danger hover:underline pointer-coarse:py-2"
                   >
                     Delete
                   </button>

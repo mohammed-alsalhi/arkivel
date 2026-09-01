@@ -4,6 +4,7 @@ import dynamicImport from "next/dynamic";
 import Link from "next/link";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
+import { LoadingState } from "@/components/ui";
 
 // Excalidraw must be dynamically imported (no SSR) due to browser APIs
 const Excalidraw = dynamicImport(
@@ -82,7 +83,7 @@ export default function WhiteboardPage() {
     setEditingTitle(false);
   }
 
-  if (loading) return <div className="py-8 text-center text-muted italic text-[13px]">Loading…</div>;
+  if (loading) return <LoadingState label="Loading…" />;
   if (!board) return <div className="wiki-notice">Whiteboard not found. <Link href="/whiteboards">Back to whiteboards.</Link></div>;
 
   return (
@@ -101,8 +102,8 @@ export default function WhiteboardPage() {
               onKeyDown={(e) => { if (e.key === "Enter") saveTitle(); if (e.key === "Escape") setEditingTitle(false); }}
               className="border border-border bg-surface px-2 py-0.5 text-[14px] font-medium focus:border-accent focus:outline-none"
             />
-            <button onClick={saveTitle} className="h-6 px-2 text-[11px] border border-border rounded hover:bg-surface-hover">Save</button>
-            <button onClick={() => setEditingTitle(false)} className="h-6 px-2 text-[11px] border border-border rounded hover:bg-surface-hover">Cancel</button>
+            <button onClick={saveTitle} className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded hover:bg-surface-hover">Save</button>
+            <button onClick={() => setEditingTitle(false)} className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded hover:bg-surface-hover">Cancel</button>
           </div>
         ) : (
           <button

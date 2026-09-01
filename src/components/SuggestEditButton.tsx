@@ -79,7 +79,7 @@ export default function SuggestEditButton({ articleId }: Props) {
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 placeholder="Anonymous"
-                className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
+                className="w-full h-6 pointer-coarse:h-9 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
               />
             </div>
             <div className="flex-1">
@@ -89,7 +89,7 @@ export default function SuggestEditButton({ articleId }: Props) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="for follow-up"
-                className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
+                className="w-full h-6 pointer-coarse:h-9 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
               />
             </div>
           </div>
@@ -112,7 +112,7 @@ export default function SuggestEditButton({ articleId }: Props) {
             <button
               type="submit"
               disabled={submitting || !suggestion.trim()}
-              className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover disabled:opacity-40"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover disabled:opacity-40"
             >
               {submitting ? "Submitting…" : "Submit suggestion"}
             </button>

@@ -57,7 +57,7 @@ export default function ReadingLevelButton({ articleId, onLevelChange }: Props) 
       <button
         onClick={() => setOpen((v) => !v)}
         disabled={loading}
-        className={`h-6 px-2 text-[11px] border rounded transition-colors flex items-center gap-1 ${
+        className={`h-6 pointer-coarse:h-9 px-2 text-[11px] border rounded transition-colors flex items-center gap-1 ${
           activeLevel !== "standard"
             ? "border-accent text-accent bg-accent/10 hover:bg-accent/20"
             : "border-border text-muted hover:text-foreground hover:bg-surface-hover"

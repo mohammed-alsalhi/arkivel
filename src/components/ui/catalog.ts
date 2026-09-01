@@ -105,6 +105,12 @@ export const componentCatalog = {
     importName: "DataTable",
     theming: ["ui-table"],
   },
+  LoadingState: {
+    category: "feedback",
+    description: "Centered italic loading placeholder for client pages fetching data.",
+    importName: "LoadingState",
+    theming: ["ui-loading-state"],
+  },
   EmptyState: {
     category: "feedback",
     description: "Reusable blank-state message with optional icon, description, and actions.",

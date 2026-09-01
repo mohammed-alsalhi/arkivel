@@ -224,7 +224,7 @@ export default function ReviewRequestButton({
               </div>
 
               {error && (
-                <p className="text-[12px] text-red-600">{error}</p>
+                <p className="text-[12px] text-danger">{error}</p>
               )}
             </div>
 

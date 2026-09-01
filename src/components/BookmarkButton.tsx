@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useOutsideClick } from "@/lib/useOutsideClick";
 
 interface Props {
   articleId: string;
@@ -12,6 +13,9 @@ export default function BookmarkButton({ articleId, initialBookmarked = false }:
   const [showNote, setShowNote] = useState(false);
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(ref, () => setShowNote(false), showNote);
 
   async function toggle() {
     if (bookmarked) {
@@ -38,7 +42,7 @@ export default function BookmarkButton({ articleId, initialBookmarked = false }:
   }
 
   return (
-    <div className="relative">
+    <div ref={ref} className="relative">
       <button
         onClick={toggle}
         title={bookmarked ? "Remove bookmark" : "Bookmark this article"}

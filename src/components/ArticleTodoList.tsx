@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { EmptyState } from "@/components/ui";
 
 type Todo = { id: string; text: string; done: boolean; sortOrder: number };
 
@@ -76,7 +77,7 @@ export default function ArticleTodoList({
       </div>
 
       {todos.length === 0 && (
-        <p className="text-muted opacity-60 italic mb-2">No tasks yet.</p>
+        <EmptyState className="mb-2" description="No tasks yet." />
       )}
 
       <ul className="space-y-1 mb-2">
@@ -119,7 +120,7 @@ export default function ArticleTodoList({
           <button
             onClick={addTodo}
             disabled={adding || !newText.trim()}
-            className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors disabled:opacity-40"
+            className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover transition-colors disabled:opacity-40"
           >
             Add
           </button>

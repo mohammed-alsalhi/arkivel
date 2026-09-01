@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { EmptyState } from "@/components/ui";
 
 interface Source {
   id: string;
@@ -91,13 +92,13 @@ export default function ArticleQA({ articleSlug: _slug }: Props) {
               onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") ask(); }}
               placeholder="Ask anything about this wiki…"
-              className="h-7 min-w-0 flex-1 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
+              className="h-7 pointer-coarse:h-9 min-w-0 flex-1 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
             />
             <button
               type="button"
               onClick={ask}
               disabled={loading || !question.trim()}
-              className="h-7 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover disabled:opacity-40"
+              className="h-7 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover disabled:opacity-40"
             >
               {loading ? "…" : "Ask"}
             </button>
@@ -124,7 +125,7 @@ export default function ArticleQA({ articleSlug: _slug }: Props) {
           )}
 
           {answer === null && !loading && !error && question && (
-            <p className="mt-2 text-[12px] text-muted italic">No answer found in the wiki.</p>
+            <EmptyState className="mt-2" description="No answer found in the wiki." />
           )}
         </div>
       )}

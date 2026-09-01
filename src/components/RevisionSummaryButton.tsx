@@ -36,7 +36,7 @@ export default function RevisionSummaryButton({ articleId, revisionId, compareTo
     <span>
       <button
         onClick={fetchSummary}
-        className="text-xs text-muted-foreground border border-border rounded px-2 py-0.5 hover:bg-muted"
+        className="ui-button"
       >
         {loading ? "…" : "What changed?"}
       </button>

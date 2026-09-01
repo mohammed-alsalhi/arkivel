@@ -9,7 +9,7 @@ import {
   getSearchSuggestions,
   getSemanticSearchResults,
 } from "@/lib/search-response";
-import { Page, PageHeader, Section } from "@/components/ui";
+import { LoadingState, Page, PageHeader, Section, SectionPanel } from "@/components/ui";
 
 type SearchResult = {
   id: string;
@@ -277,9 +277,7 @@ function SearchContent() {
         {/* Filter sidebar */}
         {showAdvanced && (
           <aside className="w-full flex-shrink-0 lg:w-56">
-            <div className="wiki-portal">
-              <div className="wiki-portal-header">Filters</div>
-              <div className="wiki-portal-body space-y-3">
+            <SectionPanel title="Filters" bodyClassName="space-y-3">
                 {/* Category filter */}
                 <div>
                   <label className="block text-[11px] text-muted font-bold mb-0.5">
@@ -388,8 +386,7 @@ function SearchContent() {
                     Clear filters
                   </button>
                 )}
-              </div>
-            </div>
+            </SectionPanel>
           </aside>
         )}
 
@@ -534,7 +531,7 @@ export default function SearchPage() {
   return (
     <Suspense
       fallback={
-        <div className="py-8 text-center text-muted italic text-[13px]">Loading...</div>
+        <LoadingState />
       }
     >
       <SearchContent />

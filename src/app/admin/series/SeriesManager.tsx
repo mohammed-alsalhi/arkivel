@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Button, EmptyState } from "@/components/ui";
 
 type Article = { id: string; title: string; slug: string };
 type SeriesMember = { id: string; position: number; article: Article };
@@ -94,14 +95,13 @@ export default function SeriesManager({
           <input value={newDesc} onChange={(e) => setNewDesc(e.target.value)} placeholder="A short description"
             className="h-8 px-2 text-sm border border-border rounded bg-background w-64" />
         </div>
-        <button type="submit" disabled={saving}
-          className="h-8 px-3 text-sm border border-border rounded hover:bg-muted disabled:opacity-50">
+        <Button type="submit" variant="primary" disabled={saving}>
           {saving ? "Creating…" : "Create series"}
-        </button>
+        </Button>
       </form>
 
       {series.length === 0 ? (
-        <p className="text-sm text-muted-foreground italic">No series yet.</p>
+        <EmptyState title="No series yet." />
       ) : (
         <div className="space-y-3">
           {series.map((s) => (
@@ -113,13 +113,12 @@ export default function SeriesManager({
                   <span className="ml-2 text-xs text-muted-foreground">({s.members.length} articles)</span>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => setExpanded(expanded === s.id ? null : s.id)}
-                    className="text-xs text-muted-foreground hover:underline">
+                  <Button onClick={() => setExpanded(expanded === s.id ? null : s.id)}>
                     {expanded === s.id ? "Collapse" : "Edit"}
-                  </button>
-                  <button onClick={() => deleteSeries(s.id)} className="text-xs text-destructive hover:underline">
+                  </Button>
+                  <Button variant="danger" onClick={() => deleteSeries(s.id)}>
                     Delete
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -133,22 +132,21 @@ export default function SeriesManager({
                           {m.article.title}
                         </Link>
                         <button onClick={() => removeMember(s.id, m.article.id)}
-                          className="text-xs text-destructive hover:underline ml-2">Remove</button>
+                          className="text-xs text-destructive hover:underline ml-2 pointer-coarse:py-2 pointer-coarse:px-2">Remove</button>
                       </li>
                     ))}
                   </ol>
                   <div className="flex gap-2 mt-2">
                     <select value={addArticleId} onChange={(e) => setAddArticleId(e.target.value)}
-                      className="h-7 px-2 text-xs border border-border rounded bg-background flex-1">
+                      className="h-7 px-2 text-xs border border-border rounded bg-background flex-1 pointer-coarse:h-9">
                       <option value="">Add article…</option>
                       {articles
                         .filter((a) => !s.members.some((m) => m.article.id === a.id))
                         .map((a) => <option key={a.id} value={a.id}>{a.title}</option>)}
                     </select>
-                    <button onClick={() => addMember(s.id)} disabled={!addArticleId}
-                      className="h-7 px-2 text-xs border border-border rounded hover:bg-muted disabled:opacity-50">
+                    <Button onClick={() => addMember(s.id)} disabled={!addArticleId}>
                       Add
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}

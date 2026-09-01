@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState } from "react";
+import { useOutsideClick } from "@/lib/useOutsideClick";
 
 interface ReadingList {
   id: string;
@@ -16,6 +17,9 @@ export default function AddToReadingList({ articleId }: Props) {
   const [lists, setLists] = useState<ReadingList[]>([]);
   const [loading, setLoading] = useState(false);
   const [added, setAdded] = useState<string[]>([]);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(ref, () => setOpen(false), open);
 
   function loadLists() {
     if (lists.length > 0) return;
@@ -36,7 +40,7 @@ export default function AddToReadingList({ articleId }: Props) {
   }
 
   return (
-    <div className="relative">
+    <div ref={ref} className="relative">
       <button
         onClick={() => { setOpen((o) => !o); loadLists(); }}
         className="ui-button"

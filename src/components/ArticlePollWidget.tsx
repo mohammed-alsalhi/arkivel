@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useConfirm } from "@/lib/useConfirm";
 
 type Poll = {
   id: string;
@@ -18,6 +19,7 @@ export default function ArticlePollWidget({
   articleId: string;
   isAdmin: boolean;
 }) {
+  const { confirm, confirmDialog } = useConfirm();
   const [polls, setPolls] = useState<Poll[]>([]);
   const [voted, setVoted] = useState<Record<string, number>>({}); // pollId -> optionIndex
   const [showNew, setShowNew] = useState(false);
@@ -86,7 +88,7 @@ export default function ArticlePollWidget({
   }
 
   async function deletePoll(pollId: string) {
-    if (!confirm("Delete this poll?")) return;
+    if (!(await confirm("Delete this poll?", { title: "Delete poll", confirmLabel: "Delete", danger: true }))) return;
     await fetch(`/api/articles/${articleId}/polls/${pollId}`, { method: "DELETE" });
     await load();
   }
@@ -100,7 +102,7 @@ export default function ArticlePollWidget({
         {isAdmin && (
           <button
             onClick={() => setShowNew((v) => !v)}
-            className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground"
+            className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground"
           >
             {showNew ? "Cancel" : "+ Add poll"}
           </button>
@@ -130,7 +132,7 @@ export default function ArticlePollWidget({
               {newOptions.length > 2 && (
                 <button
                   onClick={() => setNewOptions(newOptions.filter((_, j) => j !== i))}
-                  className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-red-500"
+                  className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-danger"
                 >
                   ✕
                 </button>
@@ -140,14 +142,14 @@ export default function ArticlePollWidget({
           <div className="flex gap-2">
             <button
               onClick={() => setNewOptions([...newOptions, ""])}
-              className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground"
             >
               + Option
             </button>
             <button
               onClick={createPoll}
               disabled={saving}
-              className="h-6 px-2 text-[11px] border border-border rounded bg-accent text-white disabled:opacity-50"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded bg-accent text-accent-foreground disabled:opacity-50"
             >
               Create
             </button>
@@ -173,13 +175,13 @@ export default function ArticlePollWidget({
                   <>
                     <button
                       onClick={() => toggleClose(poll)}
-                      className="h-6 px-2 text-[10px] border border-border rounded text-muted hover:text-foreground"
+                      className="h-6 pointer-coarse:h-9 px-2 text-[10px] border border-border rounded text-muted hover:text-foreground"
                     >
                       {poll.closed ? "Reopen" : "Close"}
                     </button>
                     <button
                       onClick={() => deletePoll(poll.id)}
-                      className="h-6 px-2 text-[10px] border border-border rounded text-muted hover:text-red-500"
+                      className="h-6 pointer-coarse:h-9 px-2 text-[10px] border border-border rounded text-muted hover:text-danger"
                     >
                       Del
                     </button>
@@ -239,6 +241,7 @@ export default function ArticlePollWidget({
           </div>
         );
       })}
+      {confirmDialog}
     </div>
   );
 }

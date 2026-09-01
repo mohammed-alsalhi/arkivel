@@ -87,7 +87,7 @@ export default function OutlineBuilderPanel({ editor, articleTitle = "" }: Props
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter article title…"
-                className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
+                className="w-full h-6 pointer-coarse:h-9 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
               />
             </div>
             <div>
@@ -95,7 +95,7 @@ export default function OutlineBuilderPanel({ editor, articleTitle = "" }: Props
               <select
                 value={style}
                 onChange={(e) => setStyle(e.target.value as OutlineStyle)}
-                className="h-6 px-1.5 text-[12px] border border-border rounded bg-surface focus:outline-none"
+                className="h-6 pointer-coarse:h-9 px-1.5 text-[12px] border border-border rounded bg-surface focus:outline-none"
               >
                 <option value="encyclopedic">Encyclopedic</option>
                 <option value="tutorial">Tutorial</option>
@@ -110,7 +110,7 @@ export default function OutlineBuilderPanel({ editor, articleTitle = "" }: Props
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
               placeholder="One sentence about the topic…"
-              className="w-full h-6 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
+              className="w-full h-6 pointer-coarse:h-9 px-2 text-[12px] border border-border rounded bg-surface focus:outline-none focus:border-accent"
             />
           </div>
 
@@ -119,7 +119,7 @@ export default function OutlineBuilderPanel({ editor, articleTitle = "" }: Props
               type="button"
               onClick={generate}
               disabled={loading || !title.trim()}
-              className="h-6 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover disabled:opacity-40"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-muted hover:text-foreground hover:bg-surface-hover disabled:opacity-40"
             >
               {loading ? "Generating…" : "Generate outline"}
             </button>
@@ -127,7 +127,7 @@ export default function OutlineBuilderPanel({ editor, articleTitle = "" }: Props
               <button
                 type="button"
                 onClick={insertOutline}
-                className="h-6 px-2 text-[11px] border border-accent rounded text-accent hover:bg-accent hover:text-white"
+                className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-accent rounded text-accent hover:bg-accent hover:text-accent-foreground"
               >
                 Insert into article
               </button>

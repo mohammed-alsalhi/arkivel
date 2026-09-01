@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Button, LinkButton, Page, PageHeader } from "@/components/ui";
+import { Button, DataTable, EmptyState, LinkButton, Page, PageHeader } from "@/components/ui";
 
 type ArticleEntry = {
   id: string;
@@ -23,26 +23,26 @@ type ScheduleData = {
 function ArticleRow({ a, dateField }: { a: ArticleEntry; dateField: "expiresAt" | "reviewDueAt" }) {
   const date = a[dateField];
   return (
-    <tr className="border-b border-border last:border-0">
-      <td className="px-3 py-2">
+    <tr>
+      <td>
         <Link href={`/articles/${a.slug}`} className="text-[13px] text-accent hover:underline font-medium">
           {a.title}
         </Link>
       </td>
-      <td className="px-3 py-2 text-[12px] text-muted">
+      <td className="text-[12px] text-muted">
         {date ? new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
       </td>
-      <td className="px-3 py-2">
+      <td>
         <span className={`text-[11px] px-1.5 py-0.5 rounded border ${
-          a.status === "published" ? "border-green-300 text-green-700 bg-green-50 dark:bg-green-950/30 dark:text-green-400"
-          : a.status === "review" ? "border-blue-300 text-blue-700 bg-blue-50 dark:bg-blue-950/30 dark:text-blue-400"
-          : "border-amber-300 text-amber-700 bg-amber-50 dark:bg-amber-950/30 dark:text-amber-400"
+          a.status === "published" ? "border-success-border text-success bg-success-soft"
+          : a.status === "review" ? "border-info-border text-info bg-info-soft"
+          : "border-warning-border text-warning bg-warning-soft"
         }`}>
           {a.status}
         </span>
       </td>
-      <td className="px-3 py-2">
-        <Link href={`/articles/${a.slug}/edit`} className="text-[11px] text-muted hover:text-accent">
+      <td>
+        <Link href={`/articles/${a.slug}/edit`} className="text-[11px] text-muted hover:text-accent pointer-coarse:inline-block pointer-coarse:py-2">
           edit
         </Link>
       </td>
@@ -70,23 +70,21 @@ function Section({
         <span className="text-[11px] text-muted">{articles.length}</span>
       </div>
       {articles.length === 0 ? (
-        <p className="px-4 py-3 text-[13px] text-muted italic">{emptyText}</p>
+        <EmptyState className="m-3" title={emptyText} />
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-[13px]">
+        <DataTable>
             <thead>
-              <tr className="border-b border-inherit bg-surface-hover">
-                <th className="text-left px-3 py-1.5 text-[11px] font-bold text-muted uppercase">Title</th>
-                <th className="text-left px-3 py-1.5 text-[11px] font-bold text-muted uppercase">Date</th>
-                <th className="text-left px-3 py-1.5 text-[11px] font-bold text-muted uppercase">Status</th>
-                <th className="px-3 py-1.5"></th>
+              <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {articles.map((a) => <ArticleRow key={a.id} a={a} dateField={dateField} />)}
             </tbody>
-          </table>
-        </div>
+        </DataTable>
       )}
     </div>
   );
@@ -129,28 +127,28 @@ export default function ContentSchedulePage() {
         <>
           <Section
             title="Expired (need archiving)"
-            colour="border-red-200 dark:border-red-900"
+            colour="border-danger-border"
             articles={data.expiredArticles}
             dateField="expiresAt"
             emptyText="No expired articles."
           />
           <Section
             title="Expiring in the next 14 days"
-            colour="border-amber-200 dark:border-amber-900"
+            colour="border-warning-border"
             articles={data.expiringSoon}
             dateField="expiresAt"
             emptyText="None expiring soon."
           />
           <Section
             title="Review overdue"
-            colour="border-red-200 dark:border-red-900"
+            colour="border-danger-border"
             articles={data.reviewOverdue}
             dateField="reviewDueAt"
             emptyText="No overdue reviews."
           />
           <Section
             title="Review due in the next 14 days"
-            colour="border-blue-200 dark:border-blue-900"
+            colour="border-info-border"
             articles={data.reviewDueSoon}
             dateField="reviewDueAt"
             emptyText="No reviews due soon."

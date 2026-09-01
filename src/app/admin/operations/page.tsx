@@ -10,6 +10,7 @@ import {
   DataTable,
   EmptyState,
   LinkButton,
+  LoadingState,
   Notice,
   Page,
   PageHeader,
@@ -75,7 +76,7 @@ export default function OperationsDashboardPage() {
   }
 
   if (loading) {
-    return <div className="py-8 text-center text-muted italic text-[13px]">Loading operations...</div>;
+    return <LoadingState label="Loading operations..." />;
   }
 
   if (error || !report) {

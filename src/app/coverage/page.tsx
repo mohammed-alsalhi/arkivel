@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Page, PageHeader, StatCard, StatGrid, TabButton, Tabs } from "@/components/ui";
+import { DataTable, Page, PageHeader, SectionPanel, StatCard, StatGrid, TabButton, Tabs } from "@/components/ui";
 
 type CoverageItem = {
   id: string;
@@ -187,63 +187,60 @@ export default function CoverageMapPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse border border-border text-[13px] mb-6">
-            <thead>
-              <tr className="bg-surface-hover">
-                <th className="border border-border px-3 py-1.5 text-left font-bold">Category</th>
-                <th className="border border-border px-3 py-1.5 text-left font-bold w-20">Articles</th>
-                <th className="border border-border px-3 py-1.5 text-left font-bold w-28">Avg words</th>
-                <th className="border border-border px-3 py-1.5 text-left font-bold w-32">Coverage</th>
-                <th className="border border-border px-3 py-1.5 text-left font-bold w-24">Status</th>
-                <th className="border border-border px-3 py-1.5 w-24"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((item) => (
-                <tr key={item.id} className="hover:bg-surface-hover">
-                  <td className="border border-border px-3 py-1.5">
-                    <Link href={`/categories/${item.slug}`} className="font-medium hover:underline">
-                      {item.name}
-                    </Link>
-                  </td>
-                  <td className="border border-border px-3 py-1.5 text-muted">{item.totalArticles}</td>
-                  <td className="border border-border px-3 py-1.5 text-muted">{item.avgWords}</td>
-                  <td className="border border-border px-3 py-1.5">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 h-1.5 bg-border rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${STATUS_BAR[item.status]}`} style={{ width: `${item.coverageScore}%` }} />
-                      </div>
-                      <span className="text-[11px] text-muted w-8 text-right">{item.coverageScore}%</span>
+        <DataTable className="text-[13px] mb-6">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th className="w-20">Articles</th>
+              <th className="w-28">Avg words</th>
+              <th className="w-32">Coverage</th>
+              <th className="w-24">Status</th>
+              <th className="w-24"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <Link href={`/categories/${item.slug}`} className="font-medium hover:underline">
+                    {item.name}
+                  </Link>
+                </td>
+                <td className="text-muted">{item.totalArticles}</td>
+                <td className="text-muted">{item.avgWords}</td>
+                <td>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-1.5 bg-border rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full ${STATUS_BAR[item.status]}`} style={{ width: `${item.coverageScore}%` }} />
                     </div>
-                  </td>
-                  <td className="border border-border px-3 py-1.5">
-                    <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${STATUS_BAR[item.status]} text-background`}>
-                      {STATUS_LABEL[item.status]}
-                    </span>
-                  </td>
-                  <td className="border border-border px-3 py-1.5 text-right">
-                    <button
-                      onClick={() => loadCategoryGaps(item.id, item.slug)}
-                      className="text-[11px] text-accent hover:underline"
-                    >
-                      Find gaps
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    <span className="text-[11px] text-muted w-8 text-right">{item.coverageScore}%</span>
+                  </div>
+                </td>
+                <td>
+                  <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${STATUS_BAR[item.status]} text-background`}>
+                    {STATUS_LABEL[item.status]}
+                  </span>
+                </td>
+                <td className="text-right">
+                  <button
+                    onClick={() => loadCategoryGaps(item.id, item.slug)}
+                    className="text-[11px] text-accent hover:underline pointer-coarse:py-2"
+                  >
+                    Find gaps
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </DataTable>
       )}
 
       {/* AI Category Gap Panel */}
       {selectedCategory && (
-        <div className="wiki-portal mb-6">
-          <div className="wiki-portal-header">
-            AI-suggested gaps in &ldquo;{filtered.find((i) => i.slug === selectedCategory)?.name ?? selectedCategory}&rdquo;
-          </div>
-          <div className="wiki-portal-body">
+        <SectionPanel
+          className="mb-6"
+          title={<>AI-suggested gaps in &ldquo;{filtered.find((i) => i.slug === selectedCategory)?.name ?? selectedCategory}&rdquo;</>}
+        >
             {aiGapsLoading ? (
               <div className="flex items-center gap-1.5 py-2">
                 <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce [animation-delay:0ms]" />
@@ -268,16 +265,11 @@ export default function CoverageMapPage() {
             ) : (
               <p className="text-[13px] text-muted">No gaps suggested for this category.</p>
             )}
-          </div>
-        </div>
+        </SectionPanel>
       )}
 
       {/* Knowledge gaps from broken wiki links */}
-      <div className="wiki-portal">
-        <div className="wiki-portal-header">
-          Broken wiki links — referenced topics with no article
-        </div>
-        <div className="wiki-portal-body">
+      <SectionPanel title="Broken wiki links — referenced topics with no article">
           {gapsLoading ? (
             <p className="text-[13px] text-muted">Scanning wiki links…</p>
           ) : gaps.length === 0 ? (
@@ -302,8 +294,7 @@ export default function CoverageMapPage() {
               ))}
             </div>
           )}
-        </div>
-      </div>
+      </SectionPanel>
     </Page>
   );
 }

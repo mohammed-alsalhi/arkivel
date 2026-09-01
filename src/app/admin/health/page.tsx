@@ -7,11 +7,11 @@ import { Page, PageHeader } from "@/components/ui";
 export const dynamic = "force-dynamic";
 
 function gradeLabel(score: number): { grade: string; color: string } {
-  if (score >= 90) return { grade: "A", color: "text-green-600" };
-  if (score >= 75) return { grade: "B", color: "text-blue-600" };
-  if (score >= 60) return { grade: "C", color: "text-yellow-600" };
-  if (score >= 40) return { grade: "D", color: "text-orange-600" };
-  return { grade: "F", color: "text-red-600" };
+  if (score >= 90) return { grade: "A", color: "text-success" };
+  if (score >= 75) return { grade: "B", color: "text-info" };
+  if (score >= 60) return { grade: "C", color: "text-warning" };
+  if (score >= 40) return { grade: "D", color: "text-warning" };
+  return { grade: "F", color: "text-danger" };
 }
 
 export default async function WikiHealthPage() {

@@ -126,7 +126,7 @@ export default function WritingCoachPanel({ getHtml, hasExcerpt }: WritingCoachP
               )}
 
               {result.issues.length === 0 && (
-                <div className="text-[11px] text-green-600">No issues found.</div>
+                <div className="text-[11px] text-success">No issues found.</div>
               )}
 
               {/* AI suggestions */}

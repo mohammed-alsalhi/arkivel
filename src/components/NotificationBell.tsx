@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useOutsideClick } from "@/lib/useOutsideClick";
 
 type Notification = {
   id: string;
@@ -50,15 +51,7 @@ export default function NotificationBell() {
     }
   }
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useOutsideClick(dropdownRef, () => setOpen(false));
 
   // Periodically refresh notifications
   useEffect(() => {

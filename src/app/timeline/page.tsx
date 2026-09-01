@@ -133,8 +133,8 @@ export default function TimelinePage() {
                           {a.status !== "published" && (
                             <span className={`text-[10px] px-1 border rounded ${
                               a.status === "draft"
-                                ? "border-amber-300 text-amber-600"
-                                : "border-blue-300 text-blue-600"
+                                ? "border-warning-border text-warning"
+                                : "border-info-border text-info"
                             }`}>
                               {a.status}
                             </span>

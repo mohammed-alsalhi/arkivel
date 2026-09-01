@@ -51,7 +51,7 @@ export default function ArticleLockGuard({ articleId, isAdmin }: Props) {
   if (!lockedBy || dismissed) return null;
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2 bg-yellow-50 border border-yellow-300 text-yellow-800 text-[12px] rounded mb-3 dark:bg-yellow-900/20 dark:border-yellow-700 dark:text-yellow-300">
+    <div className="flex items-center gap-3 px-4 py-2 bg-warning-soft border border-warning-border text-warning text-[12px] rounded mb-3">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       <span className="flex-1">
         <strong>{lockedBy.displayName || lockedBy.username}</strong> is currently editing this article. Your changes may conflict.

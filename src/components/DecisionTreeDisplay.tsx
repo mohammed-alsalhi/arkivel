@@ -26,7 +26,7 @@ function TreeNode({ node, depth = 0 }: NodeProps) {
           </button>
         )}
         <div className={`border rounded px-3 py-1.5 text-sm ${
-          hasChildren ? "bg-accent text-white border-accent" : "bg-surface border-border"
+          hasChildren ? "bg-accent text-accent-foreground border-accent" : "bg-surface border-border"
         }`}>
           {node.label}
         </div>
@@ -35,13 +35,13 @@ function TreeNode({ node, depth = 0 }: NodeProps) {
         <div className="border-l-2 border-border ml-4 pl-4 space-y-1">
           {node.yes && (
             <div>
-              <span className="text-[10px] text-green-600 font-semibold uppercase">Yes</span>
+              <span className="text-[10px] text-success font-semibold uppercase">Yes</span>
               <TreeNode node={node.yes} depth={depth + 1} />
             </div>
           )}
           {node.no && (
             <div>
-              <span className="text-[10px] text-red-500 font-semibold uppercase">No</span>
+              <span className="text-[10px] text-danger font-semibold uppercase">No</span>
               <TreeNode node={node.no} depth={depth + 1} />
             </div>
           )}
@@ -60,7 +60,7 @@ export default function DecisionTreeDisplay({ treeJson }: Props) {
   try {
     tree = JSON.parse(treeJson);
   } catch {
-    return <div className="text-sm text-red-600 border border-red-200 rounded p-3">Invalid decision tree data.</div>;
+    return <div className="text-sm text-danger border border-danger-border rounded p-3">Invalid decision tree data.</div>;
   }
 
   return (

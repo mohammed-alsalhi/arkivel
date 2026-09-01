@@ -55,9 +55,9 @@ export default function BountiesPage() {
   }
 
   const statusColors: Record<string, string> = {
-    open: "text-green-600",
-    claimed: "text-yellow-600",
-    fulfilled: "text-blue-600",
+    open: "text-success",
+    claimed: "text-warning",
+    fulfilled: "text-info",
     closed: "text-muted",
   };
 

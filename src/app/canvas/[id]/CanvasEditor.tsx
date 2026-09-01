@@ -209,13 +209,13 @@ export default function CanvasEditor({
         <span className="w-px h-4 bg-border mx-0.5" />
         <button
           onClick={() => setPickerOpen(true)}
-          className="h-6 px-2 text-[11px] border border-border rounded hover:bg-muted/30"
+          className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded hover:bg-muted/30"
         >
           + Article card
         </button>
         <button
           onClick={addTextNode}
-          className="h-6 px-2 text-[11px] border border-border rounded hover:bg-muted/30"
+          className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded hover:bg-muted/30"
         >
           + Text note
         </button>
@@ -224,7 +224,7 @@ export default function CanvasEditor({
             <span className="w-px h-4 bg-border mx-0.5" />
             <button
               onClick={() => deleteNode(selectedNode)}
-              className="h-6 px-2 text-[11px] border border-border rounded text-red-500 hover:bg-red-50"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-red-500 hover:bg-red-50"
             >
               Delete
             </button>

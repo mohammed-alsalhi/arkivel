@@ -38,7 +38,7 @@ export default function MapPage() {
               onClick={() => setEditMode(!editMode)}
               className={`min-w-0 px-3 py-1 text-[12px] transition-colors ${
                 editMode
-                  ? "bg-accent text-white"
+                  ? "bg-accent text-accent-foreground"
                   : "border border-border bg-surface-hover text-foreground hover:bg-surface"
               }`}
             >

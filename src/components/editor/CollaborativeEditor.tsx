@@ -174,24 +174,24 @@ export default function CollaborativeEditor({ articleId, initialHtml, articleTit
         <div className="flex min-w-0 flex-wrap items-center gap-2">
           <button
             onClick={() => setEnabled((v) => !v)}
-            className={`h-6 px-2 text-[11px] border rounded transition-colors flex items-center gap-1 ${
+            className={`h-6 pointer-coarse:h-9 px-2 text-[11px] border rounded transition-colors flex items-center gap-1 ${
               enabled
-                ? "border-green-500 text-green-600 bg-green-50 hover:bg-green-100"
+                ? "border-success-border text-success bg-success-soft hover:border-success"
                 : "border-border text-muted hover:bg-surface-hover"
             }`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${enabled ? "bg-green-500 animate-pulse" : "bg-gray-400"}`} />
+            <span className={`w-1.5 h-1.5 rounded-full ${enabled ? "bg-success animate-pulse" : "bg-muted"}`} />
             {enabled ? "Live" : "Enable live editing"}
           </button>
 
           <span
-            className={`h-6 px-2 text-[11px] border rounded flex items-center gap-1 ${
+            className={`h-6 pointer-coarse:h-9 px-2 text-[11px] border rounded flex items-center gap-1 ${
               connection.severity === "danger"
-                ? "border-red-300 text-red-600 bg-red-50"
+                ? "border-danger-border text-danger bg-danger-soft"
                 : connection.severity === "warning"
-                  ? "border-yellow-300 text-yellow-700 bg-yellow-50"
+                  ? "border-warning-border text-warning bg-warning-soft"
                   : connection.severity === "success"
-                    ? "border-green-300 text-green-700 bg-green-50"
+                    ? "border-success-border text-success bg-success-soft"
                     : "border-border text-muted bg-surface"
             }`}
             title={connection.description}
@@ -235,7 +235,7 @@ export default function CollaborativeEditor({ articleId, initialHtml, articleTit
                 <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
               </svg>
             )}
-            {remoteChangedWhilePending && <span className="text-yellow-700">Review remote changes before publishing</span>}
+            {remoteChangedWhilePending && <span className="text-warning">Review remote changes before publishing</span>}
             <span>{formatLastSaved(lastSynced)}</span>
             <button
               onClick={syncToServer}

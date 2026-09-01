@@ -61,7 +61,7 @@ export default async function AdminStubsPage({
               type="number"
               min={1}
               defaultValue={threshold}
-              className="h-7 w-20 px-2 text-sm border border-border rounded bg-background"
+              className="h-7 w-20 px-2 text-sm border border-border rounded bg-background pointer-coarse:h-9"
             />
             <Button type="submit">Update</Button>
           </form>
@@ -88,7 +88,7 @@ export default async function AdminStubsPage({
                   <Link href={`/articles/${a.slug}`} className="hover:underline font-medium">
                     {a.title}
                   </Link>
-                  <span className="ml-2 text-[10px] px-1 py-0.5 rounded bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400 font-medium">
+                  <span className="ml-2 text-[10px] px-1 py-0.5 rounded bg-warning-soft text-warning font-medium">
                     stub
                   </span>
                 </td>
@@ -108,7 +108,7 @@ export default async function AdminStubsPage({
                 <td>
                   <Link
                     href={`/articles/${a.slug}/edit`}
-                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
+                    className="text-xs text-accent hover:underline"
                   >
                     Expand
                   </Link>

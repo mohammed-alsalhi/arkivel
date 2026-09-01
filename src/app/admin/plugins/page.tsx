@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button, EmptyState, Page, PageHeader } from "@/components/ui";
+import { Button, EmptyState, LoadingState, Page, PageHeader } from "@/components/ui";
 
 interface PluginManifest {
   id: string;
@@ -88,9 +88,7 @@ export default function PluginsPage() {
 
   if (loading) {
     return (
-      <div className="py-8 text-center text-muted italic text-[13px]">
-        Loading plugins...
-      </div>
+      <LoadingState label="Loading plugins..." />
     );
   }
 
@@ -162,7 +160,7 @@ export default function PluginsPage() {
                   <span
                     className={`text-[10px] px-1.5 py-0.5 ${
                       plugin.enabled
-                        ? "bg-green-100 text-green-700 border border-green-300"
+                        ? "bg-success-soft text-success border border-success-border"
                         : "bg-surface-hover text-muted border border-border-light"
                     }`}
                   >

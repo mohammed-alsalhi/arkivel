@@ -1,4 +1,4 @@
-import Badge from "./Badge";
+import { Chip } from "@/components/ui";
 
 type Props = {
   status: string;
@@ -7,12 +7,12 @@ type Props = {
 export default function ArticleStatusBadge({ status }: Props) {
   switch (status) {
     case "draft":
-      return <Badge variant="warning" size="sm">Draft</Badge>;
+      return <Chip className="badge-sm" tone="warning">Draft</Chip>;
     case "review":
-      return <Badge variant="accent" size="sm">Review</Badge>;
+      return <Chip className="badge-sm" tone="info">Review</Chip>;
     case "published":
-      return <Badge variant="success" size="sm">Published</Badge>;
+      return <Chip className="badge-sm" tone="success">Published</Chip>;
     default:
-      return <Badge size="sm">{status}</Badge>;
+      return <Chip className="badge-sm">{status}</Chip>;
   }
 }

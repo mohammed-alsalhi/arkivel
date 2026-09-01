@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button, Notice, Page, PageHeader } from "@/components/ui";
+import { useToast } from "@/components/Toast";
 
 type Category = {
   id: string;
@@ -10,6 +11,7 @@ type Category = {
 };
 
 export default function ExportPage() {
+  const { addToast } = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
   const [scope, setScope] = useState<"all" | "category">("all");
   const [categorySlug, setCategorySlug] = useState("");
@@ -56,7 +58,7 @@ export default function ExportPage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(downloadUrl);
     } catch {
-      alert("Export failed. Please try again.");
+      addToast("Export failed. Please try again.", "error");
     } finally {
       setLoading(false);
     }

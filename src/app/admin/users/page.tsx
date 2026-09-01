@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DataTable, EmptyState, Page, PageHeader } from "@/components/ui";
+import { DataTable, EmptyState, LoadingState, Page, PageHeader } from "@/components/ui";
 
 type User = {
   id: string;
@@ -51,7 +51,7 @@ export default function AdminUsersPage() {
   }
 
   if (loading) {
-    return <div className="py-8 text-center text-muted italic text-[13px]">Loading…</div>;
+    return <LoadingState label="Loading…" />;
   }
 
   return (

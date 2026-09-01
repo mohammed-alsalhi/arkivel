@@ -28,23 +28,23 @@ type Props = {
 };
 
 const LEVEL_STYLE = {
-  certain: "border-l-green-500 bg-green-50 dark:bg-green-900/10",
-  probable: "border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/10",
-  disputed: "border-l-red-500 bg-red-50 dark:bg-red-900/10",
+  certain: "border-l-success bg-success-soft",
+  probable: "border-l-warning bg-warning-soft",
+  disputed: "border-l-danger bg-danger-soft",
 };
 
 const LEVEL_BADGE = {
-  certain: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  probable: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-  disputed: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+  certain: "bg-success-soft text-success",
+  probable: "bg-warning-soft text-warning",
+  disputed: "bg-danger-soft text-danger",
 };
 
 const REVIEW_BADGE: Record<ClaimReviewStatus, string> = {
   unreviewed: "bg-surface border border-border text-muted",
-  approved: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  needs_source: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-  disputed: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-  rejected: "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+  approved: "bg-success-soft text-success",
+  needs_source: "bg-warning-soft text-warning",
+  disputed: "bg-danger-soft text-danger",
+  rejected: "bg-surface-hover text-foreground",
 };
 
 const REVIEW_ACTIONS: Array<{ status: ClaimReviewStatus; label: string }> = [
@@ -171,9 +171,9 @@ export default function ClaimsPanel({ articleId, html }: Props) {
           {claims.length} claim{claims.length !== 1 ? "s" : ""} in this article
         </span>
         <span className="flex flex-wrap gap-1">
-          {certain > 0 && <span className="text-[10px] font-bold text-green-600">{certain} certain</span>}
-          {probable > 0 && <span className="text-[10px] font-bold text-yellow-600">{probable} probable</span>}
-          {disputed > 0 && <span className="text-[10px] font-bold text-red-600">{disputed} disputed</span>}
+          {certain > 0 && <span className="text-[10px] font-bold text-success">{certain} certain</span>}
+          {probable > 0 && <span className="text-[10px] font-bold text-warning">{probable} probable</span>}
+          {disputed > 0 && <span className="text-[10px] font-bold text-danger">{disputed} disputed</span>}
           {reviewed > 0 && <span className="text-[10px] font-bold text-foreground">{reviewed} reviewed</span>}
         </span>
       </button>
@@ -181,7 +181,7 @@ export default function ClaimsPanel({ articleId, html }: Props) {
       {open && (
         <div className="mt-2 space-y-2 border border-border rounded p-3 bg-surface">
           {error && (
-            <p className="text-[12px] text-red-600 dark:text-red-400">{error}</p>
+            <p className="text-[12px] text-danger">{error}</p>
           )}
 
           {claims.map((claim, index) => {
