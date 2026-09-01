@@ -35,18 +35,25 @@ export default function FocalPointPicker({ imageUrl, focalX, focalY, onChange }:
     if (coords) onChange(Math.round(coords.x), Math.round(coords.y));
   }
 
+  function handleTouch(e: React.TouchEvent) {
+    const coords = getCoords(e);
+    if (coords) onChange(Math.round(coords.x), Math.round(coords.y));
+  }
+
   return (
     <div className="space-y-2">
-      <p className="text-[11px] text-muted">Click or drag on the image to set the focal point used for cropped displays.</p>
+      <p className="text-[11px] text-muted">Tap or drag on the image to set the focal point used for cropped displays.</p>
       <div
         ref={containerRef}
         className="relative cursor-crosshair overflow-hidden rounded border border-border"
-        style={{ maxWidth: 480, aspectRatio: "16/7" }}
+        style={{ maxWidth: 480, aspectRatio: "16/7", touchAction: "none" }}
         onClick={handleClick}
         onMouseMove={handleMouseMove}
         onMouseDown={() => setDragging(true)}
         onMouseUp={() => setDragging(false)}
         onMouseLeave={() => setDragging(false)}
+        onTouchStart={handleTouch}
+        onTouchMove={handleTouch}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

@@ -26,10 +26,10 @@ type ReviewItem = {
 };
 
 const QUALITY_BUTTONS = [
-  { q: 0, label: "Blank", desc: "Complete blackout", color: "bg-red-600 hover:bg-red-700" },
-  { q: 2, label: "Hard", desc: "Recalled with effort", color: "bg-orange-500 hover:bg-orange-600" },
-  { q: 4, label: "Good", desc: "Recalled correctly", color: "bg-blue-500 hover:bg-blue-600" },
-  { q: 5, label: "Easy", desc: "Perfect, instant recall", color: "bg-green-600 hover:bg-green-700" },
+  { q: 0, label: "Blank", desc: "Complete blackout", color: "bg-danger-soft text-danger border border-danger-border hover:border-danger" },
+  { q: 2, label: "Hard", desc: "Recalled with effort", color: "bg-warning-soft text-warning border border-warning-border hover:border-warning" },
+  { q: 4, label: "Good", desc: "Recalled correctly", color: "bg-info-soft text-info border border-info-border hover:border-info" },
+  { q: 5, label: "Easy", desc: "Perfect, instant recall", color: "bg-success-soft text-success border border-success-border hover:border-success" },
 ];
 
 export default function ReviewPage() {
@@ -132,7 +132,7 @@ export default function ReviewPage() {
             {dueItems.length === 0 && (
               <div className="text-center py-16">
                 <div className="text-[2rem] mb-3">
-                  <svg className="w-12 h-12 mx-auto text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <svg className="w-12 h-12 mx-auto text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
@@ -179,7 +179,7 @@ export default function ReviewPage() {
                             <Link
                               href={`/articles/${item.article.slug}`}
                               target="_blank"
-                              className="h-8 px-4 text-[12px] border border-border rounded hover:bg-surface-hover transition-colors flex items-center gap-1.5"
+                              className="ui-button"
                             >
                               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -188,7 +188,7 @@ export default function ReviewPage() {
                             </Link>
                             <button
                               onClick={() => setRevealed(true)}
-                              className="h-8 px-4 text-[12px] bg-accent text-white rounded hover:bg-accent-hover transition-colors"
+                              className="ui-button ui-button-primary"
                             >
                               Show answer
                             </button>
@@ -203,13 +203,13 @@ export default function ReviewPage() {
                           )}
                           <div className="border-t border-border pt-4">
                             <p className="text-[12px] text-muted mb-2">How well did you recall this?</p>
-                            <div className="grid grid-cols-4 gap-2">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                               {QUALITY_BUTTONS.map(({ q, label, desc, color }) => (
                                 <button
                                   key={q}
                                   onClick={() => handleReview(q)}
                                   disabled={reviewing}
-                                  className={`${color} text-white rounded px-3 py-2 text-[12px] text-left transition-colors disabled:opacity-50`}
+                                  className={`${color} rounded px-3 py-2 pointer-coarse:py-3 text-[12px] text-left transition-colors disabled:opacity-50`}
                                 >
                                   <div className="font-semibold">{label}</div>
                                   <div className="text-[10px] opacity-80">{desc}</div>
@@ -227,7 +227,7 @@ export default function ReviewPage() {
 
             {done && (
               <div className="text-center py-16">
-                <svg className="w-12 h-12 mx-auto text-green-500 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg className="w-12 h-12 mx-auto text-success mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-[16px] font-medium text-heading">Session complete!</p>
@@ -277,7 +277,7 @@ export default function ReviewPage() {
                       <td className="text-muted">{item.repetitions}</td>
                       <td>
                         {item.isDue ? (
-                          <span className="text-orange-500 font-medium">Due now</span>
+                          <span className="text-warning font-medium">Due now</span>
                         ) : (
                           <span className="text-muted">
                             {item.daysUntilDue === 0 ? "Today" : `In ${item.daysUntilDue}d`}
@@ -287,7 +287,7 @@ export default function ReviewPage() {
                       <td className="text-right">
                         <button
                           onClick={() => unenroll(item.articleId)}
-                          className="text-[11px] text-muted hover:text-red-500 transition-colors"
+                          className="text-[11px] text-muted hover:text-danger transition-colors pointer-coarse:py-2"
                         >
                           Remove
                         </button>

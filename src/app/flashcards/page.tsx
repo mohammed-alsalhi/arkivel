@@ -21,12 +21,12 @@ const GRADE_LABELS: Record<number, string> = {
 };
 
 const GRADE_COLORS: Record<number, string> = {
-  0: "bg-red-600",
-  1: "bg-red-400",
-  2: "bg-orange-400",
-  3: "bg-yellow-400",
-  4: "bg-green-400",
-  5: "bg-green-600",
+  0: "bg-danger-soft text-danger border border-danger",
+  1: "bg-danger-soft text-danger border border-danger-border",
+  2: "bg-warning-soft text-warning border border-warning-border",
+  3: "bg-warning-soft text-warning border border-warning-border",
+  4: "bg-success-soft text-success border border-success-border",
+  5: "bg-success-soft text-success border border-success",
 };
 
 export default function FlashcardsPage() {
@@ -123,12 +123,12 @@ export default function FlashcardsPage() {
 
       {/* Grade buttons */}
       {revealed && (
-        <div className="grid grid-cols-6 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
           {[0, 1, 2, 3, 4, 5].map((g) => (
             <button
               key={g}
               onClick={() => grade(g)}
-              className={`py-2 rounded text-white text-xs font-medium ${GRADE_COLORS[g]} hover:opacity-90`}
+              className={`py-2 pointer-coarse:py-3 rounded text-xs font-medium ${GRADE_COLORS[g]} hover:opacity-90`}
             >
               {GRADE_LABELS[g]}
             </button>

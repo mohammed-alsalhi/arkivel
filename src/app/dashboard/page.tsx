@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import { Button, Page, PageHeader } from "@/components/ui";
+import { Button, EmptyState, IconButton, Page, PageHeader, SectionPanel } from "@/components/ui";
 
 // ─── Widget definitions ───────────────────────────────────────────────────────
 
@@ -273,6 +273,15 @@ export default function DashboardPage() {
     savePreferences(next);
   }
 
+  function moveWidget(i: number, delta: -1 | 1) {
+    const j = i + delta;
+    if (j < 0 || j >= widgets.length) return;
+    const next = [...widgets];
+    [next[i], next[j]] = [next[j], next[i]];
+    setWidgets(next);
+    savePreferences(next);
+  }
+
   function toggleWidget(id: WidgetId) {
     const next = widgets.includes(id)
       ? widgets.filter((w) => w !== id)
@@ -301,9 +310,7 @@ export default function DashboardPage() {
 
       {/* Widget picker in edit mode */}
       {editMode && (
-        <div className="wiki-portal">
-          <div className="wiki-portal-header">Visible widgets (drag to reorder)</div>
-          <div className="wiki-portal-body">
+        <SectionPanel title="Visible widgets (drag to reorder)">
             <div className="flex flex-wrap gap-2">
               {ALL_WIDGETS.map((w) => (
                 <label key={w.id} className="flex items-center gap-1.5 text-[12px] cursor-pointer">
@@ -316,9 +323,8 @@ export default function DashboardPage() {
                 </label>
               ))}
             </div>
-            <p className="text-[11px] text-muted mt-2">Drag widget cards to reorder. Changes are saved automatically.</p>
-          </div>
-        </div>
+            <p className="text-[11px] text-muted mt-2">Drag widget cards or use the arrow buttons to reorder. Changes are saved automatically.</p>
+        </SectionPanel>
       )}
 
       {/* Widget grid */}
@@ -327,37 +333,53 @@ export default function DashboardPage() {
           const def = ALL_WIDGETS.find((w) => w.id === id);
           if (!def) return null;
           return (
-            <div
+            <SectionPanel
               key={id}
               draggable={editMode}
               onDragStart={() => onDragStart(i)}
               onDragEnter={() => onDragEnter(i)}
               onDragEnd={onDragEnd}
               onDragOver={(e) => e.preventDefault()}
-              className={`wiki-portal ${editMode ? "cursor-grab active:cursor-grabbing opacity-90 border-dashed" : ""}`}
+              className={editMode ? "cursor-grab active:cursor-grabbing opacity-90 border-dashed" : undefined}
+              title={def.label}
+              actions={
+                editMode && (
+                  <span className="flex items-center gap-2">
+                    <IconButton
+                      label={`Move ${def.label} earlier`}
+                      disabled={i === 0}
+                      onClick={() => moveWidget(i, -1)}
+                    >
+                      ←
+                    </IconButton>
+                    <IconButton
+                      label={`Move ${def.label} later`}
+                      disabled={i === widgets.length - 1}
+                      onClick={() => moveWidget(i, 1)}
+                    >
+                      →
+                    </IconButton>
+                    <button
+                      onClick={() => toggleWidget(id)}
+                      className="text-[10px] pointer-coarse:text-[12px] pointer-coarse:py-2 text-danger hover:underline"
+                    >
+                      Remove
+                    </button>
+                  </span>
+                )
+              }
             >
-              <div className="wiki-portal-header flex items-center justify-between">
-                <span>{def.label}</span>
-                {editMode && (
-                  <button
-                    onClick={() => toggleWidget(id)}
-                    className="text-[10px] text-red-500 hover:underline"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-              <div className="wiki-portal-body">
-                {renderWidget(id)}
-              </div>
-            </div>
+              {renderWidget(id)}
+            </SectionPanel>
           );
         })}
 
         {widgets.length === 0 && (
-          <div className="col-span-3 wiki-notice">
-            No widgets selected. Click &ldquo;Customize&rdquo; to add some.
-          </div>
+          <EmptyState
+            className="col-span-3"
+            title="No widgets selected"
+            description={<>Click &ldquo;Customize&rdquo; to add some.</>}
+          />
         )}
       </div>
     </Page>

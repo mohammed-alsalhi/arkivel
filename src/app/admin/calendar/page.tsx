@@ -85,7 +85,8 @@ export default async function AdminCalendarPage({
         <LinkButton href={`/admin/calendar?year=${nextYear}&month=${nextMonth}`}>Next →</LinkButton>
       </div>
 
-      <div className="grid grid-cols-7 border-l border-t border-border">
+      <div className="overflow-x-auto">
+      <div className="grid grid-cols-7 min-w-[640px] border-l border-t border-border">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
           <div key={d} className="border-r border-b border-border px-2 py-1 text-xs font-medium text-muted-foreground bg-muted/30">
             {d}
@@ -103,8 +104,8 @@ export default async function AdminCalendarPage({
           const entries = byDay.get(day) || [];
           const isToday = now.getFullYear() === year && now.getMonth() === month && now.getDate() === day;
           return (
-            <div key={day} className={`border-r border-b border-border min-h-[80px] p-1.5 ${isToday ? "bg-blue-50 dark:bg-blue-950/20" : ""}`}>
-              <span className={`text-xs font-medium ${isToday ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"}`}>
+            <div key={day} className={`border-r border-b border-border min-h-[80px] p-1.5 ${isToday ? "bg-accent-soft" : ""}`}>
+              <span className={`text-xs font-medium ${isToday ? "text-accent" : "text-muted-foreground"}`}>
                 {day}
               </span>
               <div className="mt-1 space-y-0.5">
@@ -112,8 +113,8 @@ export default async function AdminCalendarPage({
                   <Link key={ei} href={`/articles/${e.slug}`}
                     className={`block text-[10px] truncate rounded px-1 py-0.5 hover:underline ${
                       e.type === "scheduled"
-                        ? "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300"
-                        : "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
+                        ? "bg-warning-soft text-warning"
+                        : "bg-success-soft text-success"
                     }`}
                     title={e.title}
                   >
@@ -125,14 +126,15 @@ export default async function AdminCalendarPage({
           );
         })}
       </div>
+      </div>
 
       <div className="flex gap-4 mt-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded bg-orange-100 dark:bg-orange-900/40 border border-orange-300 dark:border-orange-700" />
+          <span className="w-3 h-3 rounded bg-warning-soft border border-warning-border" />
           Scheduled
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded bg-green-100 dark:bg-green-900/40 border border-green-300 dark:border-green-700" />
+          <span className="w-3 h-3 rounded bg-success-soft border border-success-border" />
           Published
         </span>
       </div>

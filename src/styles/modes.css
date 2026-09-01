@@ -191,7 +191,7 @@ html[data-theme="dark"] .find-highlight {
   gap: 1.5rem;
   margin: 0.75rem 0;
 }
-@media (max-width: 600px) { .wiki-2col { grid-template-columns: 1fr; } }
+@media (max-width: 639px) { .wiki-2col { grid-template-columns: 1fr; } }
 .wiki-2col-left, .wiki-2col-right { min-width: 0; }
 
 /* ── Video embed ── */

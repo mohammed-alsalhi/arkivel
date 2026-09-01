@@ -32,7 +32,7 @@ export default async function GlossaryPage() {
               <a
                 key={l}
                 href={`#letter-${l}`}
-                className="h-6 w-6 flex items-center justify-center text-[12px] font-bold border border-border rounded hover:bg-surface-hover text-accent"
+                className="h-6 w-6 pointer-coarse:h-10 pointer-coarse:w-10 flex items-center justify-center text-[12px] font-bold border border-border rounded hover:bg-surface-hover text-accent"
               >
                 {l}
               </a>

@@ -747,7 +747,7 @@
   }
 }
 
-@media (max-width: 459px) {
+@media (max-width: 639px) {
   .intelligence-atlas-node text {
     display: none;
   }
