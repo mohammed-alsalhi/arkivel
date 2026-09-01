@@ -140,7 +140,7 @@ function Comment({
             {isAdmin && (
               <button
                 onClick={() => onDelete(d.id)}
-                className="text-[11px] text-red-500 hover:underline pointer-coarse:py-2"
+                className="text-[11px] text-danger hover:underline pointer-coarse:py-2"
               >
                 delete
               </button>

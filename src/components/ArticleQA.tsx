@@ -105,7 +105,7 @@ export default function ArticleQA({ articleSlug: _slug }: Props) {
           </div>
 
           {error && (
-            <p className="mt-2 text-[12px] text-red-600">{error}</p>
+            <p className="mt-2 text-[12px] text-danger">{error}</p>
           )}
 
           {answer !== null && (

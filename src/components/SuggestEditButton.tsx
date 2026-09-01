@@ -106,7 +106,7 @@ export default function SuggestEditButton({ articleId }: Props) {
             />
           </div>
 
-          {error && <p className="text-[12px] text-red-600">{error}</p>}
+          {error && <p className="text-[12px] text-danger">{error}</p>}
 
           <div className="flex gap-2">
             <button

@@ -81,7 +81,7 @@ export default function ArticlePasswordWrapper({ articleId, hasPassword, childre
         <button
           type="submit"
           disabled={checking || !password}
-          className="bg-accent px-5 py-1.5 text-[13px] font-bold text-white hover:bg-accent-hover disabled:opacity-50"
+          className="bg-accent px-5 py-1.5 text-[13px] font-bold text-accent-foreground hover:bg-accent-hover disabled:opacity-50"
         >
           {checking ? "Checking…" : "Unlock"}
         </button>

@@ -95,7 +95,7 @@ export default function ArticleTodoList({
             {isAdmin && (
               <button
                 onClick={() => deleteTodo(todo.id)}
-                className="opacity-0 group-hover:opacity-100 text-muted hover:text-red-500 transition-opacity ml-1"
+                className="opacity-0 group-hover:opacity-100 text-muted hover:text-danger transition-opacity ml-1"
                 title="Delete task"
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

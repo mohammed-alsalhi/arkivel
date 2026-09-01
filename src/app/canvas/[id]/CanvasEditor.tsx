@@ -224,7 +224,7 @@ export default function CanvasEditor({
             <span className="w-px h-4 bg-border mx-0.5" />
             <button
               onClick={() => deleteNode(selectedNode)}
-              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-red-500 hover:bg-red-50"
+              className="h-6 pointer-coarse:h-9 px-2 text-[11px] border border-border rounded text-danger hover:bg-danger-soft"
             >
               Delete
             </button>
@@ -248,7 +248,7 @@ export default function CanvasEditor({
               key={node.id}
               className={`canvas-node absolute touch-none rounded-lg border shadow-sm select-none cursor-move ${
                 selectedNode === node.id ? "ring-2 ring-accent" : ""
-              } ${node.type === "article" ? "bg-surface border-border" : "bg-yellow-50 border-yellow-200"}`}
+              } ${node.type === "article" ? "bg-surface border-border" : "bg-warning-soft border-warning-border"}`}
               style={{ left: node.x, top: node.y, width: node.width, minHeight: 80 }}
               onPointerDown={(e) => onNodePointerDown(e, node.id)}
             >

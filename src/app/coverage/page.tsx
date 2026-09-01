@@ -173,7 +173,7 @@ export default function CoverageMapPage() {
                   <span>{item.totalArticles} article{item.totalArticles !== 1 ? "s" : ""}</span>
                   <span>{item.coverageScore}%</span>
                 </div>
-                <div className="h-1.5 bg-black/10 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-foreground/10 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all ${STATUS_BAR[item.status]}`}
                     style={{ width: `${item.coverageScore}%` }}

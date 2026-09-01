@@ -109,7 +109,7 @@ export default function DigestPage() {
   }
 
   if (error || !data) {
-    return <div className="text-red-500 text-[13px] p-4">{error || "Failed to load"}</div>;
+    return <div className="text-danger text-[13px] p-4">{error || "Failed to load"}</div>;
   }
 
   return (

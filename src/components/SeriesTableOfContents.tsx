@@ -76,7 +76,7 @@ export default function SeriesTableOfContents({ articleId }: { articleId: string
               <li key={m.position} className="flex items-center gap-2">
                 <span className="w-4 text-right shrink-0 text-muted">{m.position + 1}.</span>
                 {isRead ? (
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-green-500 shrink-0">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-success shrink-0">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 ) : (

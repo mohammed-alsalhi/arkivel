@@ -322,7 +322,7 @@ export default function NewArticlePage() {
             <button
               type="submit"
               disabled={saving}
-              className="bg-accent px-4 py-1.5 text-[13px] font-bold text-white hover:bg-accent-hover disabled:opacity-50"
+              className="bg-accent px-4 py-1.5 text-[13px] font-bold text-accent-foreground hover:bg-accent-hover disabled:opacity-50"
             >
               {saving ? "Saving..." : "Publish article"}
             </button>
