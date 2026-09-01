@@ -267,12 +267,30 @@ function PresentStyles() {
 
       .present-shell,
       .present-overview-shell {
+        /* Present mode is a deliberately permanently-dark deck (exception documented
+           in CLAUDE.md); its palette lives here instead of the theme tokens. */
+        --present-bg: #0d0d14;
+        --present-bg-translucent: rgba(13, 13, 20, 0.96);
+        --present-text-bright: #f8fafc;
+        --present-text: #d1d5db;
+        --present-text-muted: #9ca3af;
+        --present-text-dim: #6b7280;
+        --present-text-faint: #4b5563;
+        --present-white: #fff;
+        --present-accent: #60a5fa;
+        --present-accent-soft: rgba(96, 165, 250, 0.72);
+        --present-accent-light: #93c5fd;
+        --present-accent-strong: #3b82f6;
+        --present-dot: #374151;
+        --present-card-bg: rgba(17, 24, 39, 0.7);
+        --present-card-active-bg: rgba(30, 64, 175, 0.34);
+
         position: fixed;
         inset: 0;
         z-index: 80;
         min-width: 0;
-        background: #0d0d14;
-        color: #f8fafc;
+        background: var(--present-bg);
+        color: var(--present-text-bright);
         overscroll-behavior: contain;
       }
 
@@ -291,7 +309,7 @@ function PresentStyles() {
       .present-progress span {
         display: block;
         height: 100%;
-        background: #60a5fa;
+        background: var(--present-accent);
         transition: width 0.35s ease;
       }
 
@@ -302,7 +320,7 @@ function PresentStyles() {
         align-items: center;
         gap: 0.75rem;
         border-color: rgba(148, 163, 184, 0.18);
-        background: rgba(13, 13, 20, 0.96);
+        background: var(--present-bg-translucent);
       }
 
       .present-topbar {
@@ -337,7 +355,7 @@ function PresentStyles() {
 
       .present-eyebrow {
         margin-bottom: 0.85rem;
-        color: rgba(96, 165, 250, 0.72);
+        color: var(--present-accent-soft);
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         font-size: 0.6875rem;
         font-weight: 700;
@@ -348,7 +366,7 @@ function PresentStyles() {
 
       .present-title {
         max-width: 18ch;
-        color: #fff;
+        color: var(--present-white);
         font-family: Georgia, "Times New Roman", serif;
         font-size: 3.25rem;
         font-weight: 700;
@@ -372,7 +390,7 @@ function PresentStyles() {
         width: min(100%, 72ch);
         min-width: 0;
         margin-top: 1.65rem;
-        color: #d1d5db;
+        color: var(--present-text);
         font-size: 1.08rem;
         line-height: 1.65;
         overflow-wrap: anywhere;
@@ -405,12 +423,12 @@ function PresentStyles() {
       }
 
       .presentation-content strong {
-        color: white;
+        color: var(--present-white);
       }
 
       .presentation-content h3,
       .presentation-content h4 {
-        color: #93c5fd;
+        color: var(--present-accent-light);
         font-weight: 700;
         margin-top: 1rem;
       }
@@ -445,7 +463,7 @@ function PresentStyles() {
 
       .presentation-content th {
         background: rgba(255, 255, 255, 0.08);
-        color: #f8fafc;
+        color: var(--present-text-bright);
       }
 
       .presentation-content img,
@@ -457,14 +475,14 @@ function PresentStyles() {
       }
 
       .presentation-content a {
-        color: #93c5fd;
+        color: var(--present-accent-light);
         text-decoration: underline;
       }
 
       .presentation-content blockquote {
-        border-left: 3px solid #3b82f6;
+        border-left: 3px solid var(--present-accent-strong);
         padding-left: 1rem;
-        color: #9ca3af;
+        color: var(--present-text-muted);
         font-style: italic;
       }
 
@@ -472,7 +490,7 @@ function PresentStyles() {
       .present-plain-button,
       .present-text-link,
       .present-button {
-        color: #9ca3af;
+        color: var(--present-text-muted);
         font-size: 0.75rem;
         line-height: 1;
         text-decoration: none;
@@ -491,7 +509,7 @@ function PresentStyles() {
       .present-plain-button:hover,
       .present-text-link:hover,
       .present-button:hover {
-        color: #fff;
+        color: var(--present-white);
       }
 
       .present-exit-link svg,
@@ -503,7 +521,7 @@ function PresentStyles() {
 
       .present-counter,
       .present-hint {
-        color: #6b7280;
+        color: var(--present-text-dim);
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         font-size: 0.6875rem;
         line-height: 1.25;
@@ -525,7 +543,7 @@ function PresentStyles() {
 
       .present-dots span {
         flex: 0 0 auto;
-        color: #4b5563;
+        color: var(--present-text-faint);
         font-size: 0.625rem;
       }
 
@@ -535,21 +553,21 @@ function PresentStyles() {
         height: 0.45rem;
         border: 0;
         border-radius: 999px;
-        background: #374151;
+        background: var(--present-dot);
         transition: width 0.15s ease, background 0.15s ease;
       }
 
       .present-dot:hover {
-        background: #6b7280;
+        background: var(--present-text-dim);
       }
 
       .present-dot-read {
-        background: #4b5563;
+        background: var(--present-text-faint);
       }
 
       .present-dot-active {
         width: 1.35rem;
-        background: #60a5fa;
+        background: var(--present-accent);
       }
 
       .present-arrows {
@@ -594,20 +612,20 @@ function PresentStyles() {
         width: min(100%, 72rem);
         margin: 0 auto 1.25rem;
         border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-        background: rgba(13, 13, 20, 0.96);
+        background: var(--present-bg-translucent);
         padding-bottom: 1rem;
       }
 
       .present-overview-header p,
       .present-overview-header span {
-        color: #6b7280;
+        color: var(--present-text-dim);
         font-size: 0.75rem;
         line-height: 1.3;
       }
 
       .present-overview-header h1 {
         margin-top: 0.2rem;
-        color: white;
+        color: var(--present-white);
         font-family: Georgia, "Times New Roman", serif;
         font-size: 1.75rem;
         font-weight: 400;
@@ -628,7 +646,7 @@ function PresentStyles() {
         min-width: 0;
         border: 1px solid rgba(148, 163, 184, 0.22);
         border-radius: 8px;
-        background: rgba(17, 24, 39, 0.7);
+        background: var(--present-card-bg);
         padding: 0.9rem;
         text-align: left;
         transition: border-color 0.15s ease, background 0.15s ease;
@@ -636,13 +654,13 @@ function PresentStyles() {
 
       .present-overview-card:hover,
       .present-overview-card-active {
-        border-color: #60a5fa;
-        background: rgba(30, 64, 175, 0.34);
+        border-color: var(--present-accent);
+        background: var(--present-card-active-bg);
       }
 
       .present-overview-card span {
         display: block;
-        color: #6b7280;
+        color: var(--present-text-dim);
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         font-size: 0.625rem;
         margin-bottom: 0.55rem;
@@ -650,7 +668,7 @@ function PresentStyles() {
 
       .present-overview-card strong {
         display: block;
-        color: #f8fafc;
+        color: var(--present-text-bright);
         font-size: 0.86rem;
         line-height: 1.25;
         overflow-wrap: anywhere;
@@ -659,7 +677,7 @@ function PresentStyles() {
       .present-overview-card em {
         display: block;
         margin-top: 0.45rem;
-        color: #9ca3af;
+        color: var(--present-text-muted);
         font-size: 0.75rem;
         font-style: normal;
         line-height: 1.4;
@@ -677,7 +695,7 @@ function PresentStyles() {
       }
 
       .present-empty p {
-        color: #d1d5db;
+        color: var(--present-text);
         font-size: 1rem;
       }
 
@@ -690,7 +708,7 @@ function PresentStyles() {
         width: 0.5rem;
         height: 0.5rem;
         border-radius: 999px;
-        background: #60a5fa;
+        background: var(--present-accent);
         animation: presentPulse 0.8s infinite alternate;
       }
 
