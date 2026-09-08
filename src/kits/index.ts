@@ -2,8 +2,11 @@
  * The built-in starter kits. Pure data plus pure helpers; the database work
  * lives in `./apply` and the status computation in `./status`.
  */
+import type { PropertyValues } from "@/modules/collections/properties";
+import { CATALOG } from "@/modules/media/catalog";
+import { watchlistProperties } from "@/modules/media/tmdb";
 import { MODULE_IDS } from "@/modules/registry";
-import type { KitCollection, KitDefinition, KitId } from "./types";
+import type { KitCollection, KitDefinition, KitId, KitItem } from "./types";
 
 export type * from "./types";
 export { kitCollectionSlug, kitStatus } from "./status";
@@ -52,21 +55,29 @@ const readingListCollection: KitCollection = {
 };
 
 // A film and series library on the collections engine: the "vistara" shape.
+// Rows come from the media module's starter catalogue so each carries its
+// tmdb key, poster, and link, and discover recognises them as saved.
+function title(id: number, status: "queued" | "watching" | "watched" | "dropped", extra: PropertyValues = {}): KitItem {
+  const entry = CATALOG.find((candidate) => candidate.id === id);
+  if (!entry) throw new Error(`watchlist kit: no catalogue entry ${id}`);
+  return { title: entry.title, properties: { ...watchlistProperties(entry), status, ...extra } };
+}
+
 const watchlistCollection: KitCollection = {
   template: "watchlist",
   name: "watchlist",
   views: [{ kind: "table" }, { kind: "board", groupBy: "status" }, { kind: "list" }],
   items: [
-    { title: "Severance", properties: { media: "series", status: "watching", moods: ["thoughtful", "thrilling", "dark"], year: 2022 } },
-    { title: "The Bear", properties: { media: "series", status: "watching", moods: ["thrilling", "inspiring", "funny"], year: 2022 } },
-    { title: "Dune: Part Two", properties: { media: "movie", status: "queued", moods: ["action", "thoughtful", "thrilling"], year: 2024 } },
-    { title: "Past Lives", properties: { media: "movie", status: "queued", moods: ["romantic", "thoughtful", "relaxing"], year: 2023 } },
-    { title: "Perfect Days", properties: { media: "movie", status: "queued", moods: ["relaxing", "inspiring", "feel_good"], year: 2023 } },
-    { title: "Shōgun", properties: { media: "series", status: "queued", moods: ["thrilling", "thoughtful", "action"], year: 2024 } },
-    { title: "The Grand Budapest Hotel", properties: { media: "movie", status: "watched", moods: ["funny", "feel_good", "relaxing"], year: 2014, rating: 9, watched_on: daysFromNow(-12) } },
-    { title: "Everything Everywhere All at Once", properties: { media: "movie", status: "watched", moods: ["funny", "thoughtful", "inspiring"], year: 2022, rating: 8, watched_on: daysFromNow(-30) } },
-    { title: "Whiplash", properties: { media: "movie", status: "watched", moods: ["thrilling", "dark", "thoughtful"], year: 2014, rating: 9, watched_on: daysFromNow(-45) } },
-    { title: "Fleabag", properties: { media: "series", status: "dropped", moods: ["funny", "romantic", "thoughtful"], year: 2016 } },
+    title(95396, "watching"),
+    title(136315, "watching"),
+    title(693134, "queued"),
+    title(666277, "queued"),
+    title(976893, "queued"),
+    title(126308, "queued"),
+    title(120467, "watched", { rating: 9, watched_on: daysFromNow(-12) }),
+    title(545611, "watched", { rating: 8, watched_on: daysFromNow(-30) }),
+    title(244786, "watched", { rating: 9, watched_on: daysFromNow(-45) }),
+    title(67070, "dropped"),
   ],
 };
 
@@ -111,8 +122,8 @@ export const KITS: readonly KitDefinition[] = [
   {
     id: "watchlist",
     name: "watchlist",
-    description: "a film and series library: a watchlist with a status board and per-episode marks, plus assets for posters and export for backups.",
-    modules: ["collections", "assets", "export", "import"],
+    description: "a film and series library: discovery with posters, a watchlist with a status board, per-episode marks, and export for backups.",
+    modules: ["collections", "media", "assets", "export", "import"],
     skin: "folio",
     collections: [
       watchlistCollection,

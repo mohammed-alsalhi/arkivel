@@ -137,13 +137,17 @@ const watchlistSchema: PropertySchema = [
     { id: "thoughtful", label: "thought-provoking", tone: "info" },
     { id: "inspiring", label: "inspiring", tone: "success" },
     { id: "action", label: "action-packed", tone: "danger" },
+    { id: "scary", label: "scary", tone: "danger" },
   ] },
   { id: "year", name: "year", type: "number" },
   { id: "rating", name: "my rating", type: "number" },
   { id: "watched_on", name: "watched on", type: "date" },
   { id: "url", name: "link", type: "url" },
   { id: "poster", name: "poster", type: "url" },
+  { id: "overview", name: "overview", type: "text" },
   { id: "notes", name: "notes", type: "text" },
+  // The media module keys saved titles by this ("movie:693134"); blank for hand-added rows.
+  { id: "tmdb", name: "tmdb id", type: "text" },
 ];
 
 // Episode marks for a series in the watchlist; the watchlist kit binds `show`.

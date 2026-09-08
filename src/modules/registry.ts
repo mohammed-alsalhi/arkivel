@@ -5,11 +5,12 @@ import exportModule from "./export/module";
 import feeds from "./feeds/module";
 import graph from "./graph/module";
 import importModule from "./import/module";
+import media from "./media/module";
 import share from "./share/module";
 import type { ModuleDefinition, ModuleId } from "./types";
 
 /** Every built module, in display order. */
-export const MODULES: readonly ModuleDefinition[] = [collections, graph, assets, importModule, exportModule, api, feeds, share];
+export const MODULES: readonly ModuleDefinition[] = [collections, graph, assets, importModule, exportModule, api, feeds, share, media];
 
 export const MODULE_IDS: readonly ModuleId[] = MODULES.map((module) => module.id);
 

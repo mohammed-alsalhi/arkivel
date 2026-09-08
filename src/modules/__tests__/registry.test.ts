@@ -11,7 +11,7 @@ import {
 
 describe("module registry", () => {
   it("registers every built module with a default of enabled", () => {
-    expect(MODULES.map((module) => module.id)).toEqual(["collections", "graph", "assets", "import", "export", "api", "feeds", "share"]);
+    expect(MODULES.map((module) => module.id)).toEqual(["collections", "graph", "assets", "import", "export", "api", "feeds", "share", "media"]);
     expect(DEFAULT_ENABLED_MODULES).toEqual(["collections", "graph", "assets", "import", "export", "api", "feeds", "share"]);
   });
 

@@ -101,7 +101,7 @@ export default async function FeaturesPage() {
               <Link href="/admin">admin</Link>.
             </FeatureItem>
             <FeatureItem title="modules">
-              optional features — graph, assets, import, export, api, feeds, share — are enabled per
+              optional features — graph, assets, import, export, api, feeds, share, media — are enabled per
               deployment with <InlineCode>ARKIVEL_MODULES</InlineCode> or from{" "}
               <Link href="/admin/modules">admin › modules</Link>.
             </FeatureItem>

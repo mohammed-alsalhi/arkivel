@@ -22,7 +22,7 @@ v5 answered every need with a feature: 96 tables, each with routes and UI, all s
 
 ```ts
 // src/modules/types.ts
-export type ModuleId = "graph" | "assets" | "import" | "export" | "api" | "feeds" | "share" | "collections";
+export type ModuleId = "graph" | "assets" | "import" | "export" | "api" | "feeds" | "share" | "collections" | "media";
 
 export type NavSection = "top" | "library" | "spaces" | "footer";
 
@@ -63,7 +63,7 @@ Resolution of the enabled set, per request, cached:
 
 `getEnabledModules()` (server) and `useEnabledModules()` (client, fed from the root layout) are the only ways to read it. Pages inside a module call `requireModule(id)` (server: `notFound()` when disabled); API routes call the same and return 404. The sidebar, command palette, help page, and features page are **composed from the registry**, never hand-listed.
 
-Existing features move into modules with no behaviour change: `graph` (`/graph`, `/api/graph`, the article context rail's graph tab), `assets` (`/assets`, `/api/assets`, `/api/upload`), `import` (`/import/**`, `/api/import/**`), `export` (`/export`, `/api/export/**`), `api` (`/api/v1/**`, `/api-docs`), `feeds` (`/feed.xml`, `/feed/atom`), `share` (`/share/**`, share-token routes).
+Existing features move into modules with no behaviour change: `graph` (`/graph`, `/api/graph`, the article context rail's graph tab), `assets` (`/assets`, `/api/assets`, `/api/upload`), `import` (`/import/**`, `/api/import/**`), `export` (`/export`, `/api/export/**`), `api` (`/api/v1/**`, `/api-docs`), `feeds` (`/feed.xml`, `/feed/atom`), `share` (`/share/**`, share-token routes). `media` (`/discover`, `/api/media/**`) is off by default: it needs the `collections` module and a `watchlist` collection, so the watchlist kit enables it.
 
 ## collections
 

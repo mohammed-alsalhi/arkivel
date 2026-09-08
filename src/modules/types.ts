@@ -5,12 +5,12 @@
  * from the registry. A module may not import from another module.
  */
 
-export type ModuleId = "graph" | "assets" | "import" | "export" | "api" | "feeds" | "share" | "collections";
+export type ModuleId = "graph" | "assets" | "import" | "export" | "api" | "feeds" | "share" | "collections" | "media";
 
 export type NavSection = "top" | "library" | "spaces" | "footer";
 
 /** A key into the shared inline icon set (`src/components/icons.tsx`). */
-export type IconName = "search" | "inbox" | "plus" | "pages" | "tag" | "graph" | "folder" | "gear" | "table";
+export type IconName = "search" | "inbox" | "plus" | "pages" | "tag" | "graph" | "folder" | "gear" | "table" | "film";
 
 export type NavEntry = {
   label: string;
