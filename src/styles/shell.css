@@ -152,10 +152,12 @@
     justify-content: flex-start;
   }
 
+  /* The table sizes to its content; its keyboard-focusable DataTable wrapper
+     (overflow-x: auto) is the scroll region, so the table itself never is. */
   .ui-table {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    width: max-content;
+    min-width: 100%;
+    table-layout: auto;
   }
 
   .category-tree-row {
@@ -281,7 +283,6 @@ html[data-skin="folio"] .wiki-layout {
   font-weight: 700;
   line-height: 1.2;
   text-overflow: ellipsis;
-  text-transform: none;
   white-space: nowrap;
 }
 
@@ -334,7 +335,14 @@ html[data-skin="folio"] .wiki-layout {
   background: var(--color-surface-hover);
   color: var(--color-heading);
   text-decoration: none;
-  outline: none;
+}
+
+/* Keyboard focus reads apart from hover: an inset ring that survives
+   forced-colors, unlike a box-shadow. */
+.wiki-sidebar-link:focus-visible,
+.wiki-sidebar-brand:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
 
 .wiki-sidebar-link-active {
@@ -543,8 +551,7 @@ html[data-skin="wiki"] .wiki-sidebar-collapse-toggle {
   font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
-  /* The brand name is operator-authored; keep its casing. */
-  text-transform: none;
+
 }
 
 .wiki-main-menu-button,
@@ -613,7 +620,7 @@ html[data-skin="wiki"] .wiki-sidebar-collapse-toggle {
   .wiki-main-menu-button {
     position: fixed;
     top: 1rem;
-    left: 1rem;
+    inset-inline-start: max(1rem, env(safe-area-inset-left));
     z-index: 60;
     display: inline-flex;
     width: 2.75rem;

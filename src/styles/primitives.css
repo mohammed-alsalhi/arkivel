@@ -38,7 +38,7 @@
 /* ── Standard UI primitives ── */
 .ui-page-title {
   min-width: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.7rem;
   font-weight: 400;
   color: var(--color-heading);
@@ -70,12 +70,13 @@
   color: var(--color-muted);
   font-size: 0.6875rem;
   font-weight: 700;
+  letter-spacing: 0.05em;
   line-height: 1.1;
   text-transform: uppercase;
 }
 
 .ui-page-dek {
-  max-width: min(100%, 78ch);
+  max-width: min(100%, 72ch);
   margin-top: 0.3rem;
   color: var(--color-muted);
   font-size: 0.8125rem;
@@ -94,7 +95,7 @@
 }
 
 .ui-section-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 400;
   color: var(--color-heading);
@@ -191,7 +192,7 @@
   height: 1.5rem;
   padding: 0 0.5rem;
   border: 1px solid var(--color-border);
-  border-radius: 0.25rem;
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--color-muted);
   font-size: 0.6875rem;
@@ -284,7 +285,7 @@
   width: 1.75rem;
   height: 1.75rem;
   border: 1px solid transparent;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--color-muted);
   transition: background-color 0.15s, border-color 0.15s, color 0.15s;
@@ -367,9 +368,9 @@
   max-height: min(60vh, 24rem);
   overflow-y: auto;
   border: 1px solid var(--color-border);
-  border-radius: 0.25rem;
+  border-radius: var(--radius-surface);
   background: var(--color-surface);
-  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.14);
+  box-shadow: var(--shadow-overlay);
 }
 
 .ui-dropdown-item {
@@ -441,6 +442,7 @@
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .ui-table th,
@@ -449,10 +451,10 @@
   overflow: hidden;
   border: 0;
   border-bottom: 1px solid var(--color-border);
-  border-right: 1px solid var(--color-border);
+  border-inline-end: 1px solid var(--color-border);
   padding: 0 0.625rem;
   line-height: 1.25;
-  text-align: left;
+  text-align: start;
   text-overflow: ellipsis;
   vertical-align: middle;
   white-space: nowrap;
@@ -460,7 +462,7 @@
 
 .ui-table th:last-child,
 .ui-table td:last-child {
-  border-right: 0;
+  border-inline-end: 0;
 }
 
 .ui-table tr:last-child td {
@@ -606,9 +608,10 @@
 }
 
 .ui-topbar-meta {
-  padding-right: 0.35rem;
+  padding-inline-end: 0.35rem;
   color: var(--color-muted);
   font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
@@ -623,6 +626,7 @@
   padding: 1rem var(--page-pad-x, 2.5rem) 2.5rem;
   color: var(--color-muted);
   font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .ui-page-footer-links,
@@ -670,7 +674,6 @@
 .ui-page-narrow {
   max-width: 42rem;
   margin-inline: auto;
-  box-sizing: content-box;
 }
 
 .ui-page-wide,
@@ -685,7 +688,7 @@
 .ui-empty-state-icon {
   margin-bottom: 0.6rem;
   color: var(--color-border);
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 2rem;
   line-height: 1;
 }
@@ -729,7 +732,7 @@
 }
 
 .ui-stat-card-value {
-  color: var(--color-accent);
+  color: var(--color-heading);
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 1.1;
@@ -797,7 +800,7 @@
   display: block;
   min-width: 0;
   color: var(--color-heading);
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.25;
@@ -811,6 +814,7 @@
   font-size: 0.75rem;
   line-height: 1.45;
   overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
 .ui-card-meta {

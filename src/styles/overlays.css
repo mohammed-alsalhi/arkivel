@@ -82,7 +82,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   font-size: 0.85rem;
   text-align: left;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-surface);
+  box-shadow: var(--shadow-overlay);
   animation: toast-in 0.3s ease-out;
   max-width: min(360px, calc(100vw - 2rem));
 }
@@ -172,7 +173,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   width: 90%;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-overlay);
 }
 .modal-header {
   padding: 0.75rem 1rem;

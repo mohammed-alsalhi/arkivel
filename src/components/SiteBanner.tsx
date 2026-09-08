@@ -41,7 +41,7 @@ export function MaintenanceBanner() {
         </svg>
       }
     >
-      <strong>Maintenance mode is active.</strong> The wiki is undergoing maintenance — some features may be temporarily unavailable.
+      <strong>maintenance mode is active.</strong> the wiki is undergoing maintenance — some features may be temporarily unavailable.
     </SiteBanner>
   );
 }
@@ -57,7 +57,7 @@ export function ReadOnlyBanner() {
         </svg>
       }
     >
-      <strong>Read-only mode is active.</strong> Article editing is temporarily disabled for non-admin users.
+      <strong>read-only mode is active.</strong> page editing is temporarily disabled for non-admin users.
     </SiteBanner>
   );
 }

@@ -15,13 +15,13 @@ describe("ArticleContent", () => {
     expect(output).toContain('dir="rtl"');
     expect(output).toContain('<h2 id="core-notes">Core notes</h2>');
     expect(output).toContain(
-      '<div class="footnote-section"><div class="footnote-section-title">Notes</div><div class="footnote-item" style="padding-left:1.5rem"><sup style="position:absolute;left:0;font-weight:700;color:var(--color-accent)">[1]</sup> durable note</div></div>',
+      '<div class="footnote-section"><div class="footnote-section-title">notes</div><div class="footnote-item" style="padding-left:1.5rem"><sup style="position:absolute;left:0;font-weight:700;color:var(--color-accent)">[1]</sup> durable note</div></div>',
     );
   });
 
   it("preserves the share preview footnote markup", () => {
     expect(prepareArticleHtml(html, "share")).toContain(
-      '<div><div style="font-weight:600;margin-bottom:0.5rem">Notes</div><div style="padding-left:1.5rem"><sup style="position:absolute;left:0;font-weight:700">[1]</sup> durable note</div></div>',
+      '<div><div style="font-weight:600;margin-bottom:0.5rem">notes</div><div style="padding-left:1.5rem"><sup style="position:absolute;left:0;font-weight:700">[1]</sup> durable note</div></div>',
     );
   });
 

@@ -60,7 +60,7 @@
    injects #wiki-width-pref-style to opt into narrow/reading measures. */
 
 #article-content .wiki-content {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
 }
 
 @media (max-width: 767px) {
@@ -127,9 +127,9 @@
 .article-reader > .article-reader-details,
 .article-reader > [class] > .article-reader-content,
 .article-reader > [class] > .article-reader-details {
-  width: min(100%, 52rem);
-  margin-right: auto;
-  margin-left: auto;
+  /* 44rem keeps the measure near 75 characters at the 1rem reading size. */
+  width: min(100%, 44rem);
+  margin-inline: auto;
 }
 
 .article-reader-header {
@@ -144,8 +144,9 @@
   font-size: clamp(2.9rem, 4vw, 3.6rem);
   font-weight: 450;
   letter-spacing: -0.06em;
-  line-height: 0.98;
+  line-height: 1.1;
   overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .article-reader-notice {
@@ -154,7 +155,7 @@
   gap: 0.7rem;
   margin-top: 0;
   margin-bottom: 1rem;
-  border-left: 2px solid var(--color-border);
+  border-inline-start: 2px solid var(--color-border);
   background: var(--color-background);
 }
 
@@ -369,7 +370,6 @@
 .article-context-outline a[aria-current="location"] {
   background: var(--color-surface-hover);
   color: var(--color-heading);
-  outline: none;
 }
 
 /* Touch ergonomics for the context drawer. These selectors live here (not in
@@ -448,7 +448,7 @@
 
   .article-context-toggle {
     position: fixed;
-    right: 1.25rem;
+    inset-inline-end: max(1.25rem, env(safe-area-inset-right));
     bottom: calc(1.25rem + env(safe-area-inset-bottom));
     z-index: 30;
     display: inline-flex;

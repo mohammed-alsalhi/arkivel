@@ -25,7 +25,7 @@ function appendFootnoteSection(html: string, presentation: FootnotePresentation)
       )
       .join("");
 
-    return `${html}<div><div style="font-weight:600;margin-bottom:0.5rem">Notes</div>${items}</div>`;
+    return `${html}<div><div style="font-weight:600;margin-bottom:0.5rem">notes</div>${items}</div>`;
   }
 
   const items = footnotes
@@ -35,7 +35,7 @@ function appendFootnoteSection(html: string, presentation: FootnotePresentation)
     )
     .join("");
 
-  return `${html}<div class="footnote-section"><div class="footnote-section-title">Notes</div>${items}</div>`;
+  return `${html}<div class="footnote-section"><div class="footnote-section-title">notes</div>${items}</div>`;
 }
 
 export function prepareArticleHtml(

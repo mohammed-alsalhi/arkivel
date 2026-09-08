@@ -243,10 +243,6 @@ html[data-skin="wiki"] .collections-choice-popover,
 html[data-skin="wiki"] .collections-choice-trigger {
   border-radius: 0.125rem;
 }
-/* Folio's neutral chip style must not erase the property's chosen color. */
-html[data-skin="folio"]:not([data-theme="dark"]) :is(.collections-view, .collections-form, .collections-panel, .collections-choice) {
-  --color-success: #106d58;
-}
 html :is(.collections-view, .collections-form, .collections-panel, .collections-choice) .ui-chip-success {
   background: var(--color-success-soft);
   color: var(--color-success);
@@ -280,6 +276,13 @@ html :is(.collections-view, .collections-form, .collections-panel, .collections-
   .collections-choice-clear {
     min-height: 2.75rem;
   }
+  .collections-choice-compact .collections-choice-chevron {
+    opacity: 1;
+  }
+}
+
+/* Touch has no hover: the compact chevron stays visible on coarse pointers. */
+@media (pointer: coarse) {
   .collections-choice-compact .collections-choice-chevron {
     opacity: 1;
   }

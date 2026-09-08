@@ -5,39 +5,31 @@
    radius, sans-serif everywhere, and a centered document column. */
 
 html[data-skin="folio"] {
-  --folio-radius: 0.375rem;
-  --folio-radius-lg: 0.625rem;
   --folio-hover: rgba(55, 53, 47, 0.06);
   --folio-active: rgba(55, 53, 47, 0.11);
-  --folio-hairline: rgba(55, 53, 47, 0.1);
-  /* Overlays only: the admin's shadow-md. Nothing in the flow casts a shadow. */
-  --folio-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --color-sidebar-bg: #f7f7f5;
-  --color-border-light: #e6e6e3;
 }
 
 html[data-skin="folio"][data-theme="dark"] {
   --folio-hover: rgba(255, 255, 255, 0.06);
   --folio-active: rgba(255, 255, 255, 0.11);
-  --folio-hairline: rgba(255, 255, 255, 0.1);
-  --folio-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-  --color-sidebar-bg: #151517;
-  --color-border-light: #2b2b30;
 }
 
-/* User-authored text keeps its own casing; only interface copy lowercases. */
-html[data-skin="folio"] :where(
-  .article-reader-header h1,
-  .focused-page-list-title,
-  .tiptap,
-  .ui-card-title,
-  .ui-table td,
-  .collections-item-link,
-  .collections-calendar-item,
-  .collections-value-button,
-  .wiki-compact-list-title
+/* Interface copy is lowercase in folio. Only chrome that never carries
+   user-authored text opts in; page titles, rows, cells, and content keep
+   their own casing because the copy is written lowercase in source. */
+html[data-skin="folio"] :is(
+  .ui-button,
+  .article-tab,
+  .command-palette-section-title,
+  .command-palette-status,
+  .command-palette-footer,
+  .skip-to-content,
+  .ui-loading-state,
+  .ui-topbar-meta,
+  .ui-page-footer-meta,
+  .wiki-sidebar-footer-copy
 ) {
-  text-transform: none;
+  text-transform: lowercase;
 }
 
 /* ── Shell ── */
@@ -46,7 +38,7 @@ html[data-skin="folio"] :where(
    fills, hairline dividers, and no shadows anywhere. */
 html[data-skin="folio"] .wiki-sidebar {
   --sidebar-width: 14rem;
-  border-right: 1px solid var(--folio-hairline);
+  border-right: 1px solid var(--hairline);
 }
 
 @media (min-width: 1024px) {
@@ -76,18 +68,13 @@ html[data-skin="folio"] .wiki-sidebar-brand {
   max-width: calc(100% - 1.5rem);
   gap: 0.5rem;
   margin: 0.5rem 0.75rem 0;
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   padding: 0 0.625rem;
 }
 
 html[data-skin="folio"] .wiki-sidebar-brand:hover,
 html[data-skin="folio"] .wiki-sidebar-brand:focus-visible {
   background: var(--color-surface-hover);
-  outline: none;
-}
-
-html[data-skin="folio"] .wiki-sidebar-brand:focus-visible {
-  box-shadow: inset 0 0 0 2px var(--color-accent);
 }
 
 html[data-skin="folio"] .wiki-sidebar-brand:hover .wiki-brand-mark {
@@ -148,7 +135,7 @@ html[data-skin="folio"] .wiki-sidebar-section-divider {
   left: 0.25rem;
   height: 1px;
   transform: translateY(-50%);
-  background: var(--folio-hairline);
+  background: var(--hairline);
 }
 
 html[data-skin="folio"] .wiki-sidebar-section-links {
@@ -162,7 +149,7 @@ html[data-skin="folio"] .wiki-sidebar-link {
   min-height: 0;
   justify-content: flex-start;
   gap: 0.5rem;
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   padding: 0 0.625rem;
   color: var(--color-muted);
   font-size: 0.875rem;
@@ -183,10 +170,6 @@ html[data-skin="folio"] .wiki-sidebar-link-active {
   color: var(--color-heading);
   font-weight: 600;
   box-shadow: none;
-}
-
-html[data-skin="folio"] .wiki-sidebar-link:focus-visible {
-  box-shadow: inset 0 0 0 2px var(--color-accent);
 }
 
 /* Icon slot 20px with a 16px glyph at 60%, full strength on the active row. */
@@ -213,15 +196,11 @@ html[data-skin="folio"] .wiki-sidebar-link-label {
   white-space: nowrap;
 }
 
-html[data-skin="folio"] .wiki-sidebar-search-trigger kbd {
-  border-color: var(--folio-hairline);
-}
-
 /* Space rows: the whole row (chevron + link) takes the hover and active
    fills so the chevron reads as part of the row, not a separate control. */
 html[data-skin="folio"] .wiki-sidebar-row {
   min-height: 2.25rem;
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   padding-left: calc(0.375rem + var(--depth) * 0.875rem);
 }
 
@@ -245,15 +224,12 @@ html[data-skin="folio"] .wiki-sidebar-row:focus-within > .wiki-sidebar-link {
   color: var(--color-heading);
 }
 
-html[data-skin="folio"] .wiki-sidebar-row > .wiki-sidebar-link:focus-visible {
-  box-shadow: inset 0 0 0 2px var(--color-accent);
-}
 
 html[data-skin="folio"] .wiki-sidebar-chevron,
 html[data-skin="folio"] .wiki-sidebar-chevron-spacer {
   width: 1.5rem;
   height: 1.5rem;
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
 }
 
 html[data-skin="folio"] .wiki-sidebar-chevron {
@@ -278,7 +254,7 @@ html[data-skin="folio"] .wiki-sidebar-footer {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  border-top: 1px solid var(--folio-hairline);
+  border-top: 1px solid var(--hairline);
   padding: 0.75rem;
 }
 
@@ -295,7 +271,7 @@ html[data-skin="folio"] .wiki-sidebar-footer-copy {
 html[data-skin="folio"] .wiki-sidebar-footer-actions .ui-icon-button {
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   color: var(--color-muted);
 }
 
@@ -389,17 +365,22 @@ html[data-skin="folio"] .ui-trail-separator {
 
 html[data-skin="folio"] .ui-topbar-side .ui-button {
   height: 1.75rem;
+}
+
+/* Quiet secondary actions; the filled primary keeps its own label color
+   (muted on the accent fill measured 2.9:1). */
+html[data-skin="folio"] .ui-topbar-side .ui-button:not(.ui-button-primary) {
   border-color: transparent;
   color: var(--color-muted);
 }
 
-html[data-skin="folio"] .ui-topbar-side .ui-button:hover {
+html[data-skin="folio"] .ui-topbar-side .ui-button:not(.ui-button-primary):hover {
   background: var(--folio-hover);
   color: var(--color-heading);
 }
 
 html[data-skin="folio"] .ui-page-footer {
-  border-top-color: var(--folio-hairline);
+  border-top-color: var(--hairline);
   font-size: 0.8125rem;
 }
 
@@ -408,7 +389,6 @@ html[data-skin="folio"] .ui-page-title {
   border-bottom: 0;
   padding-bottom: 0;
   margin-bottom: 0;
-  font-family: var(--font-sans);
   font-size: 2.25rem;
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -437,14 +417,13 @@ html[data-skin="folio"] .ui-section-title {
   border-bottom: 0;
   padding-bottom: 0;
   margin-bottom: 0.35rem;
-  font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
 html[data-skin="folio"] .ui-section-header {
-  border-bottom: 1px solid var(--folio-hairline);
+  border-bottom: 1px solid var(--hairline);
   padding-bottom: 0.45rem;
 }
 
@@ -474,11 +453,10 @@ html[data-skin="folio"] .wiki-portal {
 
 html[data-skin="folio"] .wiki-portal-header {
   min-height: 0;
-  border-bottom: 1px solid var(--folio-hairline);
+  border-bottom: 1px solid var(--hairline);
   background: transparent;
   color: var(--color-muted);
   padding: 0 0 0.45rem;
-  font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -493,8 +471,8 @@ html[data-skin="folio"] .wiki-portal-body {
 }
 
 html[data-skin="folio"] .wiki-compact-list-item {
-  border-radius: var(--folio-radius);
-  border-bottom-color: var(--folio-hairline);
+  border-radius: var(--radius-control);
+  border-bottom-color: var(--hairline);
   padding: 0.5rem 0.5rem;
 }
 
@@ -517,7 +495,7 @@ html[data-skin="folio"] .ui-table {
 html[data-skin="folio"] .ui-table th,
 html[data-skin="folio"] .ui-table td {
   border-right: 0;
-  border-bottom: 1px solid var(--folio-hairline);
+  border-bottom: 1px solid var(--hairline);
   padding: 0 0.625rem;
 }
 
@@ -533,7 +511,7 @@ html[data-skin="folio"] .ui-table th {
 }
 
 html[data-skin="folio"] .ui-table tr:last-child td {
-  border-bottom: 1px solid var(--folio-hairline);
+  border-bottom: 1px solid var(--hairline);
 }
 
 html[data-skin="folio"] .ui-table tr:hover td {
@@ -558,7 +536,6 @@ html[data-skin="folio"] .ui-button {
   height: 2rem;
   padding: 0 0.75rem;
   border-color: var(--color-border);
-  border-radius: var(--folio-radius);
   background: var(--color-surface);
   color: var(--color-foreground);
   font-size: 0.75rem;
@@ -570,10 +547,6 @@ html[data-skin="folio"] .ui-label {
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-}
-
-html[data-skin="folio"] .ui-section-title {
-  font-size: 0.875rem;
 }
 
 html[data-skin="folio"] .ui-button:hover {
@@ -611,10 +584,6 @@ html[data-skin="folio"] .ui-button-danger:hover {
   background: var(--color-danger-soft);
 }
 
-html[data-skin="folio"] .ui-icon-button {
-  border-radius: var(--folio-radius);
-}
-
 html[data-skin="folio"] .ui-icon-button:hover,
 html[data-skin="folio"] .ui-icon-button[aria-expanded="true"],
 html[data-skin="folio"] .ui-icon-button[aria-pressed="true"] {
@@ -626,7 +595,7 @@ html[data-skin="folio"] .ui-input,
 html[data-skin="folio"] .ui-select,
 html[data-skin="folio"] .ui-textarea {
   border-color: var(--color-border-light);
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   background: var(--color-background);
   font-size: 0.875rem;
 }
@@ -684,7 +653,7 @@ html[data-skin="folio"] .ui-inline-code {
 
 html[data-skin="folio"] .ui-code-block {
   border-color: var(--color-border-light);
-  border-radius: var(--folio-radius-lg);
+  border-radius: var(--radius-surface);
   background: var(--color-background);
   padding: 0.85rem 1rem;
   font-size: 0.8125rem;
@@ -694,14 +663,12 @@ html[data-skin="folio"] .ui-code-block {
 html[data-skin="folio"] .ui-dropdown {
   min-width: 12rem;
   border-color: transparent;
-  border-radius: var(--folio-radius-lg);
   background: var(--color-popover);
-  box-shadow: var(--folio-shadow);
   padding: 0.3rem;
 }
 
 html[data-skin="folio"] .ui-dropdown-item {
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   padding: 0.4rem 0.6rem;
   color: var(--color-foreground);
   font-size: 0.8125rem;
@@ -715,7 +682,7 @@ html[data-skin="folio"] .ui-dropdown-item:hover {
 html[data-skin="folio"] .ui-card,
 html[data-skin="folio"] .ui-card-link {
   border-color: var(--color-border-light);
-  border-radius: var(--folio-radius-lg);
+  border-radius: var(--radius-surface);
   transition: background-color 0.15s, box-shadow 0.15s;
 }
 
@@ -731,7 +698,6 @@ html[data-skin="folio"] .ui-card-body {
 }
 
 html[data-skin="folio"] .ui-card-title {
-  font-family: var(--font-sans);
   font-size: 0.9375rem;
   font-weight: 600;
 }
@@ -742,7 +708,7 @@ html[data-skin="folio"] .ui-card-description {
 
 html[data-skin="folio"] .ui-stat-card {
   border-color: var(--color-border-light);
-  border-radius: var(--folio-radius-lg);
+  border-radius: var(--radius-surface);
   padding: 0.85rem 1rem;
 }
 
@@ -763,10 +729,6 @@ html[data-skin="folio"] .ui-empty-state {
   font-size: 0.875rem;
 }
 
-html[data-skin="folio"] .ui-empty-state-icon {
-  font-family: var(--font-sans);
-}
-
 html[data-skin="folio"] .ui-empty-state-title {
   font-weight: 600;
 }
@@ -777,24 +739,21 @@ html[data-skin="folio"] .ui-loading-state {
 
 html[data-skin="folio"] .wiki-notice {
   border-color: var(--color-border-light);
-  border-radius: var(--folio-radius-lg);
+  border-radius: var(--radius-surface);
   padding: 0.75rem 0.9rem;
 }
 
 html[data-skin="folio"] .toast {
-  border-radius: var(--folio-radius-lg);
   border-color: transparent;
-  box-shadow: var(--folio-shadow);
 }
 
 html[data-skin="folio"] .modal {
   border-radius: 0.75rem;
   border-color: transparent;
-  box-shadow: var(--folio-shadow);
 }
 
 html[data-skin="folio"] .category-tree-row:hover {
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   background: var(--folio-hover);
 }
 
@@ -877,8 +836,8 @@ html[data-skin="folio"] .article-reader-header h1 {
 }
 
 html[data-skin="folio"] .article-reader-notice {
-  border-radius: var(--folio-radius-lg);
-  border-left-width: 3px;
+  border-radius: var(--radius-surface);
+  border-inline-start-width: 3px;
 }
 
 html[data-skin="folio"] .article-reader-content {
@@ -901,14 +860,14 @@ html[data-skin="folio"] .article-reader-content h3 {
 }
 
 html[data-skin="folio"] .article-reader-content blockquote {
-  border-left: 3px solid var(--color-heading);
+  border-inline-start: 3px solid var(--color-heading);
   color: var(--color-foreground);
   font-style: normal;
 }
 
 html[data-skin="folio"] .article-reader-content pre {
   border-color: var(--color-border-light);
-  border-radius: var(--folio-radius-lg);
+  border-radius: var(--radius-surface);
   padding: 0.9rem 1rem;
 }
 
@@ -919,11 +878,11 @@ html[data-skin="folio"] .article-reader-content code {
 
 html[data-skin="folio"] .article-reader-content img {
   border: 0;
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
 }
 
 html[data-skin="folio"] .article-reader-content hr {
-  border-top-color: var(--folio-hairline);
+  border-top-color: var(--hairline);
 }
 
 html[data-skin="folio"] .article-reader-content .wiki-link {
@@ -949,11 +908,11 @@ html[data-skin="folio"] .article-reader-content .wiki-link-broken {
 
 /* Page details read as a property list rather than an infobox */
 html[data-skin="folio"] .article-reader-details {
-  border-top-color: var(--folio-hairline);
+  border-top-color: var(--hairline);
 }
 
 html[data-skin="folio"] .article-reader-details > summary {
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   padding: 0.3rem 0.5rem;
   margin-left: -0.5rem;
   font-weight: 500;
@@ -982,11 +941,11 @@ html[data-skin="folio"] .article-reader-details .wiki-infobox-image {
 
 html[data-skin="folio"] .article-reader-details .wiki-infobox-image img {
   border: 0;
-  border-radius: var(--folio-radius-lg);
+  border-radius: var(--radius-surface);
 }
 
 html[data-skin="folio"] .article-reader-details .wiki-infobox-row {
-  border-top-color: var(--folio-hairline);
+  border-top-color: var(--hairline);
 }
 
 html[data-skin="folio"] .article-reader-details .wiki-infobox-label {
@@ -1004,14 +963,14 @@ html[data-skin="folio"] .article-reader-details .wiki-infobox-value {
 
 /* Context rail */
 html[data-skin="folio"] .wiki-right-sidebar {
-  border-left: 1px solid var(--folio-hairline);
+  border-left: 1px solid var(--hairline);
   background: var(--color-surface);
 }
 
 html[data-skin="folio"] .article-context-tabs {
   min-height: 3.6rem;
   gap: 1.35rem;
-  border-bottom-color: var(--folio-hairline);
+  border-bottom-color: var(--hairline);
   padding: 0 1.5rem 0.9rem;
 }
 
@@ -1030,7 +989,7 @@ html[data-skin="folio"] .article-context-panel {
 }
 
 html[data-skin="folio"] .article-context-outline a {
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   padding: 0.35rem 0.5rem;
   font-size: 0.8125rem;
 }
@@ -1042,7 +1001,7 @@ html[data-skin="folio"] .article-context-outline a[aria-current="location"] {
 }
 
 html[data-skin="folio"] .article-context-backlinks {
-  border-top-color: var(--folio-hairline);
+  border-top-color: var(--hairline);
 }
 
 html[data-skin="folio"] .article-context-backlinks h2 {
@@ -1084,7 +1043,7 @@ html[data-skin="folio"] .focused-home-index {
 }
 
 html[data-skin="folio"] .focused-home-index-heading {
-  border-bottom-color: var(--folio-hairline);
+  border-bottom-color: var(--hairline);
   padding-bottom: 0.5rem;
 }
 
@@ -1095,7 +1054,7 @@ html[data-skin="folio"] .focused-home-index-heading h2 {
 
 html[data-skin="folio"] .focused-home-index-heading a,
 html[data-skin="folio"] .focused-home-empty a {
-  border-radius: var(--folio-radius);
+  border-radius: var(--radius-control);
   padding: 0.25rem 0.5rem;
   color: var(--color-muted);
   font-weight: 500;
@@ -1110,8 +1069,8 @@ html[data-skin="folio"] .focused-home-empty a:hover {
 
 html[data-skin="folio"] .focused-page-list > li {
   gap: 1.5rem;
-  border-bottom-color: var(--folio-hairline);
-  border-radius: var(--folio-radius);
+  border-bottom-color: var(--hairline);
+  border-radius: var(--radius-control);
   padding: 0.7rem 0.6rem;
   margin-inline: -0.6rem;
   transition: background-color 0.12s;
@@ -1221,18 +1180,7 @@ html[data-skin="folio"] .editor-document-title {
   margin-top: 1.5rem;
 }
 
-html[data-skin="folio"] .editor-props,
-html[data-skin="folio"] .editor-document-foot,
-html[data-skin="folio"] .editor-slash-group + .editor-slash-group {
-  border-color: var(--folio-hairline);
-}
-
 html[data-skin="folio"] .editor-slash-menu,
-html[data-skin="folio"] .editor-bubble {
-  border-color: var(--folio-hairline);
-  box-shadow: var(--folio-shadow);
-}
-
 html[data-skin="folio"] .editor-slash-item[aria-selected="true"],
 html[data-skin="folio"] .editor-bubble-select:hover,
 html[data-skin="folio"] .editor-bubble-button:hover {
@@ -1244,7 +1192,7 @@ html[data-skin="folio"] .editor-document .tiptap code {
 }
 
 html[data-skin="folio"] .editor-table-controls {
-  border-color: var(--folio-hairline);
+  border-color: var(--hairline);
   background: transparent;
 }
 

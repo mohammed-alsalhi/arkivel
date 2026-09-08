@@ -28,7 +28,7 @@ export default async function SharePreviewPage({ params }: Props) {
   return (
     <Page width="narrow" className="py-8">
       <Notice className="border-l-4 border-l-warning-border mb-6">
-        <strong>Draft preview</strong> — This is a private preview link. This article has not been published.
+        <strong>draft preview</strong> — this is a private preview link. the page has not been published.
       </Notice>
 
       <PageHeader

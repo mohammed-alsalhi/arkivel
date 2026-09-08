@@ -31,7 +31,7 @@ p a:hover {
 
 /* ── MediaWiki-style headings with bottom border ── */
 .wiki-content h1 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.6rem;
   font-weight: 400;
   color: var(--color-heading);
@@ -40,7 +40,7 @@ p a:hover {
   border-bottom: 1px solid var(--color-border);
 }
 .wiki-content h2 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--color-heading);
@@ -49,7 +49,7 @@ p a:hover {
   border-bottom: 1px solid var(--color-border);
 }
 .wiki-content h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-heading);
@@ -60,23 +60,32 @@ p a:hover {
   line-height: 1.65;
 }
 .wiki-content ul, .wiki-content ol {
-  padding-left: 2rem;
+  padding-inline-start: 2rem;
   margin: 0.4rem 0;
   line-height: 1.6;
 }
 .wiki-content ul { list-style: disc; }
 .wiki-content ol { list-style: decimal; }
 .wiki-content blockquote {
-  border-left: 3px solid var(--color-border-light);
-  padding-left: 1rem;
+  border-inline-start: 3px solid var(--color-border-light);
+  padding-inline-start: 1rem;
   margin: 0.6rem 0;
   color: var(--color-muted);
   font-style: italic;
 }
-.wiki-content img {
+/* Images get a 10% pure-black (pure-white in dark) inner outline: a tinted
+   neutral picks up the surface and reads as dirt on the image edge. */
+.wiki-content img,
+.wiki-infobox-image img {
   max-width: 100%;
-  border: 1px solid var(--color-border-light);
+  border: 0;
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
   margin: 0.5rem 0;
+}
+html[data-theme="dark"] .wiki-content img,
+html[data-theme="dark"] .wiki-infobox-image img {
+  outline-color: oklch(1 0 0 / 0.1);
 }
 .wiki-content a { color: var(--color-wiki-link); text-decoration: none; }
 .wiki-content a:hover { text-decoration: underline; }
@@ -125,7 +134,7 @@ p a:hover {
   font-size: 0.85rem;
 }
 .footnote-section-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 1rem;
   margin-bottom: 0.5rem;
@@ -133,12 +142,12 @@ p a:hover {
 }
 .footnote-item {
   margin: 0.25rem 0;
-  padding-left: 1.5rem;
+  padding-inline-start: 1.5rem;
   position: relative;
 }
 .footnote-item::before {
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   font-weight: 700;
   color: var(--color-accent);
   font-size: 0.8rem;
@@ -151,9 +160,10 @@ p a:hover {
 
 /* ── Infobox (floated right panel on article pages) ── */
 .wiki-infobox {
-  float: right;
+  float: inline-end;
   width: 280px;
-  margin: 0 0 1rem 1.2rem;
+  margin: 0 0 1rem;
+  margin-inline-start: 1.2rem;
   border: 1px solid var(--color-infobox-border);
   background: var(--color-infobox-bg);
   font-size: 0.85rem;
@@ -163,7 +173,7 @@ p a:hover {
   color: var(--color-infobox-header-text);
   text-align: center;
   padding: 0.5rem 0.75rem;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 1rem;
 }
@@ -171,10 +181,6 @@ p a:hover {
   text-align: center;
   padding: 0.5rem;
   background: var(--color-surface);
-}
-.wiki-infobox-image img {
-  max-width: 100%;
-  border: 1px solid var(--color-border-light);
 }
 .wiki-infobox-row {
   display: flex;
@@ -215,7 +221,7 @@ p a:hover {
 }
 .wiki-toc ol {
   list-style: decimal;
-  padding-left: 1.75rem;
+  padding-inline-start: 1.75rem;
   margin: 0;
 }
 .wiki-toc li {

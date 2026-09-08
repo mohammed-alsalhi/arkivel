@@ -15,10 +15,10 @@ export default function TableOfContents({ html }: Props) {
 
   return (
     <div className="wiki-toc">
-      <div className="wiki-toc-title">Contents</div>
+      <div className="wiki-toc-title">contents</div>
       <ol>
         {headings.map((h, i) => (
-          <li key={i} style={{ marginLeft: `${(h.level - 1) * 0.75}rem` }}>
+          <li key={i} style={{ marginInlineStart: `${(h.level - 1) * 0.75}rem` }}>
             <a href={`#${h.id}`}>{h.text}</a>
           </li>
         ))}

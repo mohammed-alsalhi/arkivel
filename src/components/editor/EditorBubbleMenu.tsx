@@ -103,23 +103,23 @@ export default function EditorBubbleMenu({ editor, onLink, onWikiLink }: Props) 
           <option value="code">code</option>
         </select>
         <span className="editor-bubble-divider" />
-        <MarkButton label="Bold" active={state.bold} onClick={() => editor.chain().focus().toggleBold().run()}>
+        <MarkButton label="bold" active={state.bold} onClick={() => editor.chain().focus().toggleBold().run()}>
           <strong>B</strong>
         </MarkButton>
-        <MarkButton label="Italic" active={state.italic} onClick={() => editor.chain().focus().toggleItalic().run()}>
+        <MarkButton label="italic" active={state.italic} onClick={() => editor.chain().focus().toggleItalic().run()}>
           <em>i</em>
         </MarkButton>
-        <MarkButton label="Strikethrough" active={state.strike} onClick={() => editor.chain().focus().toggleStrike().run()}>
+        <MarkButton label="strikethrough" active={state.strike} onClick={() => editor.chain().focus().toggleStrike().run()}>
           <s>S</s>
         </MarkButton>
-        <MarkButton label="Inline code" active={state.code} onClick={() => editor.chain().focus().toggleCode().run()}>
+        <MarkButton label="inline code" active={state.code} onClick={() => editor.chain().focus().toggleCode().run()}>
           <code>{"<>"}</code>
         </MarkButton>
         <span className="editor-bubble-divider" />
-        <MarkButton label="Link" active={state.link} onClick={onLink}>
+        <MarkButton label="link" active={state.link} onClick={onLink}>
           link
         </MarkButton>
-        <MarkButton label="Page link" active={false} onClick={onWikiLink}>
+        <MarkButton label="page link" active={false} onClick={onWikiLink}>
           [[ ]]
         </MarkButton>
       </div>

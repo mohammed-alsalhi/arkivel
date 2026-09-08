@@ -156,7 +156,7 @@ html[data-site-mode="product"] body {
   color: var(--product-ink);
   font-weight: 680;
   letter-spacing: -0.065em;
-  line-height: 0.98;
+  line-height: 1.1;
 }
 
 .product-hero-copy h1 {

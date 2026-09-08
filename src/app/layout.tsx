@@ -141,7 +141,7 @@ export default async function RootLayout({
     return (
       <html lang="en" data-site-mode="product" data-scroll-behavior="smooth">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <a href="#main-content" className="skip-to-content">Skip to content</a>
+          <a href="#main-content" className="skip-to-content">skip to content</a>
           <ProductShell>{children}</ProductShell>
           <OverlayScrollbar />
         </body>
@@ -197,7 +197,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <a href="#main-content" className="skip-to-content">Skip to content</a>
+        <a href="#main-content" className="skip-to-content">skip to content</a>
         <EnabledModulesProvider modules={modules}>
         <SkinProvider skin={skin}>
         <AdminProvider initialAuth={initialAuth}>

@@ -328,7 +328,7 @@ html[data-skin="folio"] .collections-table thead th {
 
 /* folio: hairline dividers instead of the framed border */
 html[data-skin="folio"] .collections-panel {
-  border-color: var(--folio-hairline);
+  border-color: var(--hairline);
   background: transparent;
 }
 
@@ -336,11 +336,11 @@ html[data-skin="folio"] .collections-panel-row,
 html[data-skin="folio"] .collections-form-row,
 html[data-skin="folio"] .collections-form-rows,
 html[data-skin="folio"] .collections-panel-footer {
-  border-color: var(--folio-hairline);
+  border-color: var(--hairline);
 }
 
 html[data-skin="folio"] .collections-toolbar {
-  border-bottom-color: var(--folio-hairline);
+  border-bottom-color: var(--hairline);
 }
 
 /* Shared database layouts: skins change typography and surfaces, never structure. */
@@ -385,7 +385,6 @@ html[data-skin="folio"] .collections-toolbar {
 }
 .collections-view svg {
   flex-shrink: 0;
-  stroke-width: 1.5;
 }
 .collections-toolbar-actions {
   align-items: center;
@@ -1081,5 +1080,12 @@ html[data-skin="wiki"] .collections-view-tab-active {
   }
   .collections-card-properties > div {
     grid-template-columns: 5rem minmax(0, 1fr);
+  }
+}
+
+/* Touch has no hover: row actions stay visible on coarse pointers. */
+@media (pointer: coarse) {
+  .collections-row-actions {
+    opacity: 1;
   }
 }

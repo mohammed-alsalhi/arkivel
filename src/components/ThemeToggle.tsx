@@ -33,8 +33,8 @@ export default function ThemeToggle() {
   return (
     <IconButton
       onClick={toggle}
-      label="Toggle theme"
-      title={dark ? "Switch to light mode" : "Switch to dark mode"}
+      label="toggle theme"
+      title={dark ? "switch to light mode" : "switch to dark mode"}
       aria-pressed={dark}
     >
       {dark ? (

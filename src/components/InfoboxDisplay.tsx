@@ -88,7 +88,7 @@ export default function InfoboxDisplay({
       {/* Standard rows */}
       {category && (
         <div className="wiki-infobox-row">
-          <div className="wiki-infobox-label">Category</div>
+          <div className="wiki-infobox-label">space</div>
           <div className="wiki-infobox-value">
             <Link href={`/categories/${category.slug}`}>
               {category.name}
@@ -98,7 +98,7 @@ export default function InfoboxDisplay({
       )}
       {tags.length > 0 && (
         <div className="wiki-infobox-row">
-          <div className="wiki-infobox-label">Tags</div>
+          <div className="wiki-infobox-label">tags</div>
           <div className="wiki-infobox-value">
             {tags.map((tag, i) => (
               <span key={tag.id}>
@@ -110,11 +110,11 @@ export default function InfoboxDisplay({
         </div>
       )}
       <div className="wiki-infobox-row">
-        <div className="wiki-infobox-label">Created</div>
+        <div className="wiki-infobox-label">created</div>
         <div className="wiki-infobox-value">{formatDate(createdAt)}</div>
       </div>
       <div className="wiki-infobox-row">
-        <div className="wiki-infobox-label">Updated</div>
+        <div className="wiki-infobox-label">updated</div>
         <div className="wiki-infobox-value">{formatDate(updatedAt)}</div>
       </div>
     </div>

@@ -64,6 +64,12 @@
   font-size: 0.85rem;
 }
 
+/* Links inside running notice text read apart from it by more than color. */
+.wiki-notice a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 /* ── Diff styles ── */
 .diff-added {
   background: var(--color-diff-added);
@@ -96,7 +102,7 @@ html[data-theme="dark"] .search-highlight {
 /* ── Disambiguation notice ── */
 .wiki-disambiguation-notice {
   border: 1px solid var(--color-border-light);
-  border-left: 3px solid var(--color-accent);
+  border-inline-start: 3px solid var(--color-accent);
   background: var(--color-accent-soft);
   padding: 0.6rem 0.75rem;
   margin-bottom: 1rem;
@@ -114,10 +120,11 @@ html[data-theme="dark"] .search-highlight {
   background: var(--color-accent-soft);
 }
 
-/* ── Theme transition (applied briefly when toggling dark/light) ── */
+/* ── Theme switch: suspend every transition for one frame so the whole page
+   snaps together instead of each control cross-fading at its own pace ── */
 html.theme-transitioning,
 html.theme-transitioning *,
 html.theme-transitioning *::before,
 html.theme-transitioning *::after {
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s, fill 0.3s, stroke 0.3s !important;
+  transition: none !important;
 }
