@@ -1,5 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { corsHeaders, parseCorsOrigins } from "@/lib/cors";
 import { isProductRouteAllowed, resolveSiteMode } from "@/lib/site-mode";
+
+const corsOrigins = parseCorsOrigins(process.env.ARKIVEL_API_CORS_ORIGINS);
 
 const securityHeaders = {
   "Content-Security-Policy-Report-Only":
@@ -13,13 +16,22 @@ const securityHeaders = {
 } as const;
 
 export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const cors = pathname.startsWith("/api/") ? corsHeaders(request.headers.get("origin"), corsOrigins) : null;
+  if (cors && request.method === "OPTIONS") {
+    return new NextResponse(null, { status: 204, headers: cors });
+  }
+
   const productRouteBlocked = resolveSiteMode(process.env.ARKIVEL_SITE_MODE) === "product"
-    && !isProductRouteAllowed(request.nextUrl.pathname);
+    && !isProductRouteAllowed(pathname);
   const response = productRouteBlocked
     ? new NextResponse("Not Found", { status: 404 })
     : NextResponse.next({ request });
 
   for (const [key, value] of Object.entries(securityHeaders)) {
+    response.headers.set(key, value);
+  }
+  for (const [key, value] of Object.entries(cors ?? {})) {
     response.headers.set(key, value);
   }
 

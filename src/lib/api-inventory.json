@@ -1,0 +1,811 @@
+[
+  {
+    "route": "/api/admin/audit-log",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/categories/merge",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/kits",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "every starter kit with, for each, which of its modules are enabled and which of its collections already exist."
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/kits/apply",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "body `{ kit: KitId, seedSampleItems?: boolean }`. Returns the apply report: `{ kit, skin, modulesEnabled, collectionsCreated, collectionsSkipped, itemsCreated }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/maintenance",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "get current mode"
+      },
+      {
+        "method": "POST",
+        "summary": "get current mode */ export async function GET() { const admin = await isAdmin(); if (!admin) return NextResponse.json({ error: \"Forbidden\" }, { status: 403 }); const record = await prisma.systemSetting.findUnique({ where: { id: KEY } }); return NextResponse.json({ enabled: record?.enabled ?? false }); } /** POST /api/admin/maintenance — toggle maintenance mode"
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/maintenance/report",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/modules",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "the registry with the environment default, override, and resolved set"
+      },
+      {
+        "method": "PUT",
+        "summary": "the registry with the environment default, override, and resolved set */ export async function GET() { const admin = await isAdmin(); if (!admin) return NextResponse.json({ error: \"Forbidden\" }, { status: 403 }); return NextResponse.json(await state()); } /** PUT /api/admin/modules — store `{ enabled: ModuleId[] }` as the admin override"
+      },
+      {
+        "method": "DELETE",
+        "summary": "the registry with the environment default, override, and resolved set */ export async function GET() { const admin = await isAdmin(); if (!admin) return NextResponse.json({ error: \"Forbidden\" }, { status: 403 }); return NextResponse.json(await state()); } /** PUT /api/admin/modules — store `{ enabled: ModuleId[] }` as the admin override */ export async function PUT(request: NextRequest) { const admin = await isAdmin(); if (!admin) return NextResponse.json({ error: \"Forbidden\" }, { status: 403 }); const body = await request.json().catch(() => null); const requested = body && typeof body === \"object\" ? (body as { enabled?: unknown }).enabled : undefined; if (!Array.isArray(requested)) { return NextResponse.json({ error: \"enabled must be an array of module ids\" }, { status: 400 }); } const enabled = normalizeModuleIds(requested); await prisma.systemSetting.upsert({ where: { id: MODULES_SETTING_KEY }, update: { enabled: true, config: { enabled } }, create: { id: MODULES_SETTING_KEY, enabled: true, config: { enabled } }, }); return NextResponse.json(await state()); } /** DELETE /api/admin/modules — drop the override and return to the environment default"
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/read-only",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/redirects",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PUT",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/aliases",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/blame",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "GET /api/articles/[id]/blame Returns a per-paragraph blame annotation: for each non-empty paragraph in the current article content, finds the earliest revision that introduced it."
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/check-password",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/links",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/revisions/{revisionId}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": "POST = revert to this revision (admin only)"
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/revisions/{revisionId}/restore",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/revisions/export",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "GET — download all revisions as CSV"
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/share-token",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "POST — generate a share token for a draft article"
+      },
+      {
+        "method": "DELETE",
+        "summary": "DELETE — revoke the share token"
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/import",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/assets",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/auth/check",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/auth/login",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/auth/logout",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/auth/register",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/categories",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/categories/{id}",
+    "methods": [
+      {
+        "method": "PUT",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/collections",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": "Body: `{ name, categoryId?, description?, icon?, template?: \"blank\" | \"tasks\" | \"reading_list\" | \"simple_table\", schema?, views? }`. A template supplies schema and views unless the body overrides them."
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PATCH",
+        "summary": "Body: any of `{ name, slug, description, icon, categoryId, schema }`."
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/import-course-sync",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: { source: canonical course-sync JSON, dryRun?: boolean }. Preview is the default."
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/items",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?page=1&q=title` — 100 items a page, ordered by sortOrder then creation."
+      },
+      {
+        "method": "POST",
+        "summary": "`?page=1&q=title` — 100 items a page, ordered by sortOrder then creation. */ export async function GET(request: NextRequest, { params }: Params) { const disabled = await moduleDisabledResponse(\"collections\"); if (disabled) return disabled; const { id } = await params; const collection = await resolveCollection(id); if (!collection) return notFound(); const page = Number.parseInt(request.nextUrl.searchParams.get(\"page\") ?? \"1\", 10); const q = request.nextUrl.searchParams.get(\"q\") ?? undefined; return NextResponse.json(await listItems(collection, { page: Number.isFinite(page) ? page : 1, q })); } /** Body: `{ title, properties?, articleId?, sortOrder? }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/items/{itemId}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PATCH",
+        "summary": "Body: any of `{ title, properties (merged), articleId, sortOrder }`."
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/views",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ name, slug?, kind?, config?, isDefault? }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/views/{viewId}",
+    "methods": [
+      {
+        "method": "PATCH",
+        "summary": "Body: any of `{ name, slug, kind, config, isDefault, sortOrder }`."
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/export/history",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/export/json",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/export/markdown",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/export/zip",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/graph",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/health",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/health/wiki",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/import/notion",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/import/obsidian",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/media/health",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`{ mode, catalog, recommendation, sample_library, can_edit }` — configuration, not provider connectivity."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/import",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ items }` or `{ raw }` (a JSON file's text) — preview matches; nothing is saved."
+      },
+      {
+        "method": "PUT",
+        "summary": "Body: `{ items }` or `{ raw }` (a JSON file's text) — preview matches; nothing is saved. */ export async function POST(request: NextRequest) { return mediaRoute(async () => { const input = await readBody(request); let source: unknown = input.items; if (input.raw !== undefined) { if (typeof input.raw !== \"string\") throw new InputError(\"Upload a JSON text file.\"); try { source = JSON.parse(input.raw); } catch { throw new InputError(\"This file is not valid JSON.\"); } } return NextResponse.json(await matchTitles(importTitles(source))); }); } /** Body: `{ items: [watchlist item inputs] }` (1–100) — saves them as plan_to_watch; `{ imported, skipped, items }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/library",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "Downloads the whole library as `vistara-library.json`."
+      },
+      {
+        "method": "POST",
+        "summary": "Downloads the whole library as `vistara-library.json`. */ export async function GET() { return mediaRoute(async () => NextResponse.json(await readLibrary(), { headers: { \"Content-Disposition\": 'attachment; filename=\"vistara-library.json\"' } }), ); } /** Body: `{ backup }` — previews a merge: `{ added, existing, episodesAdded, episodesExisting }`."
+      },
+      {
+        "method": "PUT",
+        "summary": "Downloads the whole library as `vistara-library.json`. */ export async function GET() { return mediaRoute(async () => NextResponse.json(await readLibrary(), { headers: { \"Content-Disposition\": 'attachment; filename=\"vistara-library.json\"' } }), ); } /** Body: `{ backup }` — previews a merge: `{ added, existing, episodesAdded, episodesExisting }`. */ export async function POST(request: NextRequest) { return mediaRoute(async () => NextResponse.json(await previewRestore(parseBackup((await readBody(request, BACKUP_BYTES)).backup))), { write: true }); } /** Body: `{ backup }` — merges it into the library; same counts as the preview."
+      },
+      {
+        "method": "DELETE",
+        "summary": "Downloads the whole library as `vistara-library.json`. */ export async function GET() { return mediaRoute(async () => NextResponse.json(await readLibrary(), { headers: { \"Content-Disposition\": 'attachment; filename=\"vistara-library.json\"' } }), ); } /** Body: `{ backup }` — previews a merge: `{ added, existing, episodesAdded, episodesExisting }`. */ export async function POST(request: NextRequest) { return mediaRoute(async () => NextResponse.json(await previewRestore(parseBackup((await readBody(request, BACKUP_BYTES)).backup))), { write: true }); } /** Body: `{ backup }` — merges it into the library; same counts as the preview. */ export async function PUT(request: NextRequest) { return mediaRoute(async () => NextResponse.json(await restoreBackup(parseBackup((await readBody(request, BACKUP_BYTES)).backup))), { write: true }); } /** Removes untouched starter titles and their marks: `{ removed }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/mood",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ mood, count? }` — `{ mood, source, message, recommendations }` from the unwatched library."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/save",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ media: \"movie\" | \"series\", id, status? }` — saves a title into the watchlist; returns the existing item when it is already there."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/search",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?q=` — matching titles (trending when blank), each flagged with the watchlist item that already has it."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/seasons",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ itemId, season }` — marks every episode of that season watched for a saved series: one row per episode in the episodes collection (created when missing, updated when present), bound to the watchlist item."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/titles",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?q=&type=` — Vistara-shaped search results (trending or the catalogue when `q` is blank)."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/titles/{media}/{id}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "A title's details, its saved watchlist item if any, and `?season=n` episodes for a series."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/tmdb/{id}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?type=movie|tv&seasons=1` — `{ tmdb, ratings, seasons?, source, episode_scope? }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/watchlist",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?status=&type=&mood=` — saved titles, each with metadata and episode counts."
+      },
+      {
+        "method": "POST",
+        "summary": "`?status=&type=&mood=` — saved titles, each with metadata and episode counts. */ export async function GET(request: NextRequest) { return mediaRoute(async () => { const params = request.nextUrl.searchParams; const status = params.get(\"status\") ? watchStatus(params.get(\"status\")) : undefined; const type = params.get(\"type\") ? mediaType(params.get(\"type\")) : undefined; const mood = params.get(\"mood\") ? moodTags([params.get(\"mood\")])[0] : undefined; const { items } = await readLibrary(); return NextResponse.json(items.filter((item) => (!status || item.status === status) && (!type || item.media_type === type) && (!mood || item.moods.includes(mood)))); }); } /** Body: a watchlist item input — saves it; an existing `(tmdb_id, media_type)` comes back unchanged."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/watchlist/{id}",
+    "methods": [
+      {
+        "method": "PATCH",
+        "summary": "Body: `{ status?, moods? }` (at least one) — updates the title; `watched` stamps a missing watched date."
+      },
+      {
+        "method": "DELETE",
+        "summary": "Body: `{ status?, moods? }` (at least one) — updates the title; `watched` stamps a missing watched date. */ export async function PATCH(request: NextRequest, context: Context) { return mediaRoute(async () => { const { id } = await context.params; const input = await readBody(request); if (input.status === undefined && input.moods === undefined) throw new InputError(\"Choose a status or mood to update.\"); const status = input.status === undefined ? undefined : watchStatus(input.status); const moods = input.moods === undefined ? undefined : moodTags(input.moods); return NextResponse.json(await patchTitle(id, { status, moods })); }, { write: true }); } /** Removes the title and its episode marks; 404 when it is already gone."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/watchlist/{id}/episodes",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "Watched episode marks for the title, by season then episode."
+      },
+      {
+        "method": "POST",
+        "summary": "Watched episode marks for the title, by season then episode. */ export async function GET(_request: NextRequest, context: Context) { return mediaRoute(async () => NextResponse.json(await listEpisodes((await context.params).id))); } /** Body: `{ episodes: [{ season_number, episode_number }] }` (1–500) — marks them watched; returns the requested marks."
+      },
+      {
+        "method": "DELETE",
+        "summary": "Watched episode marks for the title, by season then episode. */ export async function GET(_request: NextRequest, context: Context) { return mediaRoute(async () => NextResponse.json(await listEpisodes((await context.params).id))); } /** Body: `{ episodes: [{ season_number, episode_number }] }` (1–500) — marks them watched; returns the requested marks. */ export async function POST(request: NextRequest, context: Context) { return mediaRoute(async () => { const { id } = await context.params; const input = await readBody(request); if (!Array.isArray(input.episodes) || !input.episodes.length || input.episodes.length > 500) throw new InputError(\"Choose between 1 and 500 episodes.\"); return NextResponse.json(await markEpisodes(id, input.episodes.map(episode)), { status: 201 }); }, { write: true }); } /** Body: `{ season_number, episode_number }` — removes that mark; 204 even when it was already absent."
+      }
+    ]
+  },
+  {
+    "route": "/api/preferences",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PUT",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/search",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/sessions",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "list current user's active sessions"
+      }
+    ]
+  },
+  {
+    "route": "/api/sessions/{id}",
+    "methods": [
+      {
+        "method": "DELETE",
+        "summary": "revoke a session (must belong to current user)"
+      }
+    ]
+  },
+  {
+    "route": "/api/tags",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/tags/{id}",
+    "methods": [
+      {
+        "method": "PUT",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/tokens",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "the caller's personal access tokens (never the secrets)."
+      },
+      {
+        "method": "POST",
+        "summary": "the caller's personal access tokens (never the secrets). */ export async function GET() { const user = await getSession(); if (!user) return NextResponse.json({ error: \"Authentication required\" }, { status: 401 }); return NextResponse.json(await listApiTokens(user.id)); } /** POST /api/tokens — `{ name, expiresInDays: number | null }`; the response carries the token once."
+      }
+    ]
+  },
+  {
+    "route": "/api/tokens/{id}",
+    "methods": [
+      {
+        "method": "DELETE",
+        "summary": "revoke a token you own (admins may revoke any)."
+      }
+    ]
+  },
+  {
+    "route": "/api/upload",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/users",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PATCH",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/articles",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/categories",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/contract",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/openapi.json",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/sdk",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/search",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/tags",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  }
+]

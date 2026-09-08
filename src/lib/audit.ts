@@ -3,6 +3,8 @@ import { getSession } from "@/lib/auth";
 
 export type AuditAction =
   | "admin.failed_operation"
+  | "api_token.create"
+  | "api_token.revoke"
   | "article.create"
   | "article.delete"
   | "article.restore"

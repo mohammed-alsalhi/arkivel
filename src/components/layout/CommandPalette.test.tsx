@@ -126,6 +126,7 @@ describe("CommandPalette", () => {
       "import",
       "export",
       "api reference",
+      "api tokens",
       "toggle dark mode",
       "use wiki skin",
       "copy page link",

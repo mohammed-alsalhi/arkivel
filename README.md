@@ -18,6 +18,10 @@ Vercel builds use its native Next.js adapter. Self-hosted builds produce a stand
 
 Wiki deployments default to the lowercase, full-viewport `folio` skin. Set `NEXT_PUBLIC_ARKIVEL_SKIN=wiki` to make the classic framed wiki skin the site default; signed-in readers can override either default from the appearance section in settings. Press `⌘K` / `Ctrl+K` anywhere for the command palette.
 
+## api
+
+Every route under `/api` is the interface's own surface and accepts a personal access token: create one under `/settings/tokens`, then send `Authorization: Bearer ark_…` to act as that user with their role. The generated reference at `/api-docs` lists the frozen public v1 read endpoints and the full route inventory. Set `ARKIVEL_API_CORS_ORIGINS` to let browser apps on other origins call the api with a token.
+
 ## core
 
 - articles with rich text, wiki links, backlinks, and a local graph

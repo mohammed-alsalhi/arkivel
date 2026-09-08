@@ -118,6 +118,7 @@ model User {
   articles      Article[]
   revisions     ArticleRevision[]
   sessions      Session[]
+  apiTokens     ApiToken[]
   preferences   UserPreference?
   oauthAccounts OAuthAccount[]
   assets        Asset[]
@@ -137,6 +138,22 @@ model Session {
   ipAddress String?
 
   @@index([token])
+  @@index([userId])
+}
+
+/// A personal access token: `Authorization: Bearer ark_…` acts as the user
+/// who created it, with that user's role. Only the hash is stored.
+model ApiToken {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  tokenHash  String    @unique
+  prefix     String
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+
   @@index([userId])
 }
 

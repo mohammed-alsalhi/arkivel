@@ -20,6 +20,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:status": "prisma migrate status",
     "release:docs-sync": "node scripts/verify-docs-sync.mjs",
+    "api:inventory": "node scripts/api-inventory.mjs",
     "import": "tsx scripts/import-articles.ts"
   },
   "dependencies": {

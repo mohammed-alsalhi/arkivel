@@ -5,7 +5,9 @@ import {
   PUBLIC_API_V1_EXAMPLE_BASE_URL,
 } from "@/lib/public-api-v1";
 import { TRAIL_ROOTS } from "@/lib/trail";
+import inventory from "@/lib/api-inventory.json";
 import { requireModule } from "@/modules/enabled";
+import { moduleForPath } from "@/modules/registry";
 import {
   Chip,
   CodeBlock,
@@ -70,7 +72,56 @@ export default async function ApiDocsPage() {
           </p>
         </Section>
 
-        <Section title="operations">
+        <Section title="authentication">
+          <p className="text-muted">
+            the v1 endpoints below are public reads. every other route under <InlineCode>/api</InlineCode> is the
+            same surface the interface uses, and it accepts a personal access token so scripts and other apps can do
+            everything a signed-in user can, with that user&apos;s role (viewer, editor, admin). create tokens under{" "}
+            <a href="/settings/tokens"><InlineCode>/settings/tokens</InlineCode></a>; each is shown once and can be
+            revoked there or from the audit log.
+          </p>
+          <CodeBlock>
+            <code>{`curl -H "Authorization: Bearer ark_…" ${spec.servers[0].url}/api/collections`}</code>
+          </CodeBlock>
+          <p className="text-muted">
+            anonymous calls get <InlineCode>401</InlineCode>, insufficient roles <InlineCode>403</InlineCode>. browsers on
+            another origin are refused until the deployment lists them in <InlineCode>ARKIVEL_API_CORS_ORIGINS</InlineCode>;
+            cross-origin calls never carry a session cookie, only a token.
+          </p>
+        </Section>
+
+        <Section title="full surface">
+          <p className="text-muted">
+            {inventory.length} routes and {inventory.reduce((sum, entry) => sum + entry.methods.length, 0)} operations,
+            generated from the route handlers. routes owned by a disabled module answer <InlineCode>404</InlineCode>. shapes
+            follow the interface and may change between minor versions; the v1 operations below are the frozen contract.
+          </p>
+          <DataTable className="text-[12px]">
+            <caption className="ui-sr-only">every api route with its methods</caption>
+            <thead>
+              <tr>
+                <th scope="col">route</th>
+                <th scope="col">methods</th>
+                <th scope="col">module</th>
+                <th scope="col">summary</th>
+              </tr>
+            </thead>
+            <tbody>
+              {inventory.map((entry) => (
+                <tr key={entry.route}>
+                  <td><InlineCode className="break-all">{entry.route}</InlineCode></td>
+                  <td>{entry.methods.map((m) => m.method).join(", ")}</td>
+                  <td>{moduleForPath(entry.route.replace(/\{[^}]+\}/g, "x"))?.id ?? "core"}</td>
+                  <td title={entry.methods.map((m) => m.summary).filter(Boolean).join(" · ") || undefined}>
+                    {entry.methods.map((m) => m.summary).filter(Boolean)[0] ?? "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </DataTable>
+        </Section>
+
+        <Section title="v1 operations">
           <div className="divide-y divide-border">
             {operations.map((operation) => {
               const headingId = `operation-${operation.operationId}`;

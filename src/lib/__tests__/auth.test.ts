@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 // Mock next/headers
 vi.mock("next/headers", () => ({
   cookies: vi.fn(),
+  headers: vi.fn(async () => ({ get: () => null })),
 }));
 
 // Mock prisma
@@ -12,12 +13,47 @@ vi.mock("@/lib/prisma", () => ({
       findUnique: vi.fn(),
       delete: vi.fn(),
     },
+    apiToken: {
+      findUnique: vi.fn(),
+      update: vi.fn(async () => ({})),
+    },
   },
 }));
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import prisma from "@/lib/prisma";
-import { isAdmin, requireAdmin, requireRole, type SessionUser } from "../auth";
+import { generateToken } from "../api-tokens";
+import { getSession, isAdmin, requireAdmin, requireRole, type SessionUser } from "../auth";
+
+describe("getSession with a personal access token", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(cookies).mockResolvedValue({ get: () => undefined } as never);
+  });
+
+  it("resolves the token's user when there is no session cookie", async () => {
+    const { raw, hash } = generateToken();
+    vi.mocked(headers).mockResolvedValue({ get: (name: string) => (name === "authorization" ? `Bearer ${raw}` : null) } as never);
+    vi.mocked(prisma.apiToken.findUnique).mockResolvedValue({
+      id: "tok", expiresAt: null, lastUsedAt: null,
+      user: { id: "u1", username: "script", email: "s@example.test", displayName: null, role: "editor" },
+    } as never);
+    expect(await getSession()).toMatchObject({ id: "u1", role: "editor" });
+    expect(prisma.apiToken.findUnique).toHaveBeenCalledWith(expect.objectContaining({ where: { tokenHash: hash } }));
+  });
+
+  it("rejects expired, unknown, and foreign bearer tokens", async () => {
+    const { raw } = generateToken();
+    vi.mocked(headers).mockResolvedValue({ get: () => `Bearer ${raw}` } as never);
+    vi.mocked(prisma.apiToken.findUnique).mockResolvedValue({ id: "tok", expiresAt: new Date(Date.now() - 1000), lastUsedAt: null, user: { role: "admin" } } as never);
+    expect(await getSession()).toBeNull();
+    vi.mocked(prisma.apiToken.findUnique).mockResolvedValue(null as never);
+    expect(await getSession()).toBeNull();
+    vi.mocked(headers).mockResolvedValue({ get: () => "Bearer not-ours" } as never);
+    expect(await getSession()).toBeNull();
+    expect(prisma.apiToken.findUnique).toHaveBeenCalledTimes(2);
+  });
+});
 
 describe("isAdmin", () => {
   beforeEach(() => {

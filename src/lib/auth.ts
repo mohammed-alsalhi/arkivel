@@ -1,5 +1,6 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { bearerToken, resolveApiToken } from "@/lib/api-tokens";
 import prisma from "@/lib/prisma";
 
 const SESSION_COOKIE = "session_token";
@@ -27,11 +28,19 @@ export type SessionUser = {
   role: string;
 };
 
+/**
+ * The signed-in user: the browser session cookie, or a personal access
+ * token in `Authorization: Bearer ark_…` (see `src/lib/api-tokens.ts`), which
+ * is how external apps use every `/api/**` route.
+ */
 export async function getSession(): Promise<SessionUser | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
 
-  if (!token) return null;
+  if (!token) {
+    const raw = bearerToken((await headers()).get("authorization"));
+    return raw ? resolveApiToken(raw) : null;
+  }
 
   const session = await prisma.session.findUnique({
     where: { token },

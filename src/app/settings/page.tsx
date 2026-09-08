@@ -264,6 +264,15 @@ export default function SettingsPage() {
           </Link>
         </SectionPanel>
 
+        <SectionPanel title="api tokens" bodyClassName="text-[13px]">
+          <p className="text-muted mb-2">
+            personal access tokens let scripts and other apps use the api as you.
+          </p>
+          <Link href="/settings/tokens" className="text-accent hover:underline text-[13px]">
+            manage api tokens →
+          </Link>
+        </SectionPanel>
+
         <div className="flex items-center gap-3 pt-2">
           <Button
             onClick={handleSave}
