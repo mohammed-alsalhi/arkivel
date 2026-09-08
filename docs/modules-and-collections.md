@@ -130,7 +130,9 @@ Collection choice fields use a shared searchable label picker: option colors sta
 
 ## starter kits
 
-A kit is `{ modules: ModuleId[], skin, seed }` in `src/kits/`. `ARKIVEL_KIT` picks one for a fresh database; `/admin/kits` can apply a kit's seed later (idempotent, like the demo seed). Kits: `wiki` (core + graph + api), `notes-and-tasks` (core + collections with a tasks collection: status / due / priority / assignee, table + board views), `team-knowledge-base` (everything), and `course-workspace` (linked courses and coursework, with table, board, list, and calendar views).
+A kit is `{ modules: ModuleId[], skin, seed }` in `src/kits/`. `ARKIVEL_KIT` picks one for a fresh database; `/admin/kits` can apply a kit's seed later (idempotent, like the demo seed). Kits: `wiki` (core + graph + api), `notes-and-tasks` (core + collections with a tasks collection: status / due / priority / assignee, table + board views), `team-knowledge-base` (everything), `course-workspace` (linked courses and coursework, with table, board, list, and calendar views), and `watchlist` (a film and series library: a `watchlist` collection with type / status / moods / year / rating / watched on and table, board, and list views, plus an `episodes` collection bound to it for per-episode marks; with assets, export, and import).
+
+The `watchlist` kit is the worked example of using Arkivel for a domain that is not a wiki: set `NEXT_PUBLIC_ARKIVEL_NAME` to the product name, apply the kit from `/admin/kits`, and the same image, database, and admin become a media library. Nothing in the kit is code; it is two templates and a seed.
 
 ## course workspace and course-sync import
 

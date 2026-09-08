@@ -14,7 +14,7 @@ Arkivel 6.5 supports:
 - assets, audit logs, health checks, maintenance mode, and read-only mode
 - a documented `/api/v1` contract and OpenAPI document
 - collections with table, board, list, and calendar views, searchable typed properties, filters, sorting, and linked records
-- starter kits (`wiki`, `notes and tasks`, `team knowledge base`, `course workspace`) applied from `/admin/kits`: a module preset plus seeded collections, idempotent by collection slug
+- starter kits (`wiki`, `notes and tasks`, `team knowledge base`, `course workspace`, `watchlist`) applied from `/admin/kits`: a module preset plus seeded collections, idempotent by collection slug
 - course-sync metadata imports with preview, stable source identity, linked course hubs, and separate deadlines, scores, and completion evidence
 
 It intentionally does not include AI assistants, live collaboration, marketplaces, plugins, workspaces, social feeds, learning systems, gamification, personal dashboards, maps, canvases, or presentation tools.

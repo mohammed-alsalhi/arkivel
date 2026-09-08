@@ -51,6 +51,25 @@ const readingListCollection: KitCollection = {
   ],
 };
 
+// A film and series library on the collections engine: the "vistara" shape.
+const watchlistCollection: KitCollection = {
+  template: "watchlist",
+  name: "watchlist",
+  views: [{ kind: "table" }, { kind: "board", groupBy: "status" }, { kind: "list" }],
+  items: [
+    { title: "Severance", properties: { media: "series", status: "watching", moods: ["thoughtful", "thrilling", "dark"], year: 2022 } },
+    { title: "The Bear", properties: { media: "series", status: "watching", moods: ["thrilling", "inspiring", "funny"], year: 2022 } },
+    { title: "Dune: Part Two", properties: { media: "movie", status: "queued", moods: ["action", "thoughtful", "thrilling"], year: 2024 } },
+    { title: "Past Lives", properties: { media: "movie", status: "queued", moods: ["romantic", "thoughtful", "relaxing"], year: 2023 } },
+    { title: "Perfect Days", properties: { media: "movie", status: "queued", moods: ["relaxing", "inspiring", "feel_good"], year: 2023 } },
+    { title: "Shōgun", properties: { media: "series", status: "queued", moods: ["thrilling", "thoughtful", "action"], year: 2024 } },
+    { title: "The Grand Budapest Hotel", properties: { media: "movie", status: "watched", moods: ["funny", "feel_good", "relaxing"], year: 2014, rating: 9, watched_on: daysFromNow(-12) } },
+    { title: "Everything Everywhere All at Once", properties: { media: "movie", status: "watched", moods: ["funny", "thoughtful", "inspiring"], year: 2022, rating: 8, watched_on: daysFromNow(-30) } },
+    { title: "Whiplash", properties: { media: "movie", status: "watched", moods: ["thrilling", "dark", "thoughtful"], year: 2014, rating: 9, watched_on: daysFromNow(-45) } },
+    { title: "Fleabag", properties: { media: "series", status: "dropped", moods: ["funny", "romantic", "thoughtful"], year: 2016 } },
+  ],
+};
+
 export const KITS: readonly KitDefinition[] = [
   {
     id: "wiki",
@@ -87,6 +106,17 @@ export const KITS: readonly KitDefinition[] = [
       { template: "coursework", name: "coursework", relations: { course: "courses" }, views: [
         { kind: "table" }, { kind: "board", groupBy: "status" }, { kind: "list" }, { kind: "calendar", groupBy: "due" },
       ] },
+    ],
+  },
+  {
+    id: "watchlist",
+    name: "watchlist",
+    description: "a film and series library: a watchlist with a status board and per-episode marks, plus assets for posters and export for backups.",
+    modules: ["collections", "assets", "export", "import"],
+    skin: "folio",
+    collections: [
+      watchlistCollection,
+      { template: "episodes", name: "episodes", relations: { show: "watchlist" }, views: [{ kind: "table" }] },
     ],
   },
 ];

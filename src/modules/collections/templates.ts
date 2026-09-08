@@ -1,7 +1,15 @@
 import type { PropertySchema, ViewConfig } from "./properties";
 import { defaultViewFor } from "./properties";
 
-export type TemplateId = "blank" | "tasks" | "reading_list" | "simple_table" | "courses" | "coursework";
+export type TemplateId =
+  | "blank"
+  | "tasks"
+  | "reading_list"
+  | "simple_table"
+  | "courses"
+  | "coursework"
+  | "watchlist"
+  | "episodes";
 
 export type CollectionTemplate = {
   id: TemplateId;
@@ -106,6 +114,48 @@ const courseworkSchema: PropertySchema = [
   { id: "source_notes", name: "source notes", type: "text" },
 ];
 
+// A film and series library: what to watch next, what is in progress, how it felt.
+const watchlistSchema: PropertySchema = [
+  { id: "title", name: "title", type: "title" },
+  { id: "media", name: "type", type: "select", options: [
+    { id: "movie", label: "film", tone: "default" },
+    { id: "series", label: "series", tone: "info" },
+  ] },
+  { id: "status", name: "status", type: "select", options: [
+    { id: "queued", label: "to watch", tone: "default" },
+    { id: "watching", label: "watching", tone: "info" },
+    { id: "watched", label: "watched", tone: "success" },
+    { id: "dropped", label: "dropped", tone: "warning" },
+  ] },
+  { id: "moods", name: "moods", type: "multi_select", options: [
+    { id: "funny", label: "funny", tone: "warning" },
+    { id: "feel_good", label: "feel-good", tone: "success" },
+    { id: "relaxing", label: "relaxing", tone: "success" },
+    { id: "romantic", label: "romantic", tone: "danger" },
+    { id: "thrilling", label: "thrilling", tone: "info" },
+    { id: "dark", label: "dark", tone: "default" },
+    { id: "thoughtful", label: "thought-provoking", tone: "info" },
+    { id: "inspiring", label: "inspiring", tone: "success" },
+    { id: "action", label: "action-packed", tone: "danger" },
+  ] },
+  { id: "year", name: "year", type: "number" },
+  { id: "rating", name: "my rating", type: "number" },
+  { id: "watched_on", name: "watched on", type: "date" },
+  { id: "url", name: "link", type: "url" },
+  { id: "poster", name: "poster", type: "url" },
+  { id: "notes", name: "notes", type: "text" },
+];
+
+// Episode marks for a series in the watchlist; the watchlist kit binds `show`.
+const episodesSchema: PropertySchema = [
+  { id: "title", name: "episode", type: "title" },
+  { id: "show", name: "show", type: "text" },
+  { id: "season", name: "season", type: "number" },
+  { id: "episode", name: "episode number", type: "number" },
+  { id: "watched", name: "watched", type: "checkbox" },
+  { id: "watched_on", name: "watched on", type: "date" },
+];
+
 export const COLLECTION_TEMPLATES: readonly CollectionTemplate[] = [
   { id: "courses", name: "courses", description: "course hubs, term, source links, and notes.", schema: coursesSchema,
     views: tableView(coursesSchema, { visible: ["title", "code", "term", "source_url"] }) },
@@ -132,6 +182,23 @@ export const COLLECTION_TEMPLATES: readonly CollectionTemplate[] = [
     description: "a text, a number, and a checkbox.",
     schema: simpleTableSchema,
     views: tableView(simpleTableSchema),
+  },
+  {
+    id: "watchlist",
+    name: "watchlist",
+    description: "films and series: type, status, moods, year, rating, when you watched it.",
+    schema: watchlistSchema,
+    views: tableView(watchlistSchema, { visible: ["title", "media", "status", "moods", "year", "rating"] }),
+  },
+  {
+    id: "episodes",
+    name: "episodes",
+    description: "episode marks for a series: season, number, watched, watched on.",
+    schema: episodesSchema,
+    views: tableView(episodesSchema, {
+      visible: ["title", "show", "season", "episode", "watched"],
+      sorts: [{ property: "season", direction: "asc" }, { property: "episode", direction: "asc" }],
+    }),
   },
 ];
 
