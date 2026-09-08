@@ -57,7 +57,7 @@ export function AuthFormShell({
 
         <p className="text-[12px] text-muted mt-4">
           {alternateText}{" "}
-          <Link href={alternateHref} className="text-accent hover:underline">
+          <Link href={alternateHref} className="text-accent underline">
             {alternateLabel}
           </Link>
         </p>

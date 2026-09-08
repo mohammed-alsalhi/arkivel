@@ -2,14 +2,17 @@
 
 Arkivel is a small, self-hosted knowledge base for writing, linking, searching, and exporting documentation. It uses Next.js, PostgreSQL, Prisma, Tiptap, and optional Vercel Blob uploads.
 
-One repository serves two independent deployments:
+One repository serves three deployment shapes:
 
 | deployment | mode | purpose |
 | --- | --- | --- |
 | `arkivel.com` | `ARKIVEL_SITE_MODE=product` | branding, installation docs, and API reference |
 | WorldWiki | `ARKIVEL_SITE_MODE=wiki` | the private wiki application |
+| Vistara | `ARKIVEL_SITE_MODE=media` | a personal film and series library on the same backend |
 
 Each deployment keeps its own domains, environment variables, database, and blob credentials.
+
+The media mode is the worked example of Arkivel serving a domain that is not a wiki. Set `NEXT_PUBLIC_ARKIVEL_NAME=Vistara`, `ARKIVEL_SITE_MODE=media`, and `ARKIVEL_MODULES=collections,media,assets,export,import`, then apply the `watchlist` kit from `/admin/kits`. Optional keys: `TMDB_API_KEY` for the full catalogue, `OMDB_API_KEY` for IMDb and Rotten Tomatoes ratings, `ANTHROPIC_API_KEY` for Claude-assisted mood picks. Without keys the library searches a bundled starter catalogue and matches moods locally.
 
 Vercel builds use its native Next.js adapter. Self-hosted builds produce a standalone server; wiki containers run the pinned Prisma migrations before starting it. Product containers skip database migrations.
 

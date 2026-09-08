@@ -14,6 +14,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
   }
 
+  // A personal library has nothing to index beyond its front door.
+  if (config.siteMode === "media") {
+    return [{ url: `${baseUrl}/`, changeFrequency: "daily", priority: 1 }];
+  }
+
   const { default: prisma } = await import("@/lib/prisma");
   const articles = await prisma.article.findMany({
     where: { published: true, status: "published" },

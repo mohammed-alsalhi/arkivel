@@ -4,12 +4,13 @@
    hover-only thumbs instead. The standard scrollbar-width property is
    Firefox-only here: setting it in Chromium would override ::-webkit-scrollbar. */
 @supports not selector(::-webkit-scrollbar) {
-  * {
+  html:not([data-site-mode="media"]) * {
     scrollbar-width: none;
   }
 }
 
-*::-webkit-scrollbar {
+/* The media shell keeps native scrollbars; it mounts no overlay thumbs. */
+html:not([data-site-mode="media"]) *::-webkit-scrollbar {
   width: 0;
   height: 0;
   display: none;

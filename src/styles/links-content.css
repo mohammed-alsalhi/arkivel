@@ -1,21 +1,14 @@
-/* ── Global link styles ── */
-a {
+/* ── Global link styles (the media shell styles its own links) ── */
+html:not([data-site-mode="media"]) a {
   color: var(--color-wiki-link);
   text-decoration: none;
 }
-a:hover {
+html:not([data-site-mode="media"]) a:hover {
   text-decoration: underline;
 }
 
 /* Inline prose links need underline for accessibility (axe link-in-text-block) */
-.wiki-portal-body a,
-.wiki-content p a,
-p a {
-  text-decoration: underline;
-}
-.wiki-portal-body a:hover,
-.wiki-content p a:hover,
-p a:hover {
+html:not([data-site-mode="media"]) :is(.wiki-portal-body a, .wiki-content p a, p a) {
   text-decoration: underline;
 }
 

@@ -1,13 +1,14 @@
 # Arkivel contributor instructions
 
-Arkivel has one public source repository and two Vercel deployments:
+Arkivel has one public source repository and three deployment shapes, chosen by `ARKIVEL_SITE_MODE`:
 
-- `arkivel.com` uses `ARKIVEL_SITE_MODE=product` for the product site and docs.
-- the WorldWiki project uses `ARKIVEL_SITE_MODE=wiki` for the private wiki.
+- `arkivel.com` uses `product` for the product site and docs.
+- the WorldWiki project uses `wiki` for the private wiki.
+- Vistara uses `media`: a personal film and series library (the worked example of Arkivel serving a non-wiki domain), on the same backend, database, accounts, and admin. It runs the `watchlist` kit and the `media` module; `src/media/` composes them into the library the shell reads.
 
-The core is fixed: articles, wiki links, search, spaces (categories), tags, revisions, users, sessions, audit, admin, and settings. Everything else is either a **module** (graph, assets, import, export, api, feeds, share, collections — enabled per deployment via `ARKIVEL_MODULES` and `/admin/modules`) or a **collection template** on the generic collections engine. Read `docs/modules-and-collections.md` before adding anything: no new table without first asking whether a collection template covers the need; a module never imports another module; there are no third-party plugins or a marketplace. AI assistants, live collaboration, gamification, and social feeds remain outside the product.
+The core is fixed: articles, wiki links, search, spaces (categories), tags, revisions, users, sessions, audit, admin, and settings. Everything else is either a **module** (graph, assets, import, export, api, feeds, share, collections, media — enabled per deployment via `ARKIVEL_MODULES` and `/admin/modules`) or a **collection template** on the generic collections engine. Read `docs/modules-and-collections.md` before adding anything: no new table without first asking whether a collection template covers the need; a module never imports another module (route handlers, kits, and `src/media/` are where modules compose); there are no third-party plugins or a marketplace. Live collaboration, gamification, and social feeds remain outside the product. AI stays optional and behind a key: the only use is the media library's mood pick, which falls back to local matching.
 
-Product decisions on record: the two built-in skins (`folio`, `wiki`) with a per-user choice in settings and the `⌘K` command palette are part of the core retrieval path (6.1.0). A theme editor, custom color presets, or a theme marketplace are not — keep appearance to the two skins plus light/dark. Per-deployment modules, the collections engine, and starter kits are the configurability model (6.3.0).
+Product decisions on record: the two built-in skins (`folio`, `wiki`) with a per-user choice in settings and the `⌘K` command palette are part of the core retrieval path (6.1.0). A theme editor, custom color presets, or a theme marketplace are not — the wiki shell stays at two skins plus light/dark. Per-deployment modules, the collections engine, and starter kits are the configurability model (6.3.0). A **site mode** is a shell (pages and presentation) over the shared backend; each shell owns its look, so the media shell's dark coral theme is part of that mode, not a third wiki skin (6.6.0).
 
 ## Safety
 

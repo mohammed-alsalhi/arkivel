@@ -60,7 +60,7 @@ const readingListCollection: KitCollection = {
 function title(id: number, status: "queued" | "watching" | "watched" | "dropped", extra: PropertyValues = {}): KitItem {
   const entry = CATALOG.find((candidate) => candidate.id === id);
   if (!entry) throw new Error(`watchlist kit: no catalogue entry ${id}`);
-  return { title: entry.title, properties: { ...watchlistProperties(entry), status, ...extra } };
+  return { title: entry.title, properties: { ...watchlistProperties(entry), status, sample: true, ...extra } };
 }
 
 const watchlistCollection: KitCollection = {

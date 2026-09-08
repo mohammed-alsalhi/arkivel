@@ -189,3 +189,17 @@ Repeated input is a no-op. A record with an older `generated_at` than its stored
 - never `prisma db push` against an existing database; every schema change is a migration rehearsed on a branch database first.
 - a module may not import from another module; both go through the core.
 - no new table without first asking whether a collection template covers the need.
+
+## media site mode
+
+`ARKIVEL_SITE_MODE=media` swaps the wiki shell for a film and series library (Vistara) without touching the backend. The layers, bottom up:
+
+| layer | what it owns | where |
+| --- | --- | --- |
+| collections | the `watchlist` and `episodes` templates and the kit that seeds them | `src/modules/collections/templates.ts`, `src/kits/` |
+| media module | metadata: TMDB with a bundled catalogue fallback, OMDB ratings, the mood ids | `src/modules/media/` (imports no other module) |
+| library | the library contract (the shapes the pages consume) and the adapter onto collection rows | `src/media/` (composes both modules, like `src/kits/apply.ts`) |
+| api | `/api/media/**`: health, watchlist, episodes, titles, tmdb detail, mood, import, library backup | `src/app/api/media/` |
+| shell | the library, discover, title, mood, and import pages, the navigation, the dark coral look | `src/components/media/`, `src/styles/media-site.css`, the media block in `tokens.css` |
+
+Reads are public like a wiki; every write requires a signed-in collection editor, so the library's `health` reports `can_edit` and the pages hide their controls when it is false. Kit rows carry `sample: true` until they are edited, which is what "remove sample titles" deletes. The mode forces the `collections` and `media` modules on regardless of `ARKIVEL_MODULES`.

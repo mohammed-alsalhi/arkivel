@@ -30,7 +30,12 @@ export const getModuleOverride = cache(async (): Promise<unknown> => {
  * Cached per request; the root layout hands the list to clients.
  */
 export const getEnabledModules = cache(async (): Promise<ModuleId[]> => {
-  return resolveEnabledModules(process.env.ARKIVEL_MODULES, await getModuleOverride());
+  const enabled = resolveEnabledModules(process.env.ARKIVEL_MODULES, await getModuleOverride());
+  // The media shell is nothing without its two modules, whatever the env says.
+  if (config.siteMode === "media") {
+    for (const id of ["collections", "media"] as const) if (!enabled.includes(id)) enabled.push(id);
+  }
+  return enabled;
 });
 
 export async function isModuleEnabled(id: ModuleId): Promise<boolean> {

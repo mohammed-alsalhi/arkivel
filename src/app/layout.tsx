@@ -17,6 +17,7 @@ import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import ProductShell from "@/components/product/ProductShell";
+import MediaShell from "@/components/media/MediaShell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,9 +66,13 @@ const resolveRequestSkin = cache(async (): Promise<WikiSkin> => {
 
 export async function generateViewport(): Promise<Viewport> {
   const base: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
-  // The product site is always light (white); the wiki follows the color scheme.
+  // The product site is always light (white), the media library always dark;
+  // the wiki follows the color scheme.
   if (config.siteMode === "product") {
     return { ...base, themeColor: "#ffffff" };
+  }
+  if (config.siteMode === "media") {
+    return { ...base, themeColor: "#111113" };
   }
   const colors = SKIN_THEME_COLORS[await resolveRequestSkin().catch(() => config.wikiSkin)];
   return {
@@ -150,6 +155,34 @@ export default async function RootLayout({
   }
 
   const { isAdmin } = await import("@/lib/auth");
+
+  if (config.siteMode === "media") {
+    // The library shell: Vistara's navigation and pages over the same
+    // backend, providers, and account pages. Always dark; no skin switch.
+    const [mediaAdmin, mediaSession, mediaModules] = await Promise.all([
+      isAdmin().catch(() => false),
+      getRequestSession(),
+      getEnabledModules(),
+    ]);
+    return (
+      <html lang="en" data-site-mode="media" data-theme="dark" data-skin="folio">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <a href="#main-content" className="skip-to-content">Skip to content</a>
+          <EnabledModulesProvider modules={mediaModules}>
+          <SkinProvider skin="folio">
+          <AdminProvider initialAuth={{ admin: mediaAdmin, loggedIn: Boolean(mediaSession) }}>
+          <ToastProvider>
+            <MediaShell>{children}</MediaShell>
+            <DocumentTitle appName={config.name} />
+          </ToastProvider>
+          </AdminProvider>
+          </SkinProvider>
+          </EnabledModulesProvider>
+        </body>
+      </html>
+    );
+  }
+
   const [{ categories, articleCount, maintenanceMode, readOnlyMode }, initialAdmin, initialSession, skin, modules] =
     await Promise.all([
       getShellData().catch(() => ({

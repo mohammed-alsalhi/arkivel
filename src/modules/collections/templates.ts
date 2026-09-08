@@ -144,10 +144,16 @@ const watchlistSchema: PropertySchema = [
   { id: "watched_on", name: "watched on", type: "date" },
   { id: "url", name: "link", type: "url" },
   { id: "poster", name: "poster", type: "url" },
+  { id: "backdrop", name: "backdrop", type: "url" },
   { id: "overview", name: "overview", type: "text" },
+  { id: "genres", name: "genres", type: "text" },
+  { id: "runtime", name: "runtime (minutes)", type: "number" },
+  { id: "score", name: "tmdb score", type: "number" },
   { id: "notes", name: "notes", type: "text" },
   // The media module keys saved titles by this ("movie:693134"); blank for hand-added rows.
   { id: "tmdb", name: "tmdb id", type: "text" },
+  // Kit rows start as samples; any edit clears it so "remove samples" leaves your titles alone.
+  { id: "sample", name: "starter title", type: "checkbox" },
 ];
 
 // Episode marks for a series in the watchlist; the watchlist kit binds `show`.

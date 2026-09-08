@@ -85,6 +85,19 @@
   --radius-surface: 0.625rem;
   --hairline: rgba(55, 53, 47, 0.1);
   --shadow-overlay: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+  /* Roles the media shell was designed against, aliased onto the same ramp
+     so its components read the tokens every skin already defines. */
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: var(--color-accent-foreground);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-foreground);
+  --color-popover-foreground: var(--color-foreground);
+  --color-secondary: var(--color-surface-hover);
+  --color-secondary-foreground: var(--color-foreground);
+  --color-destructive: var(--color-danger);
+  --color-input: var(--color-border);
+  --color-ring: var(--color-accent);
 }
 
 /* ── Folio dark ── */
@@ -223,6 +236,49 @@ html[data-skin="wiki"][data-theme="dark"] {
   --color-chart-5: #c8b6ff;
   --color-chart-6: #7fd0e0;
   --shadow-overlay: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Media site mode: the library's own dark, coral look. It is a shell, not a
+   per-user skin, so it sets the shared ramp directly. ── */
+html[data-site-mode="media"] {
+  color-scheme: dark;
+  --color-background: #111113;
+  --color-foreground: #f3f1ef;
+  --color-surface: #1b1b1f;
+  --color-surface-hover: #232327;
+  --color-border: #ffffff16;
+  --color-border-light: #ffffff10;
+  --color-muted: #a1a1a9;
+  --color-muted-foreground: #a1a1a9;
+  --color-heading: #f3f1ef;
+  --color-popover: #1b1b1f;
+  --color-brand-mark: #ed7964;
+  --color-accent: #ed7964;
+  --color-accent-hover: #f08b78;
+  --color-accent-foreground: #211511;
+  --color-accent-soft: rgba(237, 121, 100, 0.12);
+  --color-danger: #fa8a89;
+  --color-danger-soft: rgba(250, 138, 137, 0.08);
+  --color-danger-border: rgba(250, 138, 137, 0.3);
+  --color-success: #6ee7b7;
+  --color-warning: #f0c56a;
+  --color-info: #d1d1d4;
+  --color-wiki-link: #f3f1ef;
+  --color-sidebar-bg: #151517;
+  --color-primary: #ed7964;
+  --color-primary-foreground: #211511;
+  --color-card: #1b1b1f;
+  --color-card-foreground: #f3f1ef;
+  --color-popover-foreground: #f3f1ef;
+  --color-secondary: #252528;
+  --color-secondary-foreground: #f3f1ef;
+  --color-destructive: #fa8a89;
+  --color-input: #ffffff20;
+  --color-ring: #ed7964;
+  --radius-control: 0.5rem;
+  --radius-surface: 0.75rem;
+  --hairline: #ffffff16;
+  --shadow-overlay: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* Syntax highlighting: github.css ships a few hues under 4.5:1 on white, so

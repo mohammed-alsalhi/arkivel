@@ -25,6 +25,11 @@ describe("config", () => {
     expect(config.wikiSkin).toBe("wiki");
   });
 
+  it("recognises the media site mode and rejects unknown modes", () => {
+    expect(createConfig({ ARKIVEL_SITE_MODE: "media" }).siteMode).toBe("media");
+    expect(createConfig({ ARKIVEL_SITE_MODE: "kiosk" }).siteMode).toBe("wiki");
+  });
+
   it("falls back to the folio skin", () => {
     expect(createConfig({ NEXT_PUBLIC_ARKIVEL_SKIN: "unknown" }).wikiSkin).toBe("folio");
   });
