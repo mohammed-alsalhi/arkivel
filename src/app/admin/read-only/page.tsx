@@ -66,7 +66,7 @@ export default function ReadOnlyPage() {
       <PageHeader title="read-only mode" description="pause editing for everyone except admins." />
       <SectionPanel title="editing controls" bodyClassName="space-y-3">
         <p className="text-[13px] text-muted">
-          when read-only mode is enabled, non-admin users cannot create, edit, or delete articles.
+          when read-only mode is enabled, non-admin users cannot create, edit, or delete pages.
           a banner is shown at the top of every page. admins are not affected.
         </p>
 
@@ -84,7 +84,7 @@ export default function ReadOnlyPage() {
                 ? "read-only mode is on"
                 : "read-only mode is off"}
           </span>
-          {saved && <span className="text-[11px] text-accent">saved</span>}
+          {saved && <span className="text-[11px] text-muted">saved</span>}
         </div>
 
         {error && (
@@ -93,7 +93,7 @@ export default function ReadOnlyPage() {
 
         {enabled && (
           <Notice className="border-info-border bg-info-soft text-info">
-            visitors cannot edit articles. only admins can make changes.
+            visitors cannot edit pages. only admins can make changes.
           </Notice>
         )}
       </SectionPanel>

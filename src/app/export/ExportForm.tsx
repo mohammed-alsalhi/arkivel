@@ -92,7 +92,7 @@ export default function ExportForm() {
                 checked={scope === "category"}
                 onChange={() => setScope("category")}
               />
-              by category
+              by space
             </label>
 
             {scope === "category" && (
@@ -101,7 +101,7 @@ export default function ExportForm() {
                 onChange={(e) => setCategorySlug(e.target.value)}
                 className="ml-6 max-w-xs"
               >
-                <option value="">select a category...</option>
+                <option value="">select a space…</option>
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.slug}>
                     {cat.name}
@@ -141,7 +141,7 @@ export default function ExportForm() {
               />
               zip archive (.zip)
               <span className="text-[11px] text-muted">
-                &mdash; one markdown file per page, organized by category
+                &mdash; one markdown file per page, organized by space
               </span>
             </label>
           </div>
@@ -153,12 +153,12 @@ export default function ExportForm() {
           onClick={handleExport}
           disabled={loading || (scope === "category" && !categorySlug)}
         >
-          {loading ? "exporting..." : "download"}
+          {loading ? "exporting…" : "download"}
         </Button>
 
         {loading && (
           <p className="text-[12px] text-muted italic">
-            preparing export, please wait...
+            preparing the export…
           </p>
         )}
       </div>

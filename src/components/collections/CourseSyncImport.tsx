@@ -52,7 +52,7 @@ export function CourseSyncImport({ collectionId }: { collectionId: string }) {
     }
     setReport(result.data);
     if (!dryRun) {
-      addToast(`Course data imported: ${result.data.created} new, ${result.data.updated} updated.`, "success");
+      addToast(`course data imported: ${result.data.created} new, ${result.data.updated} updated.`, "success");
       router.refresh();
     }
   }
@@ -68,7 +68,7 @@ export function CourseSyncImport({ collectionId }: { collectionId: string }) {
       >
         <div className="modal-header" id="course-import-title">import course data</div>
         <div className="modal-body grid gap-4">
-          <p className="ui-muted">Choose the course scraper’s google-tasks-input.json export, then review the changes before importing.</p>
+          <p className="ui-muted">choose the course scraper’s google-tasks-input.json export, then review the changes before importing.</p>
           <Field label="course-sync file" htmlFor="course-import-file">
             <Input id="course-import-file" type="file" accept=".json,application/json" disabled={busy} onChange={(event) => void readFile(event.target.files?.[0])} />
           </Field>
@@ -76,7 +76,7 @@ export function CourseSyncImport({ collectionId }: { collectionId: string }) {
           {report && (
             <section aria-label="import preview" className="grid gap-3">
               <p role="status" className="tabular-nums">
-                {report.dryRun ? "Preview" : "Imported"}: {report.created} new · {report.updated} updated · {report.unchanged} unchanged · {report.skipped} skipped
+                {report.dryRun ? "preview" : "imported"}: {report.created} new · {report.updated} updated · {report.unchanged} unchanged · {report.skipped} skipped
                 {report.coursesCreated > 0 && ` · ${report.coursesCreated} new courses`}
               </p>
               {report.warnings.length > 0 && <ul className="list-disc pl-5">{report.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>}

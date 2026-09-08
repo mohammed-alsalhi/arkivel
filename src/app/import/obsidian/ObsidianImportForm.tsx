@@ -32,10 +32,10 @@ export default function ObsidianImportForm() {
     try {
       const res = await fetch("/api/import/obsidian", { method: "POST", body: formData });
       const data = await res.json();
-      if (!res.ok) { setError(data.error ?? "import failed"); return; }
+      if (!res.ok) { setError(data.error ?? "import failed. check the file and try again."); return; }
       setResults(data.results);
     } catch {
-      setError("network error");
+      setError("network error. please try again.");
     } finally {
       setLoading(false);
     }
@@ -55,8 +55,9 @@ export default function ObsidianImportForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">vault file (.md or .zip)</label>
+          <label htmlFor="obsidian-file" className="block text-sm font-medium mb-1">vault file (.md or .zip)</label>
           <input
+            id="obsidian-file"
             ref={fileRef}
             type="file"
             accept=".md,.zip"
@@ -68,12 +69,12 @@ export default function ObsidianImportForm() {
         </Button>
       </form>
 
-      {error && <p className="mt-4 text-danger text-sm">{error}</p>}
+      {error && <p role="alert" className="mt-4 text-danger text-sm">{error}</p>}
 
       {results && (
         <div className="mt-6">
           <p className="text-sm font-medium mb-2">
-            {results.filter((r) => r.created).length} articles created,{" "}
+            {results.filter((r) => r.created).length} pages created,{" "}
             {results.filter((r) => !r.created).length} skipped (already exist)
           </p>
           <ul className="divide-y divide-border border border-border rounded">

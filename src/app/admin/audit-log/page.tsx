@@ -23,12 +23,12 @@ type AuditEntry = {
 
 const ACTION_LABELS: Record<string, string> = {
   "admin.failed_operation": "admin operation failed",
-  "article.create": "article created",
-  "article.delete": "article deleted",
-  "article.restore": "article restored",
+  "article.create": "page created",
+  "article.delete": "page deleted",
+  "article.restore": "page restored",
   "article.status_change": "status changed",
-  "category.create": "category created",
-  "category.delete": "category deleted",
+  "category.create": "space created",
+  "category.delete": "space deleted",
   "export.create": "export created",
   "revision.revert": "revision reverted",
   "user.delete": "user deleted",
@@ -102,6 +102,10 @@ export default function AuditLogPage() {
     redaction: "standard",
   })}`;
 
+  const hasFilters = Boolean(
+    actionFilter || actorFilter || targetFilter || severityFilter || successFilter || dateFromFilter || dateToFilter,
+  );
+
   const resetPage = (setter: (value: string) => void) => (value: string) => {
     setter(value);
     setPage(1);
@@ -114,6 +118,7 @@ export default function AuditLogPage() {
       {/* Filters */}
       <div className="grid grid-cols-1 gap-2 mb-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
         <Select
+          aria-label="filter by action"
           value={actionFilter}
           onChange={(e) => resetPage(setActionFilter)(e.target.value)}
         >
@@ -123,16 +128,19 @@ export default function AuditLogPage() {
           ))}
         </Select>
         <Input
+          aria-label="filter by actor"
           value={actorFilter}
           onChange={(e) => resetPage(setActorFilter)(e.target.value)}
           placeholder="actor"
         />
         <Input
+          aria-label="filter by target"
           value={targetFilter}
           onChange={(e) => resetPage(setTargetFilter)(e.target.value)}
           placeholder="target"
         />
         <Select
+          aria-label="filter by severity"
           value={severityFilter}
           onChange={(e) => resetPage(setSeverityFilter)(e.target.value)}
         >
@@ -143,6 +151,7 @@ export default function AuditLogPage() {
           <option value="critical">critical</option>
         </Select>
         <Select
+          aria-label="filter by outcome"
           value={successFilter}
           onChange={(e) => resetPage(setSuccessFilter)(e.target.value)}
         >
@@ -151,12 +160,14 @@ export default function AuditLogPage() {
           <option value="false">failed</option>
         </Select>
         <Input
+          aria-label="from date"
           type="date"
           value={dateFromFilter}
           onChange={(e) => resetPage(setDateFromFilter)(e.target.value)}
         />
         <div className="flex gap-2">
           <Input
+            aria-label="to date"
             type="date"
             value={dateToFilter}
             onChange={(e) => resetPage(setDateToFilter)(e.target.value)}
@@ -170,9 +181,12 @@ export default function AuditLogPage() {
 
       {/* Table */}
       {loading ? (
-        <p className="text-[13px] text-muted italic">loading...</p>
+        <p className="text-[13px] text-muted italic">loading…</p>
       ) : logs.length === 0 ? (
-        <EmptyState title="no entries found." />
+        <EmptyState
+          title="no entries found"
+          description={hasFilters ? "no entries match these filters." : "actions taken by administrators will appear here."}
+        />
       ) : (
         <DataTable>
           <thead>
@@ -206,8 +220,15 @@ export default function AuditLogPage() {
                   <span className="text-muted text-[11px] mr-1">{entry.entityType}</span>
                   {entry.entityLabel ?? entry.entityId ?? "—"}
                 </td>
-                <td className="text-muted text-[11px] max-w-[200px] truncate">
-                  {entry.metadata ? JSON.stringify(entry.metadata) : "—"}
+                <td className="text-muted text-[11px]">
+                  {entry.metadata && Object.keys(entry.metadata).length > 0 ? (
+                    <details>
+                      <summary className="cursor-pointer">view</summary>
+                      <pre className="ui-code-block">{JSON.stringify(entry.metadata, null, 2)}</pre>
+                    </details>
+                  ) : (
+                    "—"
+                  )}
                 </td>
               </tr>
             ))}

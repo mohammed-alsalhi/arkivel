@@ -373,7 +373,7 @@ export function CollectionTable({ collection, view: initialView, page, users, ca
           <input
             type="search"
             aria-label={`search ${collection.name}`}
-            placeholder="Search items…"
+            placeholder="search items…"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -394,7 +394,7 @@ export function CollectionTable({ collection, view: initialView, page, users, ca
           <Input
             autoFocus
             aria-label="view name"
-            placeholder="View name"
+            placeholder="view name"
             value={viewName}
             onChange={(event) => setViewName(event.target.value)}
           />
@@ -446,7 +446,7 @@ export function CollectionTable({ collection, view: initialView, page, users, ca
               autoFocus
               className="ui-input"
               aria-label="new item title"
-              placeholder="Untitled"
+              placeholder="untitled"
               value={newTitle}
               disabled={creating}
               onChange={(event) => setNewTitle(event.target.value)}
@@ -474,13 +474,13 @@ export function CollectionTable({ collection, view: initialView, page, users, ca
               {creating ? "adding…" : "add item"}
             </Button>
             <Button onClick={() => setNewOpen(false)}>close</Button>
-            <span className="ui-muted">Add another without leaving this view.</span>
+            <span className="ui-muted">add another without leaving this view.</span>
           </div>
         </form>
       )}
       {loadError && (
         <div className="collections-load-error" role="alert">
-          <span>Some items could not load. Filters and counts are incomplete. {loadError}</span>
+          <span>some items could not load. filters and counts are incomplete. {loadError}</span>
           <Button onClick={() => setLoadError("")}>retry</Button>
         </div>
       )}
@@ -519,8 +519,8 @@ export function CollectionTable({ collection, view: initialView, page, users, ca
           </div>
         ) : (
           <EmptyState
-            title="Choose a status property"
-            description="A board groups items by a select property. Add one in properties to get started."
+            title="choose a status property"
+            description="a board groups items by a select property. add one in properties to get started."
           />
         )
       ) : view.kind === "calendar" ? (
@@ -533,16 +533,16 @@ export function CollectionTable({ collection, view: initialView, page, users, ca
             onNew={(day) => openNew({ [dateProperty.id]: day })}
           />
         ) : (
-          <EmptyState title="Choose a date property" description="Add a date property to plan items on a calendar." />
+          <EmptyState title="choose a date property" description="add a date property to plan items on a calendar." />
         )
       ) : result.items.length === 0 ? (
         <EmptyState
           icon={<NavIcon name="table" />}
-          title={items.length ? "No matching items" : "Your collection starts here"}
+          title={items.length ? "no matching items" : "your collection starts here"}
           description={
             items.length
-              ? "Try another search or adjust this view's filters."
-              : "Add your first item to organize deadlines, notes, and work in one place."
+              ? "try another search or adjust this view's filters."
+              : "add your first item to organize deadlines, notes, and work in one place."
           }
           actions={
             canEdit && (
@@ -624,7 +624,7 @@ export function CollectionTable({ collection, view: initialView, page, users, ca
       )}
       <div className="collections-status-row">
         <p className={clsx("collections-status", status?.tone === "error" && "collections-status-error")} aria-live="polite">
-          {status?.text ?? (canEdit ? "Click a property to edit · open an item for its full details" : "Open an item for its full details")}
+          {status?.text ?? (canEdit ? "click a property to edit · open an item for its full details" : "open an item for its full details")}
         </p>
       </div>
     </div>

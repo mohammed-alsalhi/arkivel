@@ -49,7 +49,7 @@ export default function RegisterPage() {
           router.push("/login");
         }
       } else {
-        setError(data.error || "registration failed");
+        setError(data.error || "unable to create the account. check the details and try again.");
       }
     } catch {
       setError("network error. please try again.");
@@ -74,6 +74,8 @@ export default function RegisterPage() {
         <Input
           id="register-username"
           type="text"
+          autoComplete="username"
+          spellCheck={false}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -86,6 +88,8 @@ export default function RegisterPage() {
         <Input
           id="register-email"
           type="email"
+          autoComplete="email"
+          spellCheck={false}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -97,6 +101,7 @@ export default function RegisterPage() {
         <Input
           id="register-password"
           type="password"
+          autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -109,6 +114,8 @@ export default function RegisterPage() {
         <Input
           id="register-confirm-password"
           type="password"
+          autoComplete="new-password"
+          aria-invalid={error === "passwords do not match" || undefined}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required

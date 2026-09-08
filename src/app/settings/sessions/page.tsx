@@ -65,7 +65,7 @@ export default function SessionsPage() {
     return (
       <Page width="narrow" trail={TRAIL}>
         {header}
-        <LoadingState label="loading…" />
+        <LoadingState />
       </Page>
     );
   }
@@ -75,7 +75,10 @@ export default function SessionsPage() {
       {header}
 
       {sessions.length === 0 ? (
-        <EmptyState title="no active sessions found." />
+        <EmptyState
+          title="no active sessions"
+          description="devices that log in to your account will be listed here."
+        />
       ) : (
         <div className="space-y-2">
           {sessions.map((s, i) => (

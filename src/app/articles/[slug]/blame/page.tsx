@@ -40,12 +40,13 @@ export default function BlamePage() {
     load();
   }, [params.slug]);
 
-  // Generate a stable colour from a revision ID
+  // A stable hue per revision, carried by a rule beside the text rather than a
+  // pastel fill, so the inherited text color stays readable in both themes.
   function revisionColor(revId: string): string {
     let hash = 0;
     for (let i = 0; i < revId.length; i++) hash = (hash * 31 + revId.charCodeAt(i)) >>> 0;
     const hue = hash % 360;
-    return `hsl(${hue}, 60%, 88%)`;
+    return `hsl(${hue}, 55%, 50%)`;
   }
 
   return (
@@ -58,7 +59,10 @@ export default function BlamePage() {
         {loading ? (
           <p className="text-muted text-[13px] italic">loading…</p>
         ) : paragraphs.length === 0 ? (
-          <EmptyState title="no paragraph data found." />
+          <EmptyState
+            title="no paragraph data"
+            description="blame is built from saved revisions. edit and save the page to start tracking paragraphs."
+          />
         ) : (
           <div className="space-y-1 text-[13px]">
             {paragraphs.map((p, i) => (
@@ -68,8 +72,8 @@ export default function BlamePage() {
               >
                 {/* Blame metadata sidebar */}
                 <div
-                  className="w-40 shrink-0 rounded px-2 py-1 text-[10px] leading-snug"
-                  style={{ background: revisionColor(p.revisionId) }}
+                  className="w-40 shrink-0 border-s-[3px] bg-surface-hover ps-2 pe-2 py-1 text-[10px] leading-snug"
+                  style={{ borderInlineStartColor: revisionColor(p.revisionId) }}
                 >
                   <div className="font-semibold truncate">{p.editor ?? "unknown"}</div>
                   <div className="opacity-70">{formatDate(p.editedAt)}</div>

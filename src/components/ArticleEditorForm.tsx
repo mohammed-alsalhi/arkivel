@@ -57,7 +57,7 @@ type ArticleEditorFormProps = {
 const AUTOSAVE_COPY: Record<ArticleEditorAutoSaveStatus, string> = {
   clean: "",
   restored: "draft restored",
-  unsaved: "saving draft...",
+  unsaved: "saving draft…",
   saved: "draft saved",
 };
 
@@ -117,8 +117,8 @@ function FormEditor({
   return (
     <Page trail={trail} footer={false}>
       {articleLinks && (
-        <nav className="article-tabbar" aria-label="Article sections">
-          <Link href={articleLinks.article} className="article-tab">article</Link>
+        <nav className="article-tabbar" aria-label="page sections">
+          <Link href={articleLinks.article} className="article-tab">page</Link>
           <span aria-current="page" className="article-tab article-tab-active">edit</span>
           <Link href={articleLinks.history} className="article-tab">history</Link>
         </nav>
@@ -155,8 +155,8 @@ function FormEditor({
         ) : null}
 
         <div className="grid gap-4 md:grid-cols-2">
-          <Field label="category">
-            <CategorySelect value={categoryId} onChange={onCategoryChange} categories={categories} />
+          <Field htmlFor="article-category" label="space">
+            <CategorySelect id="article-category" value={categoryId} onChange={onCategoryChange} categories={categories} />
           </Field>
           <Field label="tags">
             <TagPicker selectedTagIds={tagIds} onChange={onTagChange} />
@@ -165,7 +165,7 @@ function FormEditor({
 
         <div>
           <div className="mb-1 flex items-center justify-between gap-2">
-            <label className="ui-label">content</label>
+            <span className="ui-label">content</span>
             <span className="text-[11px] text-muted" aria-live="polite">
               {AUTOSAVE_COPY[autoSaveStatus]}
             </span>
@@ -173,7 +173,7 @@ function FormEditor({
           <TiptapEditor
             ref={editorRef}
             content={initialContent}
-            placeholder="begin writing... use [[Article Name]] to create wiki links."
+            placeholder="begin writing… use [[Page Name]] to create wiki links."
             articleTitle={title}
             onUpdate={onEditorUpdate}
           />
@@ -197,7 +197,7 @@ function FormEditor({
               checked={isPinned}
               onChange={(event) => onPinnedChange(event.target.checked)}
             />
-            <span className="font-bold text-heading">pin to category page</span>
+            <span className="font-bold text-heading">pin to space page</span>
           </label>
         </div>
 
@@ -208,7 +208,7 @@ function FormEditor({
               type="text"
               value={editSummaryField.value}
               onChange={(event) => editSummaryField.onChange(event.target.value)}
-              placeholder="briefly describe your changes..."
+              placeholder="briefly describe your changes…"
             />
           </Field>
         ) : null}
@@ -226,7 +226,7 @@ function FormEditor({
           </div>
           {deleteAction ? (
             <Button variant="danger" onClick={deleteAction.onDelete} disabled={deleteAction.deleting}>
-              {deleteAction.deleting ? "deleting..." : "delete article"}
+              {deleteAction.deleting ? "deleting…" : "delete page"}
             </Button>
           ) : null}
         </div>
@@ -309,21 +309,25 @@ function DocumentEditor({
             }
           }}
           placeholder="untitled"
-          aria-label="Page title"
+          aria-label="page title"
           rows={1}
           required
           autoComplete="off"
           spellCheck
         />
 
-        <dl className="editor-props" aria-label="Page properties">
+        <dl className="editor-props" aria-label="page properties">
           <div className="editor-prop">
-            <dt>space</dt>
-            <dd><CategorySelect value={categoryId} onChange={onCategoryChange} categories={categories} /></dd>
+            <dt><label htmlFor="article-category">space</label></dt>
+            <dd><CategorySelect id="article-category" value={categoryId} onChange={onCategoryChange} categories={categories} /></dd>
           </div>
           <div className="editor-prop">
-            <dt>tags</dt>
-            <dd><TagPicker selectedTagIds={tagIds} onChange={onTagChange} /></dd>
+            <dt id="article-tags-label">tags</dt>
+            <dd>
+              <div role="group" aria-labelledby="article-tags-label">
+                <TagPicker selectedTagIds={tagIds} onChange={onTagChange} />
+              </div>
+            </dd>
           </div>
           <div className="editor-prop">
             <dt><label htmlFor="article-status">status</label></dt>
@@ -398,7 +402,7 @@ function DocumentEditor({
               onClick={deleteAction.onDelete}
               disabled={deleteAction.deleting}
             >
-              {deleteAction.deleting ? "deleting..." : "delete page"}
+              {deleteAction.deleting ? "deleting…" : "delete page"}
             </button>
           )}
         </div>

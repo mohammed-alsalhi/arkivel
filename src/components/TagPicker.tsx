@@ -50,6 +50,7 @@ export default function TagPicker({ selectedTagIds, onChange }: Props) {
             key={tag.id}
             type="button"
             onClick={() => toggle(tag.id)}
+            aria-pressed={selectedTagIds.includes(tag.id)}
             className={`border px-2 py-0.5 text-[12px] transition-colors pointer-coarse:py-2 ${
               selectedTagIds.includes(tag.id)
                 ? "border-accent bg-accent text-accent-foreground"
@@ -66,15 +67,16 @@ export default function TagPicker({ selectedTagIds, onChange }: Props) {
           value={newTag}
           onChange={(e) => setNewTag(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), createTag())}
-          placeholder="New tag..."
-          className="border border-border bg-surface px-2 py-0.5 text-[12px] text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+          placeholder="new tag…"
+          aria-label="new tag name"
+          className="border border-border bg-surface px-2 py-0.5 text-[12px] text-foreground placeholder:text-muted focus:border-accent"
         />
         <button
           type="button"
           onClick={createTag}
           className="border border-border bg-surface-hover px-2 py-0.5 text-[12px] text-foreground hover:bg-surface pointer-coarse:py-2 pointer-coarse:px-3"
         >
-          Add
+          add
         </button>
       </div>
     </div>

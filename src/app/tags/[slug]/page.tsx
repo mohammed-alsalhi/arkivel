@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { TRAIL_ROOTS } from "@/lib/trail";
-import { formatDate } from "@/lib/utils";
+import { formatDate, plural } from "@/lib/utils";
 import { DataTable, EmptyState, Page, PageHeader } from "@/components/ui";
 
 type Props = {
@@ -38,7 +38,7 @@ export default async function TagPage({ params }: Props) {
         title={tag.name}
         description={
           <>
-            {articles.length} article{articles.length !== 1 ? "s" : ""} tagged with &ldquo;{tag.name}&rdquo;
+            {plural(articles.length, "page", "pages")} tagged with &ldquo;{tag.name}&rdquo;
           </>
         }
       />
@@ -46,15 +46,15 @@ export default async function TagPage({ params }: Props) {
       {articles.length === 0 ? (
         <EmptyState
           description={
-            <>no articles have been tagged with &ldquo;{tag.name}&rdquo; yet.</>
+            <>no pages have been tagged with &ldquo;{tag.name}&rdquo; yet.</>
           }
         />
       ) : (
         <DataTable>
           <thead>
             <tr>
-              <th>article</th>
-              <th className="w-32">category</th>
+              <th>page</th>
+              <th className="w-32">space</th>
               <th className="w-28">last edited</th>
             </tr>
           </thead>

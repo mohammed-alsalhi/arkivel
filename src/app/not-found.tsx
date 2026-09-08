@@ -9,9 +9,9 @@ export default function NotFound() {
 
       <Notice>
         <p>
-          there is currently no article with this name. you can{" "}
+          there is currently no page with this name. you can{" "}
           <Link href="/articles/new">create this page</Link>, or{" "}
-          <Link href="/search">search the wiki</Link> for an existing article.
+          <Link href="/search">search the wiki</Link> for an existing page.
         </p>
       </Notice>
     </Page>

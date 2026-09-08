@@ -665,6 +665,7 @@ function SidebarLink({
       onClick={onClick}
       aria-current={active ? "page" : undefined}
       className={clsx("wiki-sidebar-link", active && "wiki-sidebar-link-active")}
+      title={!collapsed && typeof children === "string" ? children : undefined}
       {...tooltip}
     >
       {icon && <span className="wiki-sidebar-link-icon">{icon}</span>}

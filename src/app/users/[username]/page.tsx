@@ -1,7 +1,7 @@
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { TRAIL_ROOTS } from "@/lib/trail";
-import { formatDate } from "@/lib/utils";
+import { formatDate, plural } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { DataTable, EmptyState, Page, PageHeader, Section } from "@/components/ui";
 
@@ -54,12 +54,6 @@ export default async function UserProfilePage({ params }: Props) {
     },
   });
 
-  const roleColors: Record<string, string> = {
-    admin: "text-wiki-link-broken",
-    editor: "text-accent",
-    viewer: "text-muted",
-  };
-
   const displayName = user.displayName || user.username;
 
   return (
@@ -82,7 +76,7 @@ export default async function UserProfilePage({ params }: Props) {
               </tr>
               <tr>
                 <td className="text-muted font-bold">role</td>
-                <td className={`font-bold ${roleColors[user.role] || "text-muted"}`}>
+                <td className="text-muted">
                   {user.role}
                 </td>
               </tr>
@@ -93,8 +87,8 @@ export default async function UserProfilePage({ params }: Props) {
               <tr>
                 <td className="text-muted font-bold">contributions</td>
                 <td>
-                  {revisions.length} edit{revisions.length !== 1 ? "s" : ""},
-                  {" "}{articles.length} article{articles.length !== 1 ? "s" : ""} created
+                  {plural(revisions.length, "edit", "edits")},{" "}
+                  {plural(articles.length, "page", "pages")} created
                 </td>
               </tr>
             </tbody>
@@ -104,7 +98,7 @@ export default async function UserProfilePage({ params }: Props) {
 
       {/* Articles created */}
       {articles.length > 0 && (
-        <Section title="articles created" className="mb-4">
+        <Section title="pages created" className="mb-4">
           <ul className="text-[13px] space-y-1">
             {articles.map((article) => (
               <li key={article.id}>
@@ -140,7 +134,7 @@ export default async function UserProfilePage({ params }: Props) {
                     {rev.article.title}
                   </Link>
                 ) : (
-                  <span className="text-muted italic">(deleted article)</span>
+                  <span className="text-muted italic">(deleted page)</span>
                 )}
                 {rev.editSummary && (
                   <span className="text-muted text-[12px] ml-1 italic">

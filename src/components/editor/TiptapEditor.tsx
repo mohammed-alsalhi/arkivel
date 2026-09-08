@@ -83,7 +83,7 @@ function getBlockValue(editor: Editor): string {
 
 const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
   function TiptapEditor(
-    { content = "", placeholder = "Start writing...", articleTitle = "", onUpdate, variant = "form" },
+    { content = "", placeholder = "start writing…", onUpdate, variant = "form" },
     ref,
   ) {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -120,8 +120,12 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
       content,
       onUpdate: () => onUpdateRef.current?.(),
       editorProps: {
+        // The contenteditable is the control, so it carries the role and name.
         attributes: {
           class: "tiptap max-w-none",
+          role: "textbox",
+          "aria-multiline": "true",
+          "aria-label": "page body",
         },
         // The slash menu borrows the keyboard while it is open.
         handleKeyDown(_view, event) {
@@ -195,7 +199,7 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
     const editLink = useCallback(() => {
       if (!editor) return;
       const currentUrl = editor.getAttributes("link").href as string | undefined;
-      const url = window.prompt("URL:", currentUrl ?? "https://");
+      const url = window.prompt("url:", currentUrl ?? "https://");
       if (url === null) return;
       if (!url.trim()) {
         editor.chain().focus().extendMarkRange("link").unsetLink().run();
@@ -208,7 +212,7 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
       if (!editor) return;
       const { from, to } = editor.state.selection;
       const selectedText = editor.state.doc.textBetween(from, to);
-      const title = window.prompt("Article title:", selectedText);
+      const title = window.prompt("page title:", selectedText);
       if (!title?.trim()) return;
 
       editor
@@ -271,42 +275,41 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
         className={clsx(isDocument ? "editor-document" : styles.shell)}
         data-testid="editor-shell"
         data-variant={variant}
-        aria-label={`${articleTitle || "Article"} editor`}
       >
         {!isDocument && (
         <div
           className="flex flex-wrap items-center gap-1 border-b border-border bg-surface p-2"
           data-testid="editor-toolbar"
           role="toolbar"
-          aria-label="Editor toolbar"
+          aria-label="editor toolbar"
         >
           <select
             value={editor ? getBlockValue(editor) : "paragraph"}
             onChange={(event) => setBlock(event.target.value)}
             disabled={!editor}
-            aria-label="Block style"
+            aria-label="block style"
             className="ui-select w-auto"
           >
-            <option value="paragraph">Paragraph</option>
-            <option value="h1">Heading 1</option>
-            <option value="h2">Heading 2</option>
-            <option value="h3">Heading 3</option>
-            <option value="quote">Quote</option>
-            <option value="code">Code block</option>
+            <option value="paragraph">paragraph</option>
+            <option value="h1">heading 1</option>
+            <option value="h2">heading 2</option>
+            <option value="h3">heading 3</option>
+            <option value="quote">quote</option>
+            <option value="code">code block</option>
           </select>
 
-          <ToolButton label="Undo" onClick={() => editor?.chain().focus().undo().run()} disabled={!editor?.can().undo()} />
-          <ToolButton label="Redo" onClick={() => editor?.chain().focus().redo().run()} disabled={!editor?.can().redo()} />
-          <ToolButton label="Bold" onClick={() => editor?.chain().focus().toggleBold().run()} active={editor?.isActive("bold")} disabled={!editor} />
-          <ToolButton label="Italic" onClick={() => editor?.chain().focus().toggleItalic().run()} active={editor?.isActive("italic")} disabled={!editor} />
-          <ToolButton label="Inline code" onClick={() => editor?.chain().focus().toggleCode().run()} active={editor?.isActive("code")} disabled={!editor} />
-          <ToolButton label="Bulleted list" onClick={() => editor?.chain().focus().toggleBulletList().run()} active={editor?.isActive("bulletList")} disabled={!editor} />
-          <ToolButton label="Numbered list" onClick={() => editor?.chain().focus().toggleOrderedList().run()} active={editor?.isActive("orderedList")} disabled={!editor} />
-          <ToolButton label="Link" onClick={editLink} active={editor?.isActive("link")} disabled={!editor} />
-          <ToolButton label="Wiki link" onClick={insertWikiLink} disabled={!editor} />
-          <ToolButton label="Image" onClick={() => fileInputRef.current?.click()} disabled={!editor} />
+          <ToolButton label="undo" onClick={() => editor?.chain().focus().undo().run()} disabled={!editor?.can().undo()} />
+          <ToolButton label="redo" onClick={() => editor?.chain().focus().redo().run()} disabled={!editor?.can().redo()} />
+          <ToolButton label="bold" onClick={() => editor?.chain().focus().toggleBold().run()} active={editor?.isActive("bold")} disabled={!editor} />
+          <ToolButton label="italic" onClick={() => editor?.chain().focus().toggleItalic().run()} active={editor?.isActive("italic")} disabled={!editor} />
+          <ToolButton label="inline code" onClick={() => editor?.chain().focus().toggleCode().run()} active={editor?.isActive("code")} disabled={!editor} />
+          <ToolButton label="bulleted list" onClick={() => editor?.chain().focus().toggleBulletList().run()} active={editor?.isActive("bulletList")} disabled={!editor} />
+          <ToolButton label="numbered list" onClick={() => editor?.chain().focus().toggleOrderedList().run()} active={editor?.isActive("orderedList")} disabled={!editor} />
+          <ToolButton label="link" onClick={editLink} active={editor?.isActive("link")} disabled={!editor} />
+          <ToolButton label="wiki link" onClick={insertWikiLink} disabled={!editor} />
+          <ToolButton label="image" onClick={() => fileInputRef.current?.click()} disabled={!editor} />
           <ToolButton
-            label="Table"
+            label="table"
             onClick={() => editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
             active={editor?.isActive("table")}
             disabled={!editor}
@@ -320,13 +323,13 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, Props>(
               ? "editor-table-controls"
               : "flex flex-wrap items-center gap-1 border-b border-border bg-surface-hover p-2"}
             role="toolbar"
-            aria-label="Table controls"
+            aria-label="table controls"
           >
-            <ToolButton label="Add row" onClick={() => editor.chain().focus().addRowAfter().run()} />
-            <ToolButton label="Add column" onClick={() => editor.chain().focus().addColumnAfter().run()} />
-            <ToolButton label="Delete row" onClick={() => editor.chain().focus().deleteRow().run()} />
-            <ToolButton label="Delete column" onClick={() => editor.chain().focus().deleteColumn().run()} />
-            <ToolButton label="Delete table" onClick={() => editor.chain().focus().deleteTable().run()} />
+            <ToolButton label="add row" onClick={() => editor.chain().focus().addRowAfter().run()} />
+            <ToolButton label="add column" onClick={() => editor.chain().focus().addColumnAfter().run()} />
+            <ToolButton label="delete row" onClick={() => editor.chain().focus().deleteRow().run()} />
+            <ToolButton label="delete column" onClick={() => editor.chain().focus().deleteColumn().run()} />
+            <ToolButton label="delete table" onClick={() => editor.chain().focus().deleteTable().run()} />
           </div>
         )}
 

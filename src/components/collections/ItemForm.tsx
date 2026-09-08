@@ -166,9 +166,9 @@ export function ItemForm({ collection, item: initial, users, canEdit }: Props) {
             <>
               <span className="ui-muted">delete this item?</span>
               <Button variant="danger" onClick={remove} disabled={saving}>
-                confirm
+                delete item
               </Button>
-              <Button onClick={() => setConfirmDelete(false)}>keep</Button>
+              <Button onClick={() => setConfirmDelete(false)}>cancel</Button>
             </>
           ) : (
             <Button variant="danger" onClick={() => setConfirmDelete(true)}>

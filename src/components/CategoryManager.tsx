@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAdmin } from "@/components/AdminContext";
 import { DataTable, Input, Select } from "@/components/ui";
+import { plural } from "@/lib/utils";
 
 type Category = {
   id: string;
@@ -79,7 +80,7 @@ export default function CategoryManager() {
     setSuccess("");
 
     if (!name.trim()) {
-      setError("Name is required");
+      setError("name is required");
       return;
     }
 
@@ -97,13 +98,13 @@ export default function CategoryManager() {
       });
 
       if (res.ok) {
-        setSuccess("Category updated!");
+        setSuccess("space updated");
         setEditingId(null);
         router.refresh();
         fetchCategories();
       } else {
         const data = await res.json();
-        setError(data.error || "Failed to update category");
+        setError(data.error || "unable to update space. try again.");
       }
     } else {
       // Create
@@ -119,7 +120,7 @@ export default function CategoryManager() {
       });
 
       if (res.ok) {
-        setSuccess("Category created!");
+        setSuccess("space created");
         setName("");
         setDescription("");
         setParentId("");
@@ -128,7 +129,7 @@ export default function CategoryManager() {
         fetchCategories();
       } else {
         const data = await res.json();
-        setError(data.error || "Failed to create category");
+        setError(data.error || "unable to create space. try again.");
       }
     }
   }
@@ -136,8 +137,8 @@ export default function CategoryManager() {
   async function handleDelete(cat: Category) {
     const articleCount = cat._count?.articles || 0;
     const msg = articleCount > 0
-      ? `"${cat.name}" has ${articleCount} article(s). Reassign them before deleting.`
-      : `Delete "${cat.name}"? This cannot be undone.`;
+      ? `"${cat.name}" has ${articleCount} ${plural(articleCount, "page", "pages")}. move them to another space before deleting.`
+      : `delete "${cat.name}"? the space is removed permanently.`;
 
     if (articleCount > 0) {
       setError(msg);
@@ -154,21 +155,21 @@ export default function CategoryManager() {
       fetchCategories();
     } else {
       const data = await res.json();
-      setError(data.error || "Failed to delete category");
+      setError(data.error || "unable to delete space. try again.");
     }
   }
 
   return (
     <div className="wiki-portal max-w-2xl">
-      <div className="wiki-portal-header">Manage Categories</div>
+      <div className="wiki-portal-header">manage spaces</div>
       <div className="wiki-portal-body">
         {/* Category list with edit/delete controls */}
         <DataTable className="mb-3">
           <thead>
             <tr>
-              <th>Category</th>
-              <th>Description</th>
-              <th className="text-center">Articles</th>
+              <th>space</th>
+              <th>description</th>
+              <th className="text-center">pages</th>
               <th className="w-24"></th>
             </tr>
           </thead>
@@ -191,14 +192,14 @@ export default function CategoryManager() {
                     onClick={() => startEdit(category)}
                     className="text-[11px] text-accent hover:underline mr-2"
                   >
-                    Edit
+                    edit
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDelete(category)}
-                    className="text-[11px] text-wiki-link-broken hover:underline"
+                    className="text-[11px] text-danger hover:underline"
                   >
-                    Delete
+                    delete
                   </button>
                 </td>
               </tr>
@@ -207,7 +208,7 @@ export default function CategoryManager() {
         </DataTable>
 
         {/* Success/error messages */}
-        {error && <p className="text-[12px] text-wiki-link-broken mb-2">{error}</p>}
+        {error && <p className="text-[12px] text-danger mb-2">{error}</p>}
         {success && !editingId && !showCreate && (
           <p className="text-[12px] text-accent mb-2">{success}</p>
         )}
@@ -216,12 +217,13 @@ export default function CategoryManager() {
         {(showCreate || editingId) ? (
           <form onSubmit={handleSave} className="border-t border-border pt-3 space-y-2">
             <div className="text-[12px] font-bold text-heading mb-1">
-              {editingId ? "Edit Category" : "New Category"}
+              {editingId ? "edit space" : "new space"}
             </div>
             <div className="flex gap-2">
               <div className="flex-1">
-                <label className="block text-[11px] text-muted mb-0.5">Name *</label>
+                <label htmlFor="category-name" className="block text-[11px] text-muted mb-0.5">name *</label>
                 <Input
+                  id="category-name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -229,12 +231,13 @@ export default function CategoryManager() {
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-[11px] text-muted mb-0.5">Parent</label>
+                <label htmlFor="category-parent" className="block text-[11px] text-muted mb-0.5">parent</label>
                 <Select
+                  id="category-parent"
                   value={parentId}
                   onChange={(e) => setParentId(e.target.value)}
                 >
-                  <option value="">None (top-level)</option>
+                  <option value="">none (top-level)</option>
                   {flatCategories
                     .filter(({ category }) => category.id !== editingId)
                     .map(({ category, depth }) => (
@@ -248,16 +251,18 @@ export default function CategoryManager() {
               </div>
             </div>
             <div>
-              <label className="block text-[11px] text-muted mb-0.5">Description</label>
+              <label htmlFor="category-description" className="block text-[11px] text-muted mb-0.5">description</label>
               <Input
+                id="category-description"
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-[11px] text-muted mb-0.5">Cover image URL (optional banner)</label>
+              <label htmlFor="category-cover-image" className="block text-[11px] text-muted mb-0.5">cover image url (optional banner)</label>
               <Input
+                id="category-cover-image"
                 type="url"
                 value={coverImage}
                 onChange={(e) => setCoverImage(e.target.value)}
@@ -265,21 +270,21 @@ export default function CategoryManager() {
               />
             </div>
             {error && (showCreate || editingId) && (
-              <p className="text-[12px] text-wiki-link-broken">{error}</p>
+              <p className="text-[12px] text-danger">{error}</p>
             )}
             <div className="flex gap-2">
               <button
                 type="submit"
                 className="bg-accent px-3 py-1 text-[13px] font-bold text-accent-foreground hover:bg-accent-hover"
               >
-                {editingId ? "Save" : "Create"}
+                {editingId ? "save" : "create"}
               </button>
               <button
                 type="button"
                 onClick={cancelForm}
                 className="px-3 py-1 text-[13px] text-muted border border-border hover:bg-surface-hover"
               >
-                Cancel
+                cancel
               </button>
             </div>
           </form>
@@ -288,7 +293,7 @@ export default function CategoryManager() {
             onClick={startCreate}
             className="bg-accent px-3 py-1 text-[13px] font-bold text-accent-foreground hover:bg-accent-hover"
           >
-            + New Category
+            + new space
           </button>
         )}
       </div>

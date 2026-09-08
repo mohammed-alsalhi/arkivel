@@ -54,7 +54,7 @@ export default function AdminCategoriesPage() {
     setMerging(false);
 
     if (!response.ok) {
-      setMessage(result.error ?? "merge failed.");
+      setMessage(result.error ?? "could not merge the spaces. try again.");
       return;
     }
 
@@ -87,7 +87,7 @@ export default function AdminCategoriesPage() {
             </select>
           </label>
           <button type="submit" disabled={!sourceId || !targetId || merging} className="self-end border border-border px-3 py-1.5 text-[13px] disabled:opacity-50">
-            {merging ? "merging..." : "merge"}
+            {merging ? "merging…" : "merge"}
           </button>
         </form>
         {message && <p className="mt-2 text-[12px] text-muted" aria-live="polite">{message}</p>}

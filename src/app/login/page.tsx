@@ -30,7 +30,7 @@ export default function LoginPage() {
         router.push("/");
         router.refresh();
       } else {
-        setError(data.error || "invalid credentials");
+        setError(data.error || "check your username and password.");
       }
     } catch {
       setError("network error. please try again.");
@@ -55,6 +55,8 @@ export default function LoginPage() {
         <Input
           id="login-username"
           type="text"
+          autoComplete="username"
+          spellCheck={false}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -66,6 +68,7 @@ export default function LoginPage() {
         <Input
           id="login-password"
           type="password"
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required

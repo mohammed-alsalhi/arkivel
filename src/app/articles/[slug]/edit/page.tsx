@@ -228,7 +228,7 @@ export default function EditArticlePage() {
   if (loading) {
     return (
       <Page trail={trail} footer={false}>
-        <LoadingState label="loading..." />
+        <LoadingState label="loading…" />
       </Page>
     );
   }
@@ -269,7 +269,7 @@ export default function EditArticlePage() {
         editSummaryField={{ value: editSummary, onChange: setEditSummary }}
         saving={saving}
         submitLabel="save changes"
-        savingLabel="saving..."
+        savingLabel="saving…"
         onCancel={() => router.back()}
         deleteAction={{ deleting, onDelete: handleDelete }}
       />

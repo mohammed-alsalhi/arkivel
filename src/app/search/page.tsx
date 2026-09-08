@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button, EmptyState, Input, Page, PageHeader, Section } from "@/components/ui";
 import { getSearchResults } from "@/lib/search-response";
 import { TRAIL_ROOTS } from "@/lib/trail";
+import { plural } from "@/lib/utils";
 
 type SearchResult = {
   id: string;
@@ -57,13 +58,13 @@ function SearchContent() {
       <PageHeader title="search" />
 
       <form onSubmit={submit} role="search" className="flex gap-2">
-        <label htmlFor="search-page-query" className="sr-only">Search Arkivel</label>
+        <label htmlFor="search-page-query" className="sr-only">search arkivel</label>
         <Input
           id="search-page-query"
           type="search"
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
-          placeholder="search arkivel..."
+          placeholder="search arkivel…"
           autoFocus
         />
         <Button type="submit" variant="primary">search</Button>
@@ -72,12 +73,12 @@ function SearchContent() {
       {query.length < 2 ? (
         <EmptyState title="enter at least two characters." />
       ) : loading ? (
-        <p className="ui-muted" aria-live="polite">searching...</p>
+        <p className="ui-muted" aria-live="polite">searching…</p>
       ) : results.length === 0 ? (
         <EmptyState title={`no pages found for “${query}”.`} />
       ) : (
-        <Section title={`${results.length} ${results.length === 1 ? "result" : "results"}`}>
-          <ol className="wiki-compact-list" aria-label={`Search results for ${query}`}>
+        <Section title={plural(results.length, "result", "results")}>
+          <ol className="wiki-compact-list" aria-label={`search results for ${query}`}>
             {results.map((result) => (
               <li key={result.id} className="wiki-compact-list-item">
                 <Link href={`/articles/${result.slug}`} className="wiki-compact-list-title">
@@ -103,7 +104,7 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<p className="ui-muted">loading...</p>}>
+    <Suspense fallback={<p className="ui-muted">loading…</p>}>
       <SearchContent />
     </Suspense>
   );

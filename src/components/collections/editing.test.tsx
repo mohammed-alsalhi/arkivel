@@ -124,10 +124,10 @@ it("removes an unavailable relation without clearing another selected item", asy
   );
   try {
     await act(async () => root.render(editor()));
-    const remove = container.querySelector<HTMLButtonElement>('button[aria-label="Remove unavailable item"]')!;
+    const remove = container.querySelector<HTMLButtonElement>('button[aria-label="remove unavailable item"]')!;
     expect(remove).not.toBeNull();
     expect(remove.closest("[popover]")).not.toBeNull();
-    expect(container.querySelector('button[aria-label="Remove Algorithms"]')).not.toBeNull();
+    expect(container.querySelector('button[aria-label="remove Algorithms"]')).not.toBeNull();
     await act(async () => remove.click());
     expect(onChange).toHaveBeenCalledExactlyOnceWith(["valid-target"]);
     expect(document.activeElement?.getAttribute("role")).toBe("combobox");

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { categoryTrail } from "@/lib/trail-server";
-import { formatDate } from "@/lib/utils";
+import { formatDate, plural } from "@/lib/utils";
 import { DataTable, EmptyState, LinkButton, Page, PageHeader, Section } from "@/components/ui";
 
 type Props = {
@@ -41,7 +41,7 @@ export default async function CategoryPage({ params }: Props) {
   ]);
   trail.push({ label: category.name });
 
-  const articleCountText = `${articles.length} article${articles.length !== 1 ? "s" : ""} in this category`;
+  const articleCountText = `${plural(articles.length, "page", "pages")} in this space`;
 
   return (
     <Page trail={trail}>
@@ -75,7 +75,7 @@ export default async function CategoryPage({ params }: Props) {
 
       {/* Subcategories */}
       {category.children.length > 0 && (
-        <Section title="subcategories">
+        <Section title="subspaces">
           <ul className="list-disc pl-5 space-y-0.5">
             {category.children.map((child) => (
               <li key={child.id}>
@@ -84,7 +84,7 @@ export default async function CategoryPage({ params }: Props) {
                 </Link>
                 {child._count.articles > 0 && (
                   <span className="text-[11px] text-muted ml-1">
-                    ({child._count.articles} article{child._count.articles !== 1 ? "s" : ""})
+                    ({plural(child._count.articles, "page", "pages")})
                   </span>
                 )}
               </li>
@@ -95,16 +95,16 @@ export default async function CategoryPage({ params }: Props) {
 
       {articles.length === 0 ? (
         <EmptyState
-          title="no articles yet"
-          description="this category is ready for its first article."
+          title="no pages yet"
+          description="this space is ready for its first page."
           actions={<LinkButton href="/articles/new" variant="primary">create one</LinkButton>}
         />
       ) : (
-        <Section title="articles in this category">
+        <Section title="pages in this space">
           <DataTable>
             <thead>
               <tr>
-                <th>article</th>
+                <th>page</th>
                 <th className="w-28">last edited</th>
               </tr>
             </thead>
@@ -120,7 +120,7 @@ export default async function CategoryPage({ params }: Props) {
                     </Link>
                     {article.excerpt && (
                       <span className="text-muted text-[12px]">
-                        {" "}&ndash; {article.excerpt.substring(0, 100)}{article.excerpt.length > 100 ? "..." : ""}
+                        {" "}&ndash; {article.excerpt.substring(0, 100)}{article.excerpt.length > 100 ? "…" : ""}
                       </span>
                     )}
                   </td>

@@ -50,7 +50,11 @@ export default function UserMenu() {
       }
     }
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        // IconButton does not forward refs; the trigger is the wrapper's direct button child.
+        ref.current?.querySelector<HTMLButtonElement>(":scope > button")?.focus();
+      }
     }
     document.addEventListener("mousedown", handleClick);
     document.addEventListener("keydown", handleKeyDown);
@@ -77,7 +81,7 @@ export default function UserMenu() {
   return (
     <div ref={ref} className="relative">
       <IconButton
-        label="User menu"
+        label="user menu"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
       >
@@ -96,40 +100,40 @@ export default function UserMenu() {
             <>
               {/* Logged-in user info */}
               <div className="px-3 py-2 border-b border-border">
-                <div className="text-[12px] font-bold text-heading truncate">
+                <div className="text-[12px] font-bold text-heading truncate" title={user.displayName || user.username}>
                   {user.displayName || user.username}
                 </div>
-                <div className="text-[11px] text-muted truncate">@{user.username}</div>
+                <div className="text-[11px] text-muted truncate" title={"@" + user.username}>@{user.username}</div>
                 {user.role !== "viewer" && (
                   <div className="text-[10px] text-muted capitalize mt-0.5">{user.role}</div>
                 )}
               </div>
 
               <DropdownLink href="/settings" className="text-wiki-link" onClick={() => setOpen(false)}>
-                Settings
+                settings
               </DropdownLink>
 
               {isAdmin && (
                 <>
                   <div className="border-t border-border my-1" />
                   <DropdownLink href="/admin" className="text-wiki-link" onClick={() => setOpen(false)}>
-                    Admin panel
+                    admin panel
                   </DropdownLink>
                 </>
               )}
 
               <div className="border-t border-border my-1" />
               <DropdownItem onClick={handleLogout} className="text-wiki-link">
-                Log out
+                log out
               </DropdownItem>
             </>
           ) : (
             <>
               <DropdownLink href="/login" className="text-wiki-link" onClick={() => setOpen(false)}>
-                Log in
+                log in
               </DropdownLink>
               <DropdownLink href="/register" className="text-wiki-link" onClick={() => setOpen(false)}>
-                Sign up
+                register
               </DropdownLink>
             </>
           )}

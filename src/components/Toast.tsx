@@ -43,16 +43,17 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
 function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number) => void }) {
   useEffect(() => {
-    const timer = setTimeout(() => onDismiss(toast.id), 4000);
+    if (toast.type === "error") return;
+    const timer = setTimeout(() => onDismiss(toast.id), 6000);
     return () => clearTimeout(timer);
-  }, [toast.id, onDismiss]);
+  }, [toast.id, toast.type, onDismiss]);
 
   return (
     <button
       type="button"
       className={`toast toast-${toast.type}`}
       onClick={() => onDismiss(toast.id)}
-      title="Dismiss notification"
+      title="dismiss"
     >
       {toast.message}
     </button>

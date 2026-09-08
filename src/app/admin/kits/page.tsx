@@ -17,6 +17,7 @@ import {
 } from "@/components/ui";
 import { useToast } from "@/components/Toast";
 import { TRAIL_ROOTS } from "@/lib/trail";
+import { plural } from "@/lib/utils";
 import type { ApplyKitReport, KitApplyState, KitId, KitStatus } from "@/kits/types";
 import type { ModuleId } from "@/modules/types";
 
@@ -39,11 +40,11 @@ async function fetchKits(): Promise<KitsState | "forbidden"> {
 
 function describeReport(name: string, report: ApplyKitReport): string {
   const parts = [
-    `${report.modulesEnabled.length} module${report.modulesEnabled.length === 1 ? "" : "s"} enabled`,
-    `${report.collectionsCreated.length} collection${report.collectionsCreated.length === 1 ? "" : "s"} created`,
+    `${plural(report.modulesEnabled.length, "module", "modules")} enabled`,
+    `${plural(report.collectionsCreated.length, "collection", "collections")} created`,
   ];
   if (report.collectionsSkipped.length) parts.push(`${report.collectionsSkipped.length} already there`);
-  if (report.itemsCreated) parts.push(`${report.itemsCreated} sample item${report.itemsCreated === 1 ? "" : "s"}`);
+  if (report.itemsCreated) parts.push(`${plural(report.itemsCreated, "sample item", "sample items")}`);
   return `applied ${name}: ${parts.join(", ")}. recommended skin: ${report.skin}.`;
 }
 
@@ -115,7 +116,7 @@ export default function KitsPage() {
     return (
       <Page width="wide" trail={TRAIL}>
         {header}
-        <LoadingState label="loading..." />
+        <LoadingState />
       </Page>
     );
   }
@@ -190,8 +191,8 @@ export default function KitsPage() {
                   </td>
                   <td>
                     <div className="flex flex-wrap items-center gap-3">
-                      <Button variant="primary" disabled={busy} onClick={() => void apply(kit)}>
-                        {applying === kit.id ? "applying..." : "apply"}
+                      <Button disabled={busy} onClick={() => void apply(kit)}>
+                        {applying === kit.id ? "applying…" : "apply"}
                       </Button>
                       {hasSamples && (
                         <label className="flex items-center gap-1.5 text-[12px] text-muted">
@@ -215,7 +216,7 @@ export default function KitsPage() {
 
       <Notice className="mt-3">
         applying a kit stores its module list in the <InlineCode>modules</InlineCode> system setting (see{" "}
-        <a href="/admin/modules">modules</a>) and creates its collections by slug, so applying twice is safe. a
+        <a href="/admin/modules" className="underline">modules</a>) and creates its collections by slug, so applying twice is safe. a
         kit&apos;s skin is a recommendation: pick it in settings or with <InlineCode>NEXT_PUBLIC_ARKIVEL_SKIN</InlineCode>.
       </Notice>
     </Page>

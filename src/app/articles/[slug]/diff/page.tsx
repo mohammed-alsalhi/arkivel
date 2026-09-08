@@ -58,7 +58,7 @@ export default function DiffPage() {
   }, [slug, fromId, toId]);
 
   if (loading) {
-    return <LoadingState label="loading diff..." />;
+    return <LoadingState label="loading diff…" />;
   }
 
   if (!fromData || !toData || !article) {

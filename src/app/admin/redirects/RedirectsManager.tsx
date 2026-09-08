@@ -24,7 +24,7 @@ export default function RedirectsManager({ initialRedirects }: { initialRedirect
       });
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error || "failed to save");
+        setError(data.error || "could not save the redirect. check both slugs and try again.");
       } else {
         const newRedirect = await res.json();
         setRedirects((prev) => {
@@ -44,13 +44,14 @@ export default function RedirectsManager({ initialRedirects }: { initialRedirect
     }
   }
 
-  async function handleDelete(id: string) {
+  async function handleDelete(r: RedirectRow) {
+    if (!confirm(`delete the redirect from ${r.fromSlug} to ${r.toSlug}?`)) return;
     await fetch("/api/admin/redirects", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id: r.id }),
     });
-    setRedirects((prev) => prev.filter((r) => r.id !== id));
+    setRedirects((prev) => prev.filter((row) => row.id !== r.id));
   }
 
   return (
@@ -58,21 +59,23 @@ export default function RedirectsManager({ initialRedirects }: { initialRedirect
       {/* Add form */}
       <form onSubmit={handleAdd} className="flex flex-wrap gap-2 items-end">
         <div className="flex flex-col gap-1 min-w-0 flex-1 sm:flex-none">
-          <label className="text-xs text-muted-foreground">from slug (old)</label>
+          <label htmlFor="redirect-from" className="text-xs text-muted-foreground">from slug (old)</label>
           <input
+            id="redirect-from"
             value={fromSlug}
             onChange={(e) => setFromSlug(e.target.value)}
-            placeholder="old-article-slug"
+            placeholder="old-page-slug"
             required
             className="h-8 px-2 text-sm border border-border rounded bg-background w-full sm:w-48"
           />
         </div>
         <div className="flex flex-col gap-1 min-w-0 flex-1 sm:flex-none">
-          <label className="text-xs text-muted-foreground">to slug (new)</label>
+          <label htmlFor="redirect-to" className="text-xs text-muted-foreground">to slug (new)</label>
           <input
+            id="redirect-to"
             value={toSlug}
             onChange={(e) => setToSlug(e.target.value)}
-            placeholder="new-article-slug"
+            placeholder="new-page-slug"
             required
             className="h-8 px-2 text-sm border border-border rounded bg-background w-full sm:w-48"
           />
@@ -85,7 +88,10 @@ export default function RedirectsManager({ initialRedirects }: { initialRedirect
 
       {/* Table */}
       {redirects.length === 0 ? (
-        <EmptyState title="no redirects yet." />
+        <EmptyState
+          title="no redirects yet"
+          description="add one above to send an old slug to its new page."
+        />
       ) : (
         <DataTable>
           <thead>
@@ -106,7 +112,8 @@ export default function RedirectsManager({ initialRedirects }: { initialRedirect
                 </td>
                 <td className="text-right">
                   <button
-                    onClick={() => handleDelete(r.id)}
+                    type="button"
+                    onClick={() => handleDelete(r)}
                     className="text-xs text-destructive hover:underline"
                   >
                     delete

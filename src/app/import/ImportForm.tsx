@@ -14,6 +14,7 @@ import {
   SectionPanel,
 } from "@/components/ui";
 import { TRAIL_ROOTS } from "@/lib/trail";
+import { plural } from "@/lib/utils";
 
 const TRAIL = [TRAIL_ROOTS.library, { label: "import" }];
 
@@ -109,7 +110,7 @@ export default function ImportForm() {
         setResults([{
           filename: "upload",
           success: false,
-          error: payload.error ?? "import failed",
+          error: payload.error ?? "import failed. check the files and try again.",
         }]);
         return;
       }
@@ -117,7 +118,7 @@ export default function ImportForm() {
       setResults(payload.results);
       setFiles([]);
     } catch {
-      setResults([{ filename: "upload", success: false, error: "network error" }]);
+      setResults([{ filename: "upload", success: false, error: "network error. please try again." }]);
     } finally {
       setImporting(false);
     }
@@ -173,7 +174,7 @@ export default function ImportForm() {
         {files.length > 0 ? (
           <div className="space-y-3">
             <p className="text-[12px] text-muted">
-              {files.length} file{files.length === 1 ? "" : "s"} ready
+              {plural(files.length, "file", "files")} ready
             </p>
             <ul className="divide-y divide-border border border-border text-[13px]">
               {files.map((file, index) => {
@@ -197,8 +198,8 @@ export default function ImportForm() {
             <div className="flex flex-wrap gap-2">
               <Button variant="primary" onClick={handleImport} disabled={importing}>
                 {importing
-                  ? "importing..."
-                  : "import " + files.length + " file" + (files.length === 1 ? "" : "s")}
+                  ? "importing…"
+                  : `import ${plural(files.length, "file", "files")}`}
               </Button>
               <Button onClick={() => setFiles([])} disabled={importing}>
                 clear

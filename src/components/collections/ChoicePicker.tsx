@@ -26,7 +26,7 @@ type Props = {
 };
 
 /** One label-aware picker for collection values. Native popovers handle clipping and outside dismissal. */
-export function ChoicePicker({ id, label, options = [], selected, onPick, loadOptions, children, selection, placeholder = "Empty", compact, multiple, clearable = true, disabled, className }: Props) {
+export function ChoicePicker({ id, label, options = [], selected, onPick, loadOptions, children, selection, placeholder = "empty", compact, multiple, clearable = true, disabled, className }: Props) {
   const uid = useId();
   const panelId = `${uid}-picker`;
   const listId = `${uid}-options`;
@@ -160,7 +160,7 @@ export function ChoicePicker({ id, label, options = [], selected, onPick, loadOp
         id={panelId}
         popover="auto"
         role="dialog"
-        aria-label={`Choose ${label}`}
+        aria-label={`choose ${label}`}
         className="collections-choice-popover"
         style={open ? undefined : { visibility: "hidden" }}
         onToggle={(event) => setOpen(event.currentTarget.matches(":popover-open"))}
@@ -173,12 +173,12 @@ export function ChoicePicker({ id, label, options = [], selected, onPick, loadOp
           <input
             ref={input}
             role="combobox"
-            aria-label={`Search ${label}`}
+            aria-label={`search ${label}`}
             aria-expanded={open}
             aria-controls={listId}
             aria-autocomplete="list"
             aria-activedescendant={open && activeIndex >= 0 ? `${uid}-option-${activeIndex}` : undefined}
-            placeholder={`Search ${label}…`}
+            placeholder={`search ${label}…`}
             autoComplete="off"
             value={query}
             onChange={(event) => { setQuery(event.target.value); setActive(0); }}
@@ -201,7 +201,7 @@ export function ChoicePicker({ id, label, options = [], selected, onPick, loadOp
           <div
             className="collections-choice-selection"
             role="group"
-            aria-label={`Selected ${label}`}
+            aria-label={`selected ${label}`}
             onPointerDown={(event) => event.preventDefault()}
             onClick={() => input.current?.focus({ preventScroll: true })}
           >
@@ -227,9 +227,9 @@ export function ChoicePicker({ id, label, options = [], selected, onPick, loadOp
           ))}
         </div>
         {(loading || error || matches.length === 0) && <div className="collections-choice-message" role="status">
-          {loading ? "Searching…" : error ? <>Couldn’t load options. <button type="button" onClick={() => setRetry((value) => value + 1)}>Retry</button></> : "No matching options"}
+          {loading ? "searching…" : error ? <>could not load options. <button type="button" onClick={() => setRetry((value) => value + 1)}>retry</button></> : "no matching options"}
         </div>}
-        {clearable && selected.length > 0 && <button className="collections-choice-clear" type="button" disabled={disabled} onClick={() => pick(null)}>{multiple ? "Clear selection" : "Clear value"}</button>}
+        {clearable && selected.length > 0 && <button className="collections-choice-clear" type="button" disabled={disabled} onClick={() => pick(null)}>{multiple ? "clear selection" : "clear value"}</button>}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DataTable, EmptyState, LoadingState, Page, PageHeader } from "@/components/ui";
+import { DataTable, EmptyState, LinkButton, LoadingState, Page, PageHeader } from "@/components/ui";
 import { TRAIL_ROOTS } from "@/lib/trail";
 
 const TRAIL = [TRAIL_ROOTS.admin, { label: "users" }];
@@ -48,7 +48,7 @@ export default function AdminUsersPage() {
         prev.map((u) => (u.id === updated.id ? { ...u, role: updated.role } : u))
       );
     } else {
-      setError("failed to update role");
+      setError("could not update the role. try again.");
     }
     setSaving(null);
   }
@@ -61,7 +61,7 @@ export default function AdminUsersPage() {
     return (
       <Page trail={TRAIL}>
         {header}
-        <LoadingState label="loading…" />
+        <LoadingState />
       </Page>
     );
   }
@@ -70,14 +70,14 @@ export default function AdminUsersPage() {
     <Page trail={TRAIL}>
       {header}
 
-      {error && <p className="text-[12px] text-wiki-link-broken mb-3">{error}</p>}
+      {error && <p className="text-[12px] text-danger mb-3">{error}</p>}
 
       <DataTable>
         <thead>
           <tr>
             <th>user</th>
             <th>email</th>
-            <th className="w-24">articles</th>
+            <th className="w-24">pages</th>
             <th className="w-24">edits</th>
             <th className="w-32">joined</th>
             <th className="w-36">role</th>
@@ -102,10 +102,11 @@ export default function AdminUsersPage() {
               </td>
               <td>
                 <select
+                  aria-label={`role for ${user.username}`}
                   value={user.role}
                   disabled={saving === user.id}
                   onChange={(e) => changeRole(user.id, e.target.value)}
-                  className="border border-border bg-surface px-2 py-0.5 text-[12px] text-foreground focus:outline-none focus:border-accent disabled:opacity-50 w-full"
+                  className="border border-border bg-surface px-2 py-0.5 text-[12px] text-foreground focus:border-accent disabled:opacity-50 w-full"
                 >
                   {ROLES.map((r) => (
                     <option key={r} value={r}>
@@ -119,7 +120,11 @@ export default function AdminUsersPage() {
         </tbody>
       </DataTable>
 
-      {users.length === 0 && <EmptyState title="no users found." />}
+      {users.length === 0 && <EmptyState
+          title="no users yet"
+          description="accounts appear here once people register."
+          actions={<LinkButton href="/register">register</LinkButton>}
+        />}
     </Page>
   );
 }

@@ -41,9 +41,16 @@ export function Trail({ className, items, ...props }: TrailProps) {
                 </span>
               )}
               {item.href && !current ? (
-                <Link href={item.href}>{item.label}</Link>
+                <Link href={item.href} title={typeof item.label === "string" ? item.label : undefined}>
+                  {item.label}
+                </Link>
               ) : (
-                <span aria-current={current ? "page" : undefined}>{item.label}</span>
+                <span
+                  aria-current={current ? "page" : undefined}
+                  title={typeof item.label === "string" ? item.label : undefined}
+                >
+                  {item.label}
+                </span>
               )}
             </li>
           );
@@ -252,7 +259,7 @@ export function Field({
       </label>
       {children}
       {hint && <p className="ui-muted">{hint}</p>}
-      {error && <p className="ui-field-error">{error}</p>}
+      {error && <p className="ui-field-error" id={htmlFor ? `${htmlFor}-error` : undefined}>{error}</p>}
     </div>
   );
 }
@@ -424,7 +431,7 @@ type DataTableProps = TableHTMLAttributes<HTMLTableElement>;
 
 export function DataTable({ className, ...props }: DataTableProps) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto" tabIndex={0}>
       <table className={clsx("ui-table", className)} {...props} />
     </div>
   );
@@ -453,9 +460,9 @@ type LoadingStateProps = HTMLAttributes<HTMLDivElement> & {
   label?: ReactNode;
 };
 
-export function LoadingState({ className, label = "Loading...", ...props }: LoadingStateProps) {
+export function LoadingState({ className, label = "loading…", ...props }: LoadingStateProps) {
   return (
-    <div className={clsx("ui-loading-state", className)} {...props}>
+    <div className={clsx("ui-loading-state", className)} role="status" {...props}>
       {label}
     </div>
   );

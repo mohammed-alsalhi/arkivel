@@ -44,7 +44,7 @@ export default function GraphControls({
         aria-expanded={open}
         className="flex w-full items-center justify-between gap-2 px-3 py-2 font-semibold text-[13px] text-heading"
       >
-        <span>Graph Controls</span>
+        <span>graph controls</span>
         <svg
           width="11"
           height="11"
@@ -65,13 +65,14 @@ export default function GraphControls({
         <div className="space-y-2 border-t border-border p-3">
           {/* Category filter */}
           <div>
-            <label className="block text-muted mb-0.5">Category</label>
+            <label htmlFor="graph-space" className="block text-muted mb-0.5">space</label>
             <select
+              id="graph-space"
               value={selectedCategory}
               onChange={(e) => onCategoryChange(e.target.value)}
               className="w-full border border-border px-1.5 py-1 bg-surface text-[12px]"
             >
-              <option value="">All categories</option>
+              <option value="">all spaces</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
@@ -82,10 +83,11 @@ export default function GraphControls({
 
           {/* Depth slider */}
           <div>
-            <label className="block text-muted mb-0.5">
-              Depth: {depth}
+            <label htmlFor="graph-depth" className="block text-muted mb-0.5">
+              depth: {depth}
             </label>
             <input
+              id="graph-depth"
               type="range"
               min={1}
               max={5}
@@ -98,15 +100,15 @@ export default function GraphControls({
           {/* Center article */}
           {centerSlug && (
             <div>
-              <label className="block text-muted mb-0.5">Centered on:</label>
+              <span className="block text-muted mb-0.5">centered on</span>
               <div className="flex items-center gap-1">
                 <span className="font-mono truncate flex-1">{centerSlug}</span>
                 <button
                   type="button"
                   onClick={() => onCenterChange("")}
                   className="flex h-6 w-6 flex-shrink-0 items-center justify-center text-muted hover:text-foreground pointer-coarse:h-9 pointer-coarse:w-9"
-                  aria-label="Clear center"
-                  title="Clear center"
+                  aria-label="clear center"
+                  title="clear center"
                 >
                   x
                 </button>
@@ -123,7 +125,7 @@ export default function GraphControls({
                 onChange={(e) => onClusterModeChange(e.target.checked)}
                 className="h-4 w-4 pointer-coarse:h-5 pointer-coarse:w-5"
               />
-              <span className="text-muted">Show clusters</span>
+              <span className="text-muted">show clusters</span>
             </label>
           </div>
 

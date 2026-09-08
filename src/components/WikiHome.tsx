@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PageFooter, PageTopbar } from "@/components/ui";
 import { config } from "@/lib/config";
 import { TRAIL_ROOTS, type TrailItem } from "@/lib/trail";
-import { formatDate } from "@/lib/utils";
+import { formatDate, plural } from "@/lib/utils";
 
 const trail: TrailItem[] = [TRAIL_ROOTS.library, { label: "home" }];
 
@@ -35,7 +35,7 @@ export default async function WikiHome() {
       <div className="focused-home">
         <header className="focused-home-header">
           <p className="focused-home-count">
-            {total.toLocaleString()} {total === 1 ? "page" : "pages"}
+            {plural(total, "page", "pages")}
           </p>
           <h1>home</h1>
           <p>{config.welcomeText}</p>

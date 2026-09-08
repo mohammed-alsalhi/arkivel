@@ -160,7 +160,7 @@ export default function ArticleRightSidebar({
               ) : (
                 <ol>
                   {headings.map((heading) => (
-                    <li key={heading.id} style={{ paddingLeft: `${Math.max(0, heading.level - 2) * 0.9}rem` }}>
+                    <li key={heading.id} style={{ paddingInlineStart: `${Math.max(0, heading.level - 2) * 0.9}rem` }}>
                       <a
                         href={`#${heading.id}`}
                         aria-current={activeId === heading.id ? "location" : undefined}

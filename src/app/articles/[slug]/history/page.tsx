@@ -68,7 +68,7 @@ function DiffForm({
         </button>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0}>
         <table className="w-full text-[13px]">
           <thead>
             <tr className="border-b border-border text-left">

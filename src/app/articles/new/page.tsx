@@ -179,7 +179,7 @@ export default function NewArticlePage() {
         onSubmit={handleSubmit}
         title={title}
         onTitleChange={setTitle}
-        titlePlaceholder="page title..."
+        titlePlaceholder="page title…"
         categories={categories}
         categoryId={categoryId}
         onCategoryChange={setCategoryId}
@@ -195,7 +195,7 @@ export default function NewArticlePage() {
         onPinnedChange={setIsPinned}
         saving={saving}
         submitLabel="create page"
-        savingLabel="saving..."
+        savingLabel="saving…"
         onCancel={() => router.back()}
       />
   );

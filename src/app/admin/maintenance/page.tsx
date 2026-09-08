@@ -117,7 +117,7 @@ export default function MaintenancePage() {
     return (
       <Page width="wide" trail={TRAIL}>
         {header}
-        <LoadingState label="loading..." />
+        <LoadingState />
       </Page>
     );
   }
@@ -143,7 +143,7 @@ export default function MaintenancePage() {
             <span className="text-[13px] text-foreground">
               {enabled ? "maintenance mode is on" : "maintenance mode is off"}
             </span>
-            {saved && <span className="text-[11px] text-accent">saved</span>}
+            {saved && <span className="text-[11px] text-muted">saved</span>}
           </div>
           {enabled && (
             <Notice className="border-warning-border bg-warning-soft text-warning">

@@ -105,7 +105,7 @@ function PageEditor({ value, onChange, compact, readOnly, disabled, id, label: f
         if (result) rememberLabel("page", result.id, result.label);
         onChange(result ? result.id : null);
       }}>
-      {articleId ? <span>{label}</span> : <span className="collections-choice-placeholder">Link a page</span>}
+      {articleId ? <span>{label}</span> : <span className="collections-choice-placeholder">link a page</span>}
     </ChoicePicker>
   );
 }
@@ -116,7 +116,7 @@ function RelationChip({ collectionId, itemId, onRemove, disabled }: { collection
   return (
     <div className="collections-choice-selected-item">
       <Chip>{label}</Chip>
-      <button type="button" className="collections-choice-remove" aria-label={`Remove ${label}`} disabled={disabled} onClick={onRemove}>
+      <button type="button" className="collections-choice-remove" aria-label={`remove ${label}`} disabled={disabled} onClick={onRemove}>
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" /></svg>
       </button>
     </div>
@@ -139,7 +139,7 @@ function RelationEditor({ property, value, onChange, compact, readOnly, disabled
         rememberLabel(`item:${property.collectionId}`, result.id, result.label);
         onChange(ids.includes(result.id) ? ids.filter((id) => id !== result.id) : [...ids, result.id]);
       }}>
-      {ids.length ? labels : <span className="collections-choice-placeholder">Link {property.name}</span>}
+      {ids.length ? labels : <span className="collections-choice-placeholder">link {property.name}</span>}
     </ChoicePicker>
   );
 }
@@ -148,13 +148,13 @@ function MultiSelectEditor({ property, value, onChange, compact, readOnly, disab
   const ids = Array.isArray(value) ? value : [];
   const labels = ids.map((optionId) => {
     const option = property.options.find((entry) => entry.id === optionId);
-    return <Chip key={optionId} tone={option?.tone ?? "default"}>{option?.label ?? "Unavailable option"}</Chip>;
+    return <Chip key={optionId} tone={option?.tone ?? "default"}>{option?.label ?? "unavailable option"}</Chip>;
   });
   if (readOnly) return <span className="collections-chips">{ids.length ? labels : <span className="ui-muted">—</span>}</span>;
   return (
     <ChoicePicker id={id} label={property.name} compact={compact} disabled={disabled} multiple selected={ids} options={property.options.map((option) => ({ ...option, tone: option.tone ?? "default" }))}
       onPick={(option) => onChange(!option ? [] : ids.includes(option.id) ? ids.filter((id) => id !== option.id) : [...ids, option.id])}>
-      {ids.length ? labels : <span className="collections-choice-placeholder">Empty</span>}
+      {ids.length ? labels : <span className="collections-choice-placeholder">empty</span>}
     </ChoicePicker>
   );
 }
@@ -321,13 +321,13 @@ export function PropertyEditor(props: EditorProps) {
         return person ? (
           <span>{person.label}</span>
         ) : selected ? (
-          <span className="ui-muted">Unavailable person</span>
+          <span className="ui-muted">unavailable person</span>
         ) : (
           <span className="ui-muted">—</span>
         );
       return (
         <ChoicePicker id={id} label={property.name} compact={compact} disabled={disabled} selected={selected ? [selected] : []}
-          options={context.users} onPick={(option) => onChange(option?.id ?? null)} placeholder={selected ? "Unavailable person" : "Unassigned"} />
+          options={context.users} onPick={(option) => onChange(option?.id ?? null)} placeholder={selected ? "unavailable person" : "unassigned"} />
       );
     }
     case "page":

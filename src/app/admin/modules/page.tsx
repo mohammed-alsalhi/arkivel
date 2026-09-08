@@ -121,7 +121,7 @@ export default function ModulesPage() {
     return (
       <Page width="wide" trail={TRAIL}>
         {header}
-        <LoadingState label="loading..." />
+        <LoadingState />
       </Page>
     );
   }
@@ -160,7 +160,7 @@ export default function ModulesPage() {
           )}
         </span>
         {state.override ? <Chip tone="warning">override active</Chip> : <Chip>environment default</Chip>}
-        {saved && <span className="text-[11px] text-accent">saved</span>}
+        {saved && <span className="text-[11px] text-muted">saved</span>}
       </div>
 
       <Section title="modules">

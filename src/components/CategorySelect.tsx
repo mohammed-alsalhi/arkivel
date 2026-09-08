@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Select } from "@/components/ui";
+import type { SelectHTMLAttributes } from "react";
 
 type Category = {
   id: string;
@@ -11,7 +12,7 @@ type Category = {
   children?: Category[];
 };
 
-type Props = {
+type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, "value" | "onChange"> & {
   value: string;
   onChange: (id: string) => void;
   categories?: Category[];
@@ -19,7 +20,7 @@ type Props = {
 
 export type { Category as CategoryOption };
 
-export default function CategorySelect({ value, onChange, categories: externalCategories }: Props) {
+export default function CategorySelect({ value, onChange, categories: externalCategories, ...selectProps }: Props) {
   const [fetched, setFetched] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -36,10 +37,11 @@ export default function CategorySelect({ value, onChange, categories: externalCa
 
   return (
     <Select
+      {...selectProps}
       value={value}
       onChange={(e) => onChange(e.target.value)}
     >
-      <option value="">No category</option>
+      <option value="">no space</option>
       {renderOptions(roots, 0)}
     </Select>
   );

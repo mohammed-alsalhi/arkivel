@@ -4,6 +4,7 @@ import CategoryManager from "@/components/CategoryManager";
 import TagManager from "@/components/TagManager";
 import { EmptyState, LinkButton, Page, PageHeader } from "@/components/ui";
 import { TRAIL_ROOTS } from "@/lib/trail";
+import { plural } from "@/lib/utils";
 
 async function getCategoryTree() {
   try {
@@ -41,8 +42,8 @@ export default async function CategoriesPage() {
         title="spaces"
         description={
           <>
-            {categoryCount.toLocaleString()} categor{categoryCount === 1 ? "y" : "ies"} organizing {articleCount.toLocaleString()} article{articleCount !== 1 ? "s" : ""}.
-            select a category to browse its articles.
+            {plural(categoryCount, "space", "spaces")} organizing {plural(articleCount, "page", "pages")}.
+            select a space to browse its pages.
           </>
         }
         actions={
@@ -54,7 +55,10 @@ export default async function CategoriesPage() {
       />
 
       {categories.length === 0 ? (
-        <EmptyState title="no categories have been created yet." />
+        <EmptyState
+          title="no spaces yet"
+          description="spaces group related pages. create the first one below."
+        />
       ) : (
         <div className="category-tree">
           {categories.map((cat) => (
@@ -104,7 +108,7 @@ function CategoryTreeRow({ category, depth }: { category: TreeCategory; depth: n
           {category.name}
         </Link>
         <span className="category-tree-count">
-          ({category._count.articles} article{category._count.articles !== 1 ? "s" : ""})
+          ({plural(category._count.articles, "page", "pages")})
         </span>
         {category.description && (
           <span className="category-tree-description">

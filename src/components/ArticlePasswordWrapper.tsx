@@ -40,11 +40,11 @@ export default function ArticlePasswordWrapper({ articleId, hasPassword, childre
         sessionStorage.setItem(`article_unlocked_${articleId}`, "1");
         setUnlocked(true);
       } else {
-        setError("Incorrect password. Please try again.");
+        setError("incorrect password. try again.");
         setPassword("");
       }
     } catch {
-      setError("Could not verify password. Please try again.");
+      setError("unable to verify the password. try again.");
     } finally {
       setChecking(false);
     }
@@ -58,32 +58,35 @@ export default function ArticlePasswordWrapper({ articleId, hasPassword, childre
 
   return (
     <div className="border border-border bg-surface px-5 py-10 flex flex-col items-center gap-5 text-center">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-muted">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-muted" aria-hidden="true">
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
       </svg>
       <div>
         <div className="text-[16px] font-semibold text-heading mb-1" style={{ fontFamily: "var(--font-serif)" }}>
-          Password protected
+          password protected
         </div>
-        <div className="text-[13px] text-muted">Enter the password to read this article.</div>
+        <div className="text-[13px] text-muted">enter the password to read this page.</div>
       </div>
       <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2 w-full max-w-xs">
+        <label htmlFor="article-password" className="sr-only">page password</label>
         <input
+          id="article-password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter password…"
-          className="w-full border border-border bg-background px-3 py-1.5 text-[13px] text-foreground focus:border-accent focus:outline-none"
+          placeholder="enter password…"
+          autoComplete="off"
+          className="w-full border border-border bg-background px-3 py-1.5 text-[13px] text-foreground focus:border-accent"
           autoFocus
         />
-        {error && <p className="text-[12px] text-wiki-link-broken">{error}</p>}
+        {error && <p className="text-[12px] text-danger" role="alert">{error}</p>}
         <button
           type="submit"
           disabled={checking || !password}
           className="bg-accent px-5 py-1.5 text-[13px] font-bold text-accent-foreground hover:bg-accent-hover disabled:opacity-50"
         >
-          {checking ? "Checking…" : "Unlock"}
+          {checking ? "checking…" : "unlock"}
         </button>
       </form>
     </div>

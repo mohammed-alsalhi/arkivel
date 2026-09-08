@@ -1,6 +1,6 @@
 import Link from "next/link";
 import prisma from "@/lib/prisma";
-import { EmptyState, Page, PageHeader } from "@/components/ui";
+import { EmptyState, LinkButton, Page, PageHeader } from "@/components/ui";
 import { TRAIL_ROOTS } from "@/lib/trail";
 
 export default async function TagsPage() {
@@ -26,7 +26,11 @@ export default async function TagsPage() {
       />
 
       {tags.length === 0 ? (
-        <EmptyState title="no tags yet." />
+        <EmptyState
+          title="no tags yet"
+          description="tags are created when you add them to a page."
+          actions={<LinkButton href="/articles/new">new page</LinkButton>}
+        />
       ) : (
         <div className="tag-cloud">
           {tags.map((tag) => (

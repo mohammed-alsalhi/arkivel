@@ -87,7 +87,7 @@ export default async function RecentChangesPage() {
         actions={<LinkButton href="/articles">all pages</LinkButton>}
       />
       {timeline.length === 0 ? (
-        <EmptyState title="no recent changes" description="edits and newly created articles will appear here." />
+        <EmptyState title="no recent changes" description="edits and newly created pages will appear here." />
       ) : (
         <div className="space-y-3">
           {Object.entries(grouped).map(([date, changes]) => (

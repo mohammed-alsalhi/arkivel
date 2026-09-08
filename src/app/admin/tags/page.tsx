@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, DataTable, EmptyState, Input, Page, PageHeader } from "@/components/ui";
+import { Button, DataTable, EmptyState, Input, LinkButton, Page, PageHeader } from "@/components/ui";
 import { TRAIL_ROOTS } from "@/lib/trail";
+import { plural } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -60,19 +61,19 @@ export default function AdminTagsPage() {
       cancelEdit();
     } else {
       const body = await res.json().catch(() => ({}));
-      setError(body.error ?? "failed to save");
+      setError(body.error ?? "could not save the tag. try again.");
     }
     setSaving(false);
   }
 
   async function deleteTag(tag: Tag) {
-    if (!confirm(`delete tag "${tag.name}"? this will remove it from all articles.`)) return;
+    if (!confirm(`delete tag "${tag.name}"? this will remove it from all pages.`)) return;
     const res = await fetch(`/api/tags/${tag.id}`, { method: "DELETE" });
     if (res.ok) {
       setTags((prev) => prev.filter((t) => t.id !== tag.id));
     } else {
       const body = await res.json().catch(() => ({}));
-      alert(body.error ?? "failed to delete tag");
+      alert(body.error ?? "could not delete the tag. try again.");
     }
   }
 
@@ -82,7 +83,7 @@ export default function AdminTagsPage() {
 
   return (
     <Page trail={TRAIL}>
-      <PageHeader title="tags" description="rename, recolor, or delete the tags used across articles." />
+      <PageHeader title="tags" description="rename, recolor, or delete the tags used across pages." />
 
       <div className="mb-4 flex items-center gap-2">
         <Input
@@ -91,13 +92,17 @@ export default function AdminTagsPage() {
           placeholder="filter tags…"
           className="w-64"
         />
-        <span className="text-[12px] text-muted">{filtered.length} tag{filtered.length !== 1 ? "s" : ""}</span>
+        <span className="text-[12px] text-muted">{plural(filtered.length, "tag", "tags")}</span>
       </div>
 
       {loading ? (
         <p className="text-muted text-[13px]">loading…</p>
       ) : filtered.length === 0 ? (
-        <EmptyState title="no tags found." />
+        <EmptyState
+          title="no tags found"
+          description={search ? "no tags match this filter." : "tags are created when you add them to a page."}
+          actions={search ? undefined : <LinkButton href="/articles/new">new page</LinkButton>}
+        />
       ) : (
         <DataTable>
           <thead>
@@ -105,7 +110,7 @@ export default function AdminTagsPage() {
               <th>name</th>
               <th>slug</th>
               <th>color</th>
-              <th>articles</th>
+              <th>pages</th>
               <th>actions</th>
             </tr>
           </thead>
@@ -134,6 +139,7 @@ export default function AdminTagsPage() {
                             className="w-7 h-6 rounded border border-border cursor-pointer"
                           />
                           <button
+                            type="button"
                             onClick={() => setEditColor("")}
                             className="text-[11px] text-muted hover:text-foreground"
                             title="clear color"
@@ -167,7 +173,7 @@ export default function AdminTagsPage() {
                         </div>
                       </td>
                       <td className="text-muted font-mono text-[11px]">{tag.slug}</td>
-                      <td className="text-muted">{tag.color || <span className="opacity-40 italic">none</span>}</td>
+                      <td className="text-muted">{tag.color || <span className="italic">none</span>}</td>
                       <td className="text-muted">{tag._count?.articles ?? "—"}</td>
                       <td>
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

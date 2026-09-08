@@ -25,7 +25,7 @@ export default function NotionImportForm() {
       const data = await res.json();
       setResult(data);
     } catch {
-      setResult({ error: "network error" });
+      setResult({ error: "network error. please try again." });
     } finally {
       setLoading(false);
     }
@@ -35,13 +35,14 @@ export default function NotionImportForm() {
     <Page width="narrow" trail={TRAIL}>
       <PageHeader
         title="import from notion"
-        description="enter your notion integration token and the page id to import. the page will be created as a draft article."
+        description="enter your notion integration token and the page id to import. the page will be created as a draft page."
       />
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">integration token</label>
+          <label htmlFor="notion-token" className="block text-sm font-medium mb-1">integration token</label>
           <Input
+            id="notion-token"
             type="password"
             value={accessToken}
             onChange={(e) => setAccessToken(e.target.value)}
@@ -50,8 +51,9 @@ export default function NotionImportForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">page id</label>
+          <label htmlFor="notion-page-id" className="block text-sm font-medium mb-1">page id</label>
           <Input
+            id="notion-page-id"
             type="text"
             value={pageId}
             onChange={(e) => setPageId(e.target.value)}
@@ -64,7 +66,7 @@ export default function NotionImportForm() {
         </Button>
       </form>
 
-      {result?.error && <p className="mt-4 text-danger text-sm">{result.error}</p>}
+      {result?.error && <p role="alert" className="mt-4 text-danger text-sm">{result.error}</p>}
       {result?.slug && (
         <p className="mt-4 text-success text-sm">
           imported as draft:{" "}

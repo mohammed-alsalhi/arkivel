@@ -202,7 +202,7 @@ export function ViewSettingsPanel({ collectionId, schema, view, viewCount, onSav
             add filter
           </Button>
         </div>
-        {config.filters.length === 0 && <p className="ui-muted">All items are included in this view.</p>}
+        {config.filters.length === 0 && <p className="ui-muted">all items are included in this view.</p>}
         {config.filters.map((filter, index) => {
           const property = schema.find((entry) => entry.id === filter.property);
           const filterValue = String(filter.value ?? "");
@@ -294,9 +294,9 @@ export function ViewSettingsPanel({ collectionId, schema, view, viewCount, onSav
             <>
               <span className="ui-muted">delete this view?</span>
               <Button variant="danger" onClick={remove} disabled={saving}>
-                confirm
+                delete view
               </Button>
-              <Button onClick={() => setConfirmDelete(false)}>keep</Button>
+              <Button onClick={() => setConfirmDelete(false)}>cancel</Button>
             </>
           ) : (
             <Button variant="danger" onClick={() => setConfirmDelete(true)}>

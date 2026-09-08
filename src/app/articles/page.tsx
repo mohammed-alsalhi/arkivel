@@ -5,7 +5,7 @@ import { ARTICLE_STATUSES, type ArticleStatus } from "@/lib/article-status";
 import { articleVisibilityFilter } from "@/lib/article-visibility";
 import { isAdmin } from "@/lib/auth";
 import { TRAIL_ROOTS } from "@/lib/trail";
-import { formatDate } from "@/lib/utils";
+import { formatDate, plural } from "@/lib/utils";
 import {
   Button,
   DataTable,
@@ -112,13 +112,13 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
       <PageHeader
         kicker="library"
         title="all pages"
-        description={`${total.toLocaleString()} article${total === 1 ? "" : "s"}${
+        description={`${plural(total, "page", "pages")}${
           category || tag || status ? " matching these filters" : " in the index"
         }.`}
         actions={canViewDrafts ? (
           <>
             <LinkButton href="/articles/new" variant="primary">
-              new article
+              new page
             </LinkButton>
             <LinkButton href="/recent-changes">recent changes</LinkButton>
           </>
@@ -132,9 +132,9 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
           method="get"
         >
           {canViewDrafts ? <label className="grid gap-1 text-[12px] text-muted">
-            <span>category</span>
+            <span>space</span>
             <Select defaultValue={category} name="category">
-              <option value="">all categories</option>
+              <option value="">all spaces</option>
               {categories.map((item) => (
                 <option key={item.id} value={item.slug}>
                   {item.name}
@@ -168,7 +168,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
           </label>
 
           <div className="flex items-end gap-2">
-            <Button type="submit" variant="primary">
+            <Button type="submit">
               filter
             </Button>
             <LinkButton href="/articles">clear</LinkButton>
@@ -178,16 +178,16 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
 
       {articles.length === 0 ? (
         <EmptyState
-          actions={canViewDrafts ? <LinkButton href="/articles/new">new article</LinkButton> : undefined}
-          description="adjust the filters or create the first matching article."
-          title="no articles found"
+          actions={canViewDrafts ? <LinkButton href="/articles/new">new page</LinkButton> : undefined}
+          description="adjust the filters or create the first matching page."
+          title="no pages found"
         />
       ) : (
         <DataTable>
           <thead>
             <tr>
-              <th>article</th>
-              <th className="w-36">category</th>
+              <th>page</th>
+              <th className="w-36">space</th>
               <th className="w-48">tags</th>
               <th className="w-24">status</th>
               <th className="w-36">updated</th>
@@ -203,7 +203,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
                   {article.excerpt ? (
                     <p className="mt-1 text-[12px] text-muted">
                       {article.excerpt.slice(0, 140)}
-                      {article.excerpt.length > 140 ? "..." : ""}
+                      {article.excerpt.length > 140 ? "…" : ""}
                     </p>
                   ) : null}
                 </td>
@@ -253,7 +253,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
 
       {totalPages > 1 ? (
         <nav
-          aria-label="article pagination"
+          aria-label="page navigation"
           className="mt-4 flex items-center justify-between gap-3 text-[13px]"
         >
           <div>

@@ -209,3 +209,7 @@ export function classNames(
 ): string {
   return classes.filter(Boolean).join(" ");
 }
+
+export function plural(n: number, one: string, many: string): string {
+  return `${n.toLocaleString()} ${new Intl.PluralRules("en").select(n) === "one" ? one : many}`;
+}

@@ -154,9 +154,7 @@ export default function SettingsPage() {
       <div className="max-w-xl space-y-6">
         <SectionPanel title="appearance" bodyClassName="space-y-3">
           <fieldset>
-            <legend className="block text-[13px] font-medium text-heading mb-1.5">
-              skin
-            </legend>
+            <legend className="ui-label mb-1.5">skin</legend>
             <div className="space-y-2">
               {SKIN_OPTIONS.map((option) => (
                 <label
@@ -182,10 +180,8 @@ export default function SettingsPage() {
         </SectionPanel>
 
         <SectionPanel title="editor" bodyClassName="space-y-3">
-          <div>
-            <label className="block text-[13px] font-medium text-heading mb-1.5">
-              default editor mode
-            </label>
+          <fieldset>
+            <legend className="ui-label mb-1.5">default editor mode</legend>
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-1.5 text-[13px] cursor-pointer">
                 <input
@@ -214,7 +210,7 @@ export default function SettingsPage() {
                 markdown
               </label>
             </div>
-          </div>
+          </fieldset>
         </SectionPanel>
 
         <SectionPanel title="display" bodyClassName="space-y-3">
@@ -275,7 +271,7 @@ export default function SettingsPage() {
             variant="primary"
             className="disabled:opacity-50"
           >
-            {saving ? "saving..." : "save settings"}
+            {saving ? "saving…" : "save settings"}
           </Button>
           <Button onClick={handleReset} type="button">
             reset to defaults
