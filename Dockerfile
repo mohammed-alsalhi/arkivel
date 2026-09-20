@@ -60,6 +60,8 @@ COPY --from=builder /app/prisma.config.ts ./
 COPY --from=builder /app/scripts/bootstrap-owner.mjs ./scripts/bootstrap-owner.mjs
 COPY --from=builder /app/node_modules ./node_modules
 
+RUN mkdir -p /app/data/uploads && chown -R nextjs:nodejs /app/data
+
 USER nextjs
 
 EXPOSE 3000

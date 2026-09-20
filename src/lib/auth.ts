@@ -52,11 +52,11 @@ export async function createSession(userId: string, request?: NextRequest) {
 
 // The encrypted OAuth cookie references the same revocable database sessions
 // as password login. Never resolve an identity from a JWT email or cached role.
-export async function getOAuthSessionToken(): Promise<string | null> {
+export async function getOAuthSessionToken(request?: NextRequest): Promise<string | null> {
   if (!process.env.NEXTAUTH_SECRET) return null;
-  const cookieStore = await cookies();
+  const cookieStore = request?.cookies ?? await cookies();
   const token = await getToken({
-    req: new NextRequest(process.env.NEXTAUTH_URL || "http://localhost:3000", {
+    req: request ?? new NextRequest(process.env.NEXTAUTH_URL || "http://localhost:3000", {
       headers: { cookie: cookieStore.toString() },
     }),
     secret: process.env.NEXTAUTH_SECRET,
@@ -85,13 +85,13 @@ export async function resolveSession(token: string): Promise<SessionUser | null>
   return session.user;
 }
 
-export async function getSession(): Promise<SessionUser | null> {
-  const cookieStore = await cookies();
+export async function getSession(request?: NextRequest): Promise<SessionUser | null> {
+  const cookieStore = request?.cookies ?? await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (token) return resolveSession(token);
-  const oauthToken = await getOAuthSessionToken();
+  const oauthToken = await getOAuthSessionToken(request);
   if (oauthToken) return resolveSession(oauthToken);
-  const raw = bearerToken((await headers()).get("authorization"));
+  const raw = bearerToken((request?.headers ?? await headers()).get("authorization"));
   return raw ? resolveApiToken(raw) : null;
 }
 

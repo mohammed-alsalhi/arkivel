@@ -1,5 +1,12 @@
 # changelog
 
+## 1.1.0
+
+- add private-instance read access with a login-only shell and revocable session checks
+- add private local and S3-compatible uploads, safe download headers, and persistent Compose storage
+- add operator member setup while registration stays closed
+- add checksummed backups, guarded restore rehearsal, and container release automation
+
 ## 1.0.0
 
 Initial public release.

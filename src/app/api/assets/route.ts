@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { moduleDisabledResponse } from "@/modules/enabled";
 import crypto from "crypto";
-import path from "path";
 import prisma from "@/lib/prisma";
 import { getSession, isAdmin } from "@/lib/auth";
-import { getStorage } from "@/lib/storage";
+import { getStorage, MAX_UPLOAD_BYTES, uploadExtension } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 
@@ -40,9 +39,10 @@ export async function POST(req: NextRequest) {
 
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
-  if (!file) return NextResponse.json({ error: "No file" }, { status: 400 });
+  if (!(file instanceof File)) return NextResponse.json({ error: "No file" }, { status: 400 });
 
-  const ext = path.extname(file.name) || "";
+  if (file.size > MAX_UPLOAD_BYTES) return NextResponse.json({ error: "Maximum upload size is 20 MiB" }, { status: 413 });
+  const ext = uploadExtension(file.name);
   const filename = `assets/${crypto.randomUUID()}${ext}`;
   const buffer = Buffer.from(await file.arrayBuffer());
 

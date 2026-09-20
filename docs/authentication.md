@@ -32,7 +32,7 @@ Setup acquires a PostgreSQL transaction lock before checking for an existing adm
 
 `ARKIVEL_REGISTRATION=closed` is the default. Existing users can still log in. Set it to exactly `open` and restart the application to permit new local or OAuth users after an owner exists. New users always receive the viewer role; an administrator manages roles in the existing users screen. Unknown values stay closed. The login, register, and account menu reflect the same policy as the API.
 
-This controls account creation, not document visibility. Anonymous read routes remain public. Do not treat closed registration as a private-instance access gate.
+This controls account creation, not document visibility. Anonymous read routes remain public by default. Set `ARKIVEL_ACCESS=private` to require sign-in for content independently of registration. See [private self-hosting](private-self-hosting.md), including the existing-public-attachment migration caveat.
 
 ## OAuth
 

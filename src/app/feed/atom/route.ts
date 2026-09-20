@@ -1,3 +1,4 @@
+import { isPrivateInstance } from "@/lib/instance-access";
 import { NextResponse } from "next/server";
 import { moduleDisabledResponse } from "@/modules/enabled";
 import prisma from "@/lib/prisma";
@@ -64,7 +65,7 @@ ${entries}
   return new NextResponse(xml, {
     headers: {
       "Content-Type": "application/atom+xml; charset=utf-8",
-      "Cache-Control": "public, max-age=3600",
+      "Cache-Control": isPrivateInstance() ? "private, no-store" : "public, max-age=3600",
     },
   });
 }

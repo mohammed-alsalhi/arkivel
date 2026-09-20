@@ -8,9 +8,9 @@ const url = new URL(process.env.DATABASE_URL || "postgresql://localhost/missing"
 assert(/^\/arkivel_.*(?:test|e2e)/.test(url.pathname), "Use an empty disposable arkivel_*test/e2e database");
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const password = "test-only-owner-password";
-function setup(username) {
+function setup(username, extra = []) {
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, ["scripts/bootstrap-owner.mjs", "--username", username, "--email", `${username}@example.test`], { stdio: ["pipe", "pipe", "pipe"] });
+    const child = spawn(process.execPath, ["scripts/bootstrap-owner.mjs", "--username", username, "--email", `${username}@example.test`, ...extra], { stdio: ["pipe", "pipe", "pipe"] });
     let output = "";
     child.stdout.on("data", chunk => { output += chunk; });
     child.stderr.on("data", chunk => { output += chunk; });
@@ -21,6 +21,7 @@ function setup(username) {
 }
 try {
   assert.equal((await pool.query('SELECT count(*)::int AS n FROM "User"')).rows[0].n, 0, "Database must have no users; this check never deletes data");
+  assert.equal((await setup("unowned_member", ["--member"])).code, 1);
   const attempts = await Promise.all([setup("owner_one"), setup("owner_two")]);
   assert.deepEqual(attempts.map(x => x.code).sort(), [0, 1], JSON.stringify(attempts));
   const { rows } = await pool.query('SELECT username, role, "passwordHash" FROM "User"');
@@ -28,7 +29,11 @@ try {
   assert.equal(rows[0].role, "admin");
   assert(await bcrypt.compare(password, rows[0].passwordHash));
   assert.equal((await setup("owner_three")).code, 1);
-  console.log("Concurrent owner bootstrap: one administrator; repeat setup rejected.");
+  assert.equal((await setup("member_one", ["--member"])).code, 0);
+  assert.equal((await setup("member_one", ["--member", "--role", "admin"])).code, 1);
+  assert.equal((await pool.query('SELECT role FROM "User" WHERE username = $1', ["member_one"])).rows[0].role, "viewer");
+  assert.equal((await setup("bad_role", ["--member", "--role", "superadmin"])).code, 1);
+  console.log("Owner/member bootstrap: one initial administrator; members default to viewer; repeat setup and invalid roles rejected.");
 } finally {
   await pool.end();
 }

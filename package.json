@@ -1,6 +1,6 @@
 {
   "name": "arkivel",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "engines": {
     "node": "24.x"
@@ -23,9 +23,13 @@
     "api:inventory": "node scripts/api-inventory.mjs",
     "import": "tsx scripts/import-articles.ts",
     "api:reference": "tsx scripts/export-api-reference.ts",
-    "setup:owner": "node scripts/bootstrap-owner.mjs"
+    "setup:owner": "node scripts/bootstrap-owner.mjs",
+    "backup": "node scripts/backup/create.mjs",
+    "backup:restore-check": "node scripts/backup/restore-check.mjs",
+    "setup:user": "node scripts/bootstrap-owner.mjs --member"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1135.0",
     "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",
     "@tiptap/core": "3.31.3",

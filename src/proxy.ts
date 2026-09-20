@@ -1,6 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { corsHeaders, parseCorsOrigins } from "@/lib/cors";
 
+import { getSession, requireRole } from "@/lib/auth";
+import { isPrivateInstance, isPublicEntry } from "@/lib/instance-access";
+
 const corsOrigins = parseCorsOrigins(process.env.ARKIVEL_API_CORS_ORIGINS);
 
 const securityHeaders = {
@@ -14,14 +17,37 @@ const securityHeaders = {
   "X-Frame-Options": "DENY",
 } as const;
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const cors = pathname.startsWith("/api/") ? corsHeaders(request.headers.get("origin"), corsOrigins) : null;
-  if (cors && request.method === "OPTIONS") {
-    return new NextResponse(null, { status: 204, headers: cors });
-  }
+  let response = cors && request.method === "OPTIONS"
+    ? new NextResponse(null, { status: 204, headers: cors })
+    : NextResponse.next({ request });
 
-  const response = NextResponse.next({ request });
+  if (isPrivateInstance()) {
+    if (request.method === "OPTIONS") response = new NextResponse(null, { status: 204 });
+    if (!isPublicEntry(pathname) && request.method !== "OPTIONS") {
+      try {
+        if (requireRole(await getSession(request), "viewer")) {
+          if (pathname.startsWith("/api/") || request.method !== "GET") {
+            response = NextResponse.json({ error: "Authentication required" }, { status: 401 });
+          } else {
+            const login = new URL("/login", request.url);
+            login.searchParams.set("next", pathname + request.nextUrl.search);
+            response = NextResponse.redirect(login);
+          }
+        }
+      } catch {
+        // A database outage must never turn a private instance into a public one.
+        response = NextResponse.json({ error: "Authentication temporarily unavailable" }, { status: 503 });
+      }
+    }
+    if (!pathname.startsWith("/_next/static/") && !pathname.startsWith("/brand/")) {
+      response.headers.set("Cache-Control", "private, no-store, max-age=0");
+      response.headers.set("Vary", "Cookie, Authorization");
+      response.headers.set("X-Robots-Tag", "noindex, nofollow");
+    }
+  }
 
   for (const [key, value] of Object.entries(securityHeaders)) {
     response.headers.set(key, value);
@@ -34,5 +60,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/image|favicon.ico).*)"],
+  matcher: ["/:path*"],
 };

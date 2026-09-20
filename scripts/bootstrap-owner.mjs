@@ -5,8 +5,10 @@ import bcrypt from "bcryptjs";
 import pg from "pg";
 import { parseArgs } from "node:util";
 
-const { values } = parseArgs({ options: { username: { type: "string" }, email: { type: "string" } } });
+const { values } = parseArgs({ options: { username: { type: "string" }, email: { type: "string" }, member: { type: "boolean" }, role: { type: "string" } } });
 const username = values.username;
+const role = values.member ? (values.role || "viewer") : "admin";
+if (!["viewer", "editor", "admin"].includes(role) || (!values.member && values.role)) { console.error("Use --member with --role viewer, editor, or admin."); process.exit(1); }
 const email = values.email?.trim().toLowerCase();
 if (!process.env.DATABASE_URL || !username || !/^[a-zA-Z0-9_]{3,30}$/.test(username) || !email || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || process.stdin.isTTY) {
   console.error("Provide DATABASE_URL, --username (3–30 letters/numbers/underscores), --email, and a password on stdin.");
@@ -29,11 +31,13 @@ try {
   await prisma.$transaction(async tx => {
     // Serialize competing operator setup commands before checking for an owner.
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(1095912278, 1)`;
-    if (await tx.user.findFirst({ where: { role: "admin" }, select: { id: true } })) throw new Error("An administrator already exists; use the existing account.");
+    const owner = await tx.user.findFirst({ where: { role: "admin" }, select: { id: true } });
+    if (values.member && !owner) throw new Error("Create the first owner before adding members.");
+    if (!values.member && owner) throw new Error("An administrator already exists; use the existing account.");
     if (await tx.user.findFirst({ where: { OR: [{ username }, { email: { equals: email, mode: "insensitive" } }] }, select: { id: true } })) throw new Error("Username or email is already registered; no existing account was changed.");
-    await tx.user.create({ data: { username, email, passwordHash, displayName: username, role: "admin" } });
+    await tx.user.create({ data: { username, email, passwordHash, displayName: username, role } });
   });
-  console.log("Owner created. Sign in with the chosen username and password.");
+  console.log(`${values.member ? "Member" : "Owner"} created. Sign in with the chosen username and password.`);
 } catch (error) {
   console.error(error instanceof Error && !('code' in error) ? error.message : "Owner setup failed; no owner was created.");
   process.exitCode = 1;

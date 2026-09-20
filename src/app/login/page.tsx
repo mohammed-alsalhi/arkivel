@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthFormShell } from "@/components/AuthFormShell";
+import { loginDestination } from "@/lib/instance-access";
 import { signIn } from "next-auth/react";
 import { Field, Input, Button } from "@/components/ui";
 
@@ -39,7 +40,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        router.push("/");
+        router.push(loginDestination(new URLSearchParams(window.location.search).get("next")));
         router.refresh();
       } else {
         setError(data.error || "check your username and password.");
@@ -62,7 +63,7 @@ export default function LoginPage() {
       alternateText="don't have an account?"
       alternateHref={registrationOpen ? "/register" : undefined}
       afterForm={<div className="mt-4 space-y-2">
-        {providers.map(provider => <Button key={provider} type="button" onClick={() => signIn(provider, { callbackUrl: "/" })}>
+        {providers.map(provider => <Button key={provider} type="button" onClick={() => signIn(provider, { callbackUrl: loginDestination(new URLSearchParams(window.location.search).get("next")) })}>
           continue with {provider === "github" ? "GitHub" : "Google"}
         </Button>)}
         {!registrationOpen && <p className="text-[12px] text-muted">New accounts are managed by your administrator.</p>}

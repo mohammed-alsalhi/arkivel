@@ -76,6 +76,7 @@ jobs:
           - { skin: wiki, mode: wiki }
           - { skin: editorial, mode: docs }
           - { skin: compact, mode: docs }
+          - { skin: compact, mode: docs, access: private }
     services:
       postgres:
         image: postgres:16-alpine
@@ -92,6 +93,11 @@ jobs:
           --health-retries 5
     env:
       ARKIVEL_SITE_MODE: ${{ matrix.mode }}
+      ARKIVEL_ACCESS: ${{ matrix.access || 'public' }}
+      ARKIVEL_STORAGE: local
+      ARKIVEL_UPLOAD_DIR: /tmp/arkivel-e2e-uploads
+      NEXTAUTH_SECRET: arkivel-e2e-session-secret
+      NEXTAUTH_URL: http://127.0.0.1:3000
       ADMIN_SECRET: arkivel-e2e-auth-required
       BASE_URL: http://127.0.0.1:3000
       DATABASE_URL: postgresql://arkivel:arkivel@127.0.0.1:5432/arkivel_e2e
@@ -113,6 +119,9 @@ jobs:
         run: node scripts/check-owner-setup.mjs
       - name: Seed focused smoke fixtures
         run: npm run qa:seed-smoke
+      - name: Rehearse backup and restore
+        if: matrix.access == 'private'
+        run: node scripts/check-backup.mjs
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - name: Start Arkivel
@@ -136,7 +145,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-${{ matrix.skin }}
+          name: playwright-${{ matrix.skin }}-${{ matrix.access || 'public' }}
           path: |
             playwright-report/
             test-results/
