@@ -34,7 +34,21 @@ Stop writers before taking a coordinated database/files snapshot. Run from a sou
 npm run backup -- /secure/backups/arkivel-2026-09-20
 ```
 
-The destination must not already exist. The backup includes a custom-format PostgreSQL dump, local uploads, table counts, and SHA-256 checksums. An `INCOMPLETE` marker remains after failure. Connection credentials travel through the process environment, never command arguments. Direct PostgreSQL connections are preferred over transaction poolers for operational tooling.
+The destination must not already exist. A full local backup requires an existing upload directory; a missing path is rejected instead of silently omitting attachments. The backup includes a custom-format PostgreSQL dump, local uploads, table counts, and SHA-256 checksums. An `INCOMPLETE` marker remains after failure. Connection credentials travel through the process environment, never command arguments. Direct PostgreSQL connections are preferred over transaction poolers for operational tooling.
+
+For Compose, the uploads live in a Docker volume, not the host checkout. Run the included tooling in a one-off container that mounts the same volume, with the app stopped and PostgreSQL still running:
+
+```sh
+mkdir -p backups
+docker compose stop app
+docker compose run --rm --no-deps --user 0 --entrypoint node \
+  -v "$PWD/backups:/backups" app scripts/backup/create.mjs /backups/snapshot
+docker compose run --rm --no-deps --user 0 --entrypoint chown \
+  -v "$PWD/backups:/backups" app -R "$(id -u):$(id -g)" /backups/snapshot
+docker compose start app
+```
+
+The temporary backup container runs as root to read the private volume and write the host backup; the web app continues to run as its unprivileged user. Keep `backups` off public serving paths and copy the result to protected off-host storage. Do not run the host backup command against an unrelated empty uploads directory when the app uses a Docker volume.
 
 For S3/Blob, `--database-only` explicitly produces a database-only backup. Enable bucket versioning/backup separately; remote objects are not copied by this command. Store backups off-host with encryption and restricted access: the dump contains account password hashes, sessions, and application content. These commands do not install a backup schedule.
 

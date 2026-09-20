@@ -31,7 +31,7 @@ jobs:
         run: docker build --label org.opencontainers.image.source=https://github.com/${{ github.repository }} --label org.opencontainers.image.revision=${{ github.sha }} -t arkivel:check .
       - name: Verify non-root runtime and migration tooling
         run: |
-          docker run --rm --entrypoint sh arkivel:check -ec 'test "$(id -u)" = 1001; test -f server.js; test -f scripts/bootstrap-owner.mjs; test -w /app/data/uploads; node node_modules/prisma/build/index.js --version'
+          docker run --rm --entrypoint sh arkivel:check -ec 'test "$(id -u)" = 1001; test -f server.js; test -f scripts/bootstrap-owner.mjs; test -w /app/data/uploads; test -f scripts/backup/create.mjs; pg_dump --version; node node_modules/prisma/build/index.js --version'
       - name: Smoke test container against disposable PostgreSQL
         run: |
           docker network create arkivel-check
@@ -47,6 +47,7 @@ jobs:
           done
           test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3000/)" = 307
           printf 'test-only-owner-password\n' | docker exec -i arkivel-app node scripts/bootstrap-owner.mjs --username container_owner --email owner@example.test
+          docker exec arkivel-app node scripts/backup/create.mjs /tmp/container-backup
           curl --fail --silent -H 'Content-Type: application/json' --data '{"username":"container_owner","password":"test-only-owner-password"}' http://127.0.0.1:3000/api/auth/login
       - name: Container failure logs
         if: failure()

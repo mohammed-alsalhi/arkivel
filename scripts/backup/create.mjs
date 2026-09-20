@@ -23,7 +23,7 @@ try {
   const inventory = { "database.dump": await checksum(dump) };
   if (!databaseOnly) {
     let uploads;
-    try { uploads = await files(source); } catch (error) { if (error.code === "ENOENT") uploads = []; else throw error; }
+    try { uploads = await files(source); } catch (error) { if (error.code === "ENOENT") throw new Error("Upload directory is missing; set ARKIVEL_UPLOAD_DIR or explicitly use --database-only"); else throw error; }
     for (const file of uploads) {
       const relative = path.join("uploads", file);
       const target = path.join(destination, relative);
