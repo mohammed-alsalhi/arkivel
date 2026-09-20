@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // Mock next/headers
@@ -161,5 +162,47 @@ describe("requireRole", () => {
     const result = requireRole(viewer, "admin");
     expect(result).not.toBeNull();
     expect(result!.status).toBe(403);
+  });
+});
+
+
+describe("OAuth session authorization", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+    vi.stubEnv("NEXTAUTH_SECRET", "test-only-oauth-signing-secret");
+    vi.stubEnv("NEXTAUTH_URL", "https://wiki.example.test");
+    vi.mocked(headers).mockResolvedValue({ get: () => null } as never);
+  });
+  afterEach(() => vi.unstubAllEnvs());
+
+  it("reads the current database role and rejects a revoked encrypted OAuth session", async () => {
+    const { encode } = await import("next-auth/jwt");
+    const jwt = await encode({ secret: process.env.NEXTAUTH_SECRET!, token: { arkivelSessionToken: "oauth-db-token", role: "admin", email: "forged@example.test" } });
+    vi.mocked(cookies).mockResolvedValue({ get: () => undefined, toString: () => `__Secure-next-auth.session-token=${jwt}` } as never);
+    vi.mocked(prisma.session.findUnique).mockResolvedValue({ id: "oauth", expiresAt: new Date(Date.now() + 60000), user: { id: "u", role: "viewer" } } as never);
+    expect(await getSession()).toMatchObject({ id: "u", role: "viewer" });
+    expect(prisma.session.findUnique).toHaveBeenCalledWith(expect.objectContaining({ where: { token: "oauth-db-token" } }));
+    vi.mocked(prisma.session.findUnique).mockResolvedValue(null);
+    expect(await getSession()).toBeNull();
+  });
+
+  it("rejects a forged cookie and a legacy email-only JWT", async () => {
+    const { encode } = await import("next-auth/jwt");
+    for (const jwt of ["forged", await encode({ secret: process.env.NEXTAUTH_SECRET!, token: { email: "owner@example.test", role: "admin" } })]) {
+      vi.mocked(cookies).mockResolvedValue({ get: () => undefined, toString: () => `__Secure-next-auth.session-token=${jwt}` } as never);
+      expect(await getSession()).toBeNull();
+    }
+    expect(prisma.session.findUnique).not.toHaveBeenCalled();
+  });
+
+  it("rejects expired database sessions and unknown role values", async () => {
+    vi.mocked(cookies).mockResolvedValue({ get: () => ({ value: "expired" }) } as never);
+    vi.mocked(prisma.session.findUnique).mockResolvedValue({ id: "old", expiresAt: new Date(0), user: { role: "admin" } } as never);
+    vi.mocked(prisma.session.delete).mockResolvedValue({} as never);
+    expect(await getSession()).toBeNull();
+    for (const role of ["typo", "toString", "constructor", "__proto__"]) {
+      expect(requireRole({ role } as SessionUser, "viewer")?.status).toBe(403);
+    }
+    expect(requireRole({ role: "admin" } as SessionUser, "typo")?.status).toBe(403);
   });
 });

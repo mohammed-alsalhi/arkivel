@@ -42,6 +42,7 @@ cd arkivel
 npm install
 cp .env.example .env
 npm run db:deploy
+# create an owner using the command in docs/authentication.md
 npm run dev
 ```
 
@@ -53,6 +54,8 @@ To populate a fresh local database with a realistic demo dataset (categories, ta
 
 The application opens at `http://localhost:3000`. The marketing website is deployed separately; this repository contains the self-hostable application and its documentation.
 
+Create the first administrator using [owner setup](docs/authentication.md). Registration is closed by default; opening it only creates viewers after an owner exists.
+
 ## required configuration
 
 ```dotenv
@@ -60,6 +63,7 @@ DATABASE_URL=postgresql://user:password@host:5432/database
 ADMIN_SECRET=replace-me
 NEXT_PUBLIC_BASE_URL=https://wiki.example.com
 ARKIVEL_SITE_MODE=wiki
+ARKIVEL_REGISTRATION=closed
 ```
 
 Optional variables include OAuth credentials, `BLOB_READ_WRITE_TOKEN`, and public brand assets. See [.env.example](.env.example).
@@ -91,6 +95,7 @@ npm run seed:demo
 
 ## documentation
 
+- [owner setup and authentication](docs/authentication.md)
 - [user guide](docs/help.md)
 - [feature boundary](docs/features.md)
 - [api v1 contract](docs/api-v1-migration.md)

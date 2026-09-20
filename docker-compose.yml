@@ -39,6 +39,7 @@ services:
       <<: *app-config
       DATABASE_URL: "postgresql://wiki:wiki_password@db:5432/wiki"
       ADMIN_SECRET: "${ADMIN_SECRET:-}"
+      ARKIVEL_REGISTRATION: "${ARKIVEL_REGISTRATION:-closed}"
       ARKIVEL_MODULES: "${ARKIVEL_MODULES:-}"
       TMDB_API_KEY: "${TMDB_API_KEY:-}"
       OMDB_API_KEY: "${OMDB_API_KEY:-}"

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthFormShell } from "@/components/AuthFormShell";
-import { Field, Input } from "@/components/ui";
+import Link from "next/link";
+import { Field, Input, Page, PageHeader } from "@/components/ui";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -13,6 +14,10 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [registrationOpen, setRegistrationOpen] = useState<boolean | null>(null);
+  useEffect(() => {
+    fetch("/api/auth/check").then(r => r.json()).then(data => setRegistrationOpen(data.registrationOpen === true)).catch(() => setRegistrationOpen(false));
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -58,6 +63,11 @@ export default function RegisterPage() {
     }
   }
 
+  if (registrationOpen !== true) return <Page><PageHeader title="register" />
+    <p>{registrationOpen === null ? "Checking registration…" : "Registration is closed. Contact your administrator for an account."}</p>
+    <Link href="/login" className="text-accent underline">log in</Link>
+  </Page>;
+
   return (
     <AuthFormShell
       mode="register"
@@ -80,6 +90,8 @@ export default function RegisterPage() {
           onChange={(e) => setUsername(e.target.value)}
           required
           minLength={3}
+          maxLength={30}
+          pattern="[a-zA-Z0-9_]+"
           placeholder="choose a username"
         />
       </Field>
@@ -105,8 +117,8 @@ export default function RegisterPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          minLength={6}
-          placeholder="at least 6 characters"
+          minLength={12}
+          placeholder="at least 12 characters"
         />
       </Field>
 
@@ -119,7 +131,7 @@ export default function RegisterPage() {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
-          minLength={6}
+          minLength={12}
           placeholder="re-enter password"
         />
       </Field>

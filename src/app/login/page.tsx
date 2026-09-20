@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthFormShell } from "@/components/AuthFormShell";
-import { Field, Input } from "@/components/ui";
+import { signIn } from "next-auth/react";
+import { Field, Input, Button } from "@/components/ui";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -11,6 +12,17 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [registrationOpen, setRegistrationOpen] = useState(false);
+  const [providers, setProviders] = useState<string[]>([]);
+  useEffect(() => {
+    fetch("/api/auth/check").then(r => r.json()).then(data => {
+      setRegistrationOpen(data.registrationOpen === true);
+      setProviders(data.providers || []);
+      if (new URLSearchParams(window.location.search).has("error")) {
+        setError("Unable to sign in with that provider. Use your existing login or contact your administrator.");
+      }
+    }).catch(() => {});
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,7 +60,13 @@ export default function LoginPage() {
       submitLabel="log in"
       loadingLabel="logging in…"
       alternateText="don't have an account?"
-      alternateHref="/register"
+      alternateHref={registrationOpen ? "/register" : undefined}
+      afterForm={<div className="mt-4 space-y-2">
+        {providers.map(provider => <Button key={provider} type="button" onClick={() => signIn(provider, { callbackUrl: "/" })}>
+          continue with {provider === "github" ? "GitHub" : "Google"}
+        </Button>)}
+        {!registrationOpen && <p className="text-[12px] text-muted">New accounts are managed by your administrator.</p>}
+      </div>}
       alternateLabel="register"
     >
       <Field htmlFor="login-username" label="username">

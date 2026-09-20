@@ -1,169 +1,74 @@
 import type { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import { cookies } from "next/headers";
+import { randomBytes } from "node:crypto";
 import prisma from "@/lib/prisma";
+import { createSession, registrationAllowed, resolveSession, revokeBrowserSessions, SESSION_MAX_AGE } from "@/lib/auth";
+
+const providers: AuthOptions["providers"] = [];
+if (process.env.NEXTAUTH_SECRET && process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(GoogleProvider({ clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET }));
+}
+if (process.env.NEXTAUTH_SECRET && process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+  providers.push(GitHubProvider({ clientId: process.env.GITHUB_CLIENT_ID, clientSecret: process.env.GITHUB_CLIENT_SECRET }));
+}
 
 export const authOptions: AuthOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID || "",
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
-    }),
-  ],
-
+  providers,
   callbacks: {
-    /**
-     * Called after a successful OAuth sign-in.
-     * Links OAuth accounts to existing wiki users by email, or creates a
-     * new user (with "viewer" role) if no matching account exists.
-     * Stores an OAuthAccount record for the provider/account pair.
-     */
     async signIn({ user, account }) {
-      if (!account || !user.email) return true;
-
+      if (!account || !providers.some(provider => provider.id === account.provider)) return false;
+      const identity = { provider: account.provider, providerAccountId: account.providerAccountId };
+      const existing = await prisma.oAuthAccount.findUnique({ where: { provider_providerAccountId: identity } });
+      if (existing) return true;
+      if (!user.email || !await registrationAllowed()) return false;
+      const email = user.email.trim().toLowerCase();
+      // Matching email alone does not prove ownership of an existing Arkivel
+      // account. Linking requires an explicit authenticated flow (not yet shipped).
+      if (await prisma.user.findFirst({ where: { email: { equals: email, mode: "insensitive" } }, select: { id: true } })) return false;
+      const base = (user.name || email.split("@")[0]).toLowerCase().replace(/[^a-z0-9_]/g, "_").slice(0, 20) || "user";
       try {
-        // Check if an OAuthAccount record already exists for this provider+id pair
-        const existingOAuth = await prisma.oAuthAccount.findUnique({
-          where: {
-            provider_providerAccountId: {
-              provider: account.provider,
-              providerAccountId: account.providerAccountId,
-            },
-          },
-          include: { user: true },
-        });
-
-        if (existingOAuth) {
-          // Already linked — update tokens if they changed
-          await prisma.oAuthAccount.update({
-            where: { id: existingOAuth.id },
-            data: {
-              accessToken: account.access_token ?? null,
-              refreshToken: account.refresh_token ?? null,
-              expiresAt: account.expires_at ?? null,
-            },
-          });
-          return true;
-        }
-
-        // Try to link to an existing user by email
-        let wikiUser = await prisma.user.findUnique({
-          where: { email: user.email },
-        });
-
-        if (!wikiUser) {
-          // Create a new user account with viewer role
-          const username = await generateUniqueUsername(
-            user.name || user.email.split("@")[0]
-          );
-          wikiUser = await prisma.user.create({
-            data: {
-              username,
-              email: user.email,
-              displayName: user.name || null,
-              // No password — OAuth-only accounts use empty string sentinel
-              passwordHash: "",
-              role: "viewer",
-            },
-          });
-        }
-
-        // Store OAuthAccount record
-        await prisma.oAuthAccount.create({
+        await prisma.user.create({
           data: {
-            userId: wikiUser.id,
-            provider: account.provider,
-            providerAccountId: account.providerAccountId,
-            accessToken: account.access_token ?? null,
-            refreshToken: account.refresh_token ?? null,
-            expiresAt: account.expires_at ?? null,
+            username: `${base}_${randomBytes(4).toString("hex")}`,
+            email, displayName: user.name || null, passwordHash: "", role: "viewer",
+            oauthAccounts: { create: identity },
           },
         });
-
         return true;
-      } catch (err) {
-        console.error("[oauth] signIn callback error:", err);
-        return false;
+      } catch (error) {
+        if (error && typeof error === "object" && "code" in error && error.code === "P2002") return false;
+        throw error;
       }
     },
-
-    /**
-     * Called whenever a session is checked.
-     * Adds the wiki user's role to the session object so client components
-     * can gate UI on role without an extra API call.
-     */
-    async session({ session }) {
-      if (session.user?.email) {
-        try {
-          const wikiUser = await prisma.user.findUnique({
-            where: { email: session.user.email },
-            select: { id: true, role: true, username: true, displayName: true },
-          });
-
-          if (wikiUser) {
-            // Augment the session type with wiki-specific fields
-            (session.user as typeof session.user & {
-              id: string;
-              role: string;
-              username: string;
-              displayName: string | null;
-            }).id = wikiUser.id;
-            (session.user as typeof session.user & { role: string }).role = wikiUser.role;
-            (session.user as typeof session.user & { username: string }).username = wikiUser.username;
-            (session.user as typeof session.user & { displayName: string | null }).displayName =
-              wikiUser.displayName;
-          }
-        } catch (err) {
-          console.error("[oauth] session callback error:", err);
-        }
+    async jwt({ token, account }) {
+      if (account) {
+        const linked = await prisma.oAuthAccount.findUnique({
+          where: { provider_providerAccountId: { provider: account.provider, providerAccountId: account.providerAccountId } },
+        });
+        if (!linked) throw new Error("OAuth account is not linked");
+        await revokeBrowserSessions();
+        // A prior password cookie must not mask the newly chosen OAuth identity.
+        (await cookies()).set("session_token", "", { httpOnly: true, sameSite: "strict", path: "/", maxAge: 0 });
+        token.arkivelSessionToken = (await createSession(linked.userId)).token;
       }
+      return token;
+    },
+    async session({ session, token }) {
+      const user = typeof token.arkivelSessionToken === "string" ? await resolveSession(token.arkivelSessionToken) : null;
+      session.user = user ? { ...user, name: user.displayName || user.username } : undefined;
       return session;
     },
   },
-
-  pages: {
-    signIn: "/login",
+  events: {
+    async signOut(message) {
+      if ("token" in message && typeof message.token?.arkivelSessionToken === "string") {
+        await prisma.session.deleteMany({ where: { token: message.token.arkivelSessionToken } });
+      }
+    },
   },
-
-  // Use JWT strategy to avoid requiring a NextAuth DB adapter
-  // (the wiki has its own session system; OAuth callbacks handle user mapping)
-  session: {
-    strategy: "jwt",
-  },
-
-  // Signing secret for JWT — must be set in production
+  pages: { signIn: "/login", error: "/login" },
+  session: { strategy: "jwt", maxAge: SESSION_MAX_AGE },
   secret: process.env.NEXTAUTH_SECRET,
 };
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-/**
- * Generates a unique username by appending a numeric suffix if the base name
- * is already taken.
- */
-async function generateUniqueUsername(base: string): Promise<string> {
-  // Sanitise: lowercase, replace non-alphanumeric with underscores, trim
-  const sanitised = base
-    .toLowerCase()
-    .replace(/[^a-z0-9_]/g, "_")
-    .replace(/_+/g, "_")
-    .replace(/^_|_$/g, "")
-    .slice(0, 30) || "user";
-
-  const existing = await prisma.user.findUnique({ where: { username: sanitised } });
-  if (!existing) return sanitised;
-
-  // Try up to 99 numeric suffixes
-  for (let i = 2; i <= 99; i++) {
-    const candidate = `${sanitised}_${i}`;
-    const clash = await prisma.user.findUnique({ where: { username: candidate } });
-    if (!clash) return candidate;
-  }
-
-  // Fallback: append random hex
-  return `${sanitised}_${Math.random().toString(16).slice(2, 8)}`;
-}
