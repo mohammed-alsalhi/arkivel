@@ -67,7 +67,7 @@ describe("starter kit admin API", () => {
       const body = await res.json();
       expect(body.enabled).toEqual(["collections", "graph"]);
       expect(prisma.collection.findMany).toHaveBeenCalledWith({
-        where: { slug: { in: ["tasks", "reading-list", "tasks", "courses", "coursework", "watchlist", "episodes"] } },
+        where: { slug: { in: ["documentation", "tasks", "reading-list", "tasks", "courses", "coursework", "watchlist", "episodes"] } },
         select: { slug: true },
       });
 

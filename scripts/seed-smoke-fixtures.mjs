@@ -83,6 +83,35 @@ async function main() {
     data: related.map(([targetSlug]) => ({ sourceId: article.id, targetSlug, relation: "related-to" })),
   });
 
+  const documentation = await prisma.collection.upsert({
+    where: { slug: "documentation" }, update: {},
+    create: { slug: "documentation", name: "Documentation", schema: [
+      { id: "title", name: "title", type: "title" },
+      ...["version", "section", "key"].map(id => ({ id, name: id, type: "text" })),
+      { id: "order", name: "order", type: "number" },
+    ] },
+  });
+  for (const version of ["v1.0", "v2.0"]) {
+    for (const [order, key, title] of [[0, "start", "Getting started"], [1, "publish", "Publishing a guide"]]) {
+      const doc = await upsertArticle({ slug: `docs-${version}-${key}`, title,
+        excerpt: `Learn ${title.toLowerCase()} in ${version}.`,
+        content: `<p>This guide covers ${version}.</p><h2>Before you begin</h2><p>Keep your documentation close to the work. Publish a page, link it in the documentation collection, and choose a version.</p>`,
+        contentRaw: `This guide covers ${version}.`,
+      }, architecture.id, user.id);
+      await prisma.collectionItem.upsert({ where: { articleId: doc.id },
+        update: {}, create: { collectionId: documentation.id, articleId: doc.id, title,
+          properties: { title, version, section: "Essentials", key, order }, sortOrder: order },
+      });
+    }
+  }
+
+  for (const [key, flags] of [["draft", { status: "draft" }], ["unpublished", { published: false }], ["locked", { accessPassword: "test-only" }], ["redirect", { redirectTo: "docs-v2.0-start" }]]) {
+    const article = await upsertArticle({ slug: `docs-hidden-${key}`, title: `Hidden ${key}`, content: "", contentRaw: "" }, architecture.id, user.id);
+    await prisma.article.update({ where: { id: article.id }, data: flags });
+    await prisma.collectionItem.upsert({ where: { articleId: article.id }, update: {}, create: {
+      collectionId: documentation.id, articleId: article.id, title: article.title, properties: { version: "v99", section: "Hidden" },
+    } });
+  }
   console.log("seeded focused arkivel smoke fixtures");
 }
 

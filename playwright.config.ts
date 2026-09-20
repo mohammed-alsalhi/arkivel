@@ -12,7 +12,7 @@ export default defineConfig({
   reporter: "html",
   use: {
     baseURL,
-    storageState: skin === "folio" || skin === "wiki" ? {
+    storageState: skin && ["folio", "wiki", "editorial", "compact"].includes(skin) ? {
       cookies: [{ name: "arkivel-skin", value: skin, domain: new URL(baseURL).hostname, path: "/", expires: -1, httpOnly: false, secure: baseURL.startsWith("https:"), sameSite: "Lax" }],
       origins: [],
     } : undefined,

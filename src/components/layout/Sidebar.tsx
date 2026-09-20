@@ -1,5 +1,8 @@
 "use client";
 
+import DocumentationNavigation from "@/components/documentation/DocumentationNavigation";
+import type { DocumentationIndex } from "@/documentation";
+
 import { clsx } from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -202,12 +205,14 @@ export default function Sidebar({
   categories,
   collections = [],
   articleCount = 0,
+  documentation,
   logoMark,
 }: {
   brandName: string;
   categories: Category[];
   collections?: SidebarCollection[];
   articleCount?: number;
+  documentation?: DocumentationIndex;
   logoMark: string;
 }) {
   const pathname = usePathname();
@@ -397,6 +402,8 @@ export default function Sidebar({
               </button>
               {topEntries.map(renderEntry)}
             </div>
+
+            {documentation && !collapsed && <DocumentationNavigation index={documentation} onNavigate={close} />}
 
             <SidebarSection title="library" collapsed={collapsed}>
               {libraryEntries.map(renderEntry)}

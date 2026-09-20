@@ -30,6 +30,8 @@ const geistMono = Geist_Mono({
 
 // Page backgrounds per skin (see styles/tokens.css) for the browser chrome color.
 const SKIN_THEME_COLORS: Record<WikiSkin, { light: string; dark: string }> = {
+  editorial: { light: "#f3eee5", dark: "#171512" },
+  compact: { light: "#eef2f6", dark: "#101824" },
   wiki: { light: "#f8f9fa", dark: "#181a1b" },
   folio: { light: "#f6f7f9", dark: "#0b0b0c" },
 };
@@ -198,6 +200,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
+      data-site-mode={config.siteMode}
       data-skin={skin}
       suppressHydrationWarning
     >
@@ -220,6 +223,7 @@ export default async function RootLayout({
         <ToastProvider>
           <LayoutShell>
             <Sidebar
+              documentation={config.siteMode === "docs" ? await import("@/documentation/queries").then(m => m.getDocumentationIndex()) : undefined}
               articleCount={articleCount}
               brandName={config.name}
               categories={categories}

@@ -7,10 +7,10 @@ import type { PropertyValues } from "@/modules/collections/properties";
 import type { TemplateId } from "@/modules/collections/templates";
 import type { ModuleId } from "@/modules/types";
 
-export type KitId = "wiki" | "notes-and-tasks" | "team-knowledge-base" | "course-workspace" | "watchlist";
+export type KitId = "documentation" | "wiki" | "notes-and-tasks" | "team-knowledge-base" | "course-workspace" | "watchlist";
 
 /** Skins are chosen per user (or by `NEXT_PUBLIC_ARKIVEL_SKIN`); a kit only recommends one. */
-export type KitSkin = "folio" | "wiki";
+export type KitSkin = import("@/lib/config").WikiSkin;
 
 export type KitViewKind = "table" | "board" | "list" | "calendar";
 

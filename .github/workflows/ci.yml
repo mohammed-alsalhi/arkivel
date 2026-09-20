@@ -71,7 +71,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        skin: [folio, wiki]
+        include:
+          - { skin: folio, mode: wiki }
+          - { skin: wiki, mode: wiki }
+          - { skin: editorial, mode: docs }
+          - { skin: compact, mode: docs }
     services:
       postgres:
         image: postgres:16-alpine
@@ -87,7 +91,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
-      ARKIVEL_SITE_MODE: wiki
+      ARKIVEL_SITE_MODE: ${{ matrix.mode }}
       ADMIN_SECRET: arkivel-e2e-auth-required
       BASE_URL: http://127.0.0.1:3000
       DATABASE_URL: postgresql://arkivel:arkivel@127.0.0.1:5432/arkivel_e2e

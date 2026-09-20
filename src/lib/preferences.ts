@@ -1,8 +1,9 @@
+import type { WikiSkin } from "./config";
 import { isWikiSkin } from "./skin";
 
 export const DEFAULT_PREFERENCES = {
   // "" = follow the site default (config.wikiSkin); otherwise a named skin.
-  skin: "" as "" | "folio" | "wiki",
+  skin: "" as "" | WikiSkin,
   dashboardWidgets: [
     "welcome",
     "featured",

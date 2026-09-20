@@ -7,6 +7,7 @@ Choose a site mode for your instance:
 | interface | mode | purpose |
 | --- | --- | --- |
 | wiki | `ARKIVEL_SITE_MODE=wiki` | a knowledge base |
+| docs | `ARKIVEL_SITE_MODE=docs` | versioned documentation using articles and collections |
 | media | `ARKIVEL_SITE_MODE=media` | a personal film and series library on the same backend |
 
 Each deployment keeps its own domains, environment variables, database, and blob credentials.
@@ -15,7 +16,7 @@ The media mode is the worked example of Arkivel serving a domain that is not a w
 
 Vercel builds use its native Next.js adapter. Self-hosted builds produce a standalone server; containers run the pinned Prisma migrations before starting it.
 
-Wiki deployments default to the lowercase, full-viewport `folio` skin. Set `NEXT_PUBLIC_ARKIVEL_SKIN=wiki` to make the classic framed wiki skin the site default; signed-in readers can override either default from the appearance section in settings. Press `⌘K` / `Ctrl+K` anywhere for the command palette.
+Wiki deployments default to the lowercase, full-viewport `folio` skin. Set `NEXT_PUBLIC_ARKIVEL_SKIN=wiki` to make the classic framed wiki skin the site default; `editorial` adds warm paper tones and serif reading typography; `compact` adds a denser workspace with a narrow sidebar. Readers can override the default from the appearance section in settings. Press `⌘K` / `Ctrl+K` anywhere for the command palette.
 
 ## api
 
@@ -103,3 +104,5 @@ npm run seed:demo
 - [architecture](ARCHITECTURE.md)
 
 License: MIT.
+
+See [documentation mode](docs/documentation-mode.md) for version navigation and authoring.

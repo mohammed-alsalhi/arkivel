@@ -83,6 +83,11 @@ const watchlistCollection: KitCollection = {
 
 export const KITS: readonly KitDefinition[] = [
   {
+    id: "documentation", name: "documentation", description: "a versioned documentation index over published articles, with ordered sections and a shared editor",
+    modules: ["collections", "api", "assets", "import", "export"], skin: "editorial",
+    collections: [{ template: "documentation", name: "documentation", views: [{ kind: "table" }] }],
+  },
+  {
     id: "wiki",
     name: "wiki",
     description: "a personal or public wiki: pages, links, the graph, feeds, share links, and the public api. no collections.",

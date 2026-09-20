@@ -33,6 +33,7 @@ export const getEnabledModules = cache(async (): Promise<ModuleId[]> => {
   if (config.siteMode === "media") {
     for (const id of ["collections", "media"] as const) if (!enabled.includes(id)) enabled.push(id);
   }
+  if (config.siteMode === "docs" && !enabled.includes("collections")) enabled.push("collections");
   return enabled;
 });
 

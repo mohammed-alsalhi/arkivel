@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import DocumentationPager from "@/components/documentation/DocumentationPager";
 import ArticleContent from "@/components/ArticleContent";
 import ArticlePasswordWrapper from "@/components/ArticlePasswordWrapper";
 import ArticleRightSidebar from "@/components/ArticleRightSidebar";
@@ -188,6 +189,7 @@ export default async function ArticlePage({ params }: Props) {
             )}
           </ArticlePasswordWrapper>
 
+          {config.siteMode === "docs" && <DocumentationPager slug={slug} />}
           <PageFooter trail={trail} updatedAt={article.updatedAt} />
         </article>
 

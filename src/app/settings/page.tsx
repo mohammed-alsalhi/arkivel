@@ -155,11 +155,11 @@ export default function SettingsPage() {
         <SectionPanel title="appearance" bodyClassName="space-y-3">
           <fieldset>
             <legend className="ui-label mb-1.5">skin</legend>
-            <div className="space-y-2">
+            <div className="skin-options">
               {SKIN_OPTIONS.map((option) => (
                 <label
                   key={option.value || "default"}
-                  className="flex items-start gap-2 text-[13px] cursor-pointer"
+                  className="skin-option text-[13px]"
                 >
                   <input
                     type="radio"
@@ -170,6 +170,7 @@ export default function SettingsPage() {
                     className="accent-accent mt-0.5"
                   />
                   <span>
+                    <span className="skin-preview" data-preview={option.value || config.wikiSkin} aria-hidden="true"><i /><span>Field notes<br />A place for ideas.</span></span>
                     <span className="block">{option.name}</span>
                     <span className="block text-muted">{option.description}</span>
                   </span>

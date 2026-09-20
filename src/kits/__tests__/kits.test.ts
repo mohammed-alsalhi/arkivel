@@ -6,7 +6,7 @@ import { MODULE_IDS } from "@/modules/registry";
 
 describe("kit definitions", () => {
   it("ships the documented kits", () => {
-    expect(KIT_IDS).toEqual(["wiki", "notes-and-tasks", "team-knowledge-base", "course-workspace", "watchlist"]);
+    expect(KIT_IDS).toEqual(["documentation", "wiki", "notes-and-tasks", "team-knowledge-base", "course-workspace", "watchlist"]);
     expect(isKitId("wiki")).toBe(true);
     expect(isKitId("crm")).toBe(false);
     expect(getKit("notes-and-tasks")?.name).toBe("notes and tasks");

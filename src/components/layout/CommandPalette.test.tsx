@@ -129,6 +129,8 @@ describe("CommandPalette", () => {
       "api tokens",
       "toggle dark mode",
       "use wiki skin",
+      "use editorial skin",
+      "use compact skin",
       "copy page link",
     ]);
   });
@@ -299,7 +301,7 @@ describe("CommandPalette", () => {
     openWithShortcut();
     typeQuery("skin");
 
-    expect(options().map((option) => option.textContent)).toEqual(["search all pages for 'skin' →", "use folio skin"]);
+    expect(options().map((option) => option.textContent)).toEqual(["search all pages for 'skin' →", "use folio skin", "use editorial skin", "use compact skin"]);
 
     key(input()!, { key: "ArrowDown" });
     expect(selectedOption()?.textContent).toBe("use folio skin");

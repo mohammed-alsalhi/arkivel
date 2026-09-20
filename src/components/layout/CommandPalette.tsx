@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { createPortal } from "react-dom";
 import { useAdmin, useLoggedIn } from "@/components/AdminContext";
-import { applySkin, currentSkin } from "@/lib/skin";
+import { applySkin, currentSkin, SKINS } from "@/lib/skin";
 import { toggleTheme } from "@/lib/theme";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 import { useScrollLock } from "@/lib/useScrollLock";
@@ -178,7 +178,6 @@ export default function CommandPalette() {
       });
     }
 
-    const otherSkin: WikiSkin = skin === "folio" ? "wiki" : "folio";
     const actions: Array<{ id: string; label: string; keywords: string[]; run: () => void }> = [
       {
         id: "action:toggle-theme",
@@ -188,15 +187,12 @@ export default function CommandPalette() {
           toggleTheme();
         },
       },
-      {
-        id: `action:skin-${otherSkin}`,
-        label: `use ${otherSkin} skin`,
-        keywords: ["skin", "layout", "appearance", "theme", otherSkin],
-        run: () => {
-          applySkin(otherSkin);
-          router.refresh();
-        },
-      },
+      ...SKINS.filter(option => option !== skin).map(option => ({
+        id: `action:skin-${option}`,
+        label: `use ${option} skin`,
+        keywords: ["skin", "layout", "appearance", "theme", option],
+        run: () => { applySkin(option); router.refresh(); },
+      })),
       {
         id: "action:copy-link",
         label: "copy page link",

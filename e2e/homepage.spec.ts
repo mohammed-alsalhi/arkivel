@@ -12,7 +12,7 @@ test.describe("focused core navigation", () => {
       await expect(page.locator("html")).toHaveAttribute("data-skin", process.env.NEXT_PUBLIC_ARKIVEL_SKIN);
     }
 
-    await expect(page.getByRole("heading", { level: 1, name: "home", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: process.env.ARKIVEL_SITE_MODE === "docs" ? /the field guide/ : "home", exact: true })).toBeVisible();
 
     const navigation = page.getByRole("complementary", { name: "Wiki navigation" });
     await expect(navigation).toBeVisible();
@@ -40,7 +40,7 @@ test.describe("focused core navigation", () => {
   });
 
   test("hydrated settings restores the built site skin and public branding", async ({ page, context }) => {
-    const expectedSkin = process.env.NEXT_PUBLIC_ARKIVEL_SKIN === "wiki" ? "wiki" : "folio";
+    const expectedSkin = process.env.NEXT_PUBLIC_ARKIVEL_SKIN || "folio";
     const otherSkin = expectedSkin === "wiki" ? "folio" : "wiki";
     const expectedName = process.env.NEXT_PUBLIC_ARKIVEL_NAME?.trim() || "Arkivel";
     const expectedBaseUrl = process.env.NEXT_PUBLIC_BASE_URL?.trim() || "http://localhost:3000";

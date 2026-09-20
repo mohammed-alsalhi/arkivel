@@ -2,6 +2,7 @@ import type { PropertySchema, ViewConfig } from "./properties";
 import { defaultViewFor } from "./properties";
 
 export type TemplateId =
+  | "documentation"
   | "blank"
   | "tasks"
   | "reading_list"
@@ -169,7 +170,16 @@ const episodesSchema: PropertySchema = [
   { id: "watched_at", name: "exact watched time", type: "text" },
 ];
 
+const documentationSchema: PropertySchema = [
+  { id: "title", name: "page", type: "title" },
+  { id: "version", name: "version", type: "text" },
+  { id: "section", name: "section", type: "text" },
+  { id: "key", name: "topic key", type: "text" },
+  { id: "order", name: "reading order", type: "number" },
+];
+
 export const COLLECTION_TEMPLATES: readonly CollectionTemplate[] = [
+  { id: "documentation", name: "documentation", description: "versioned documentation: link each row to a published article, then set its version, section, topic key, and reading order", schema: documentationSchema, views: tableView(documentationSchema) },
   { id: "courses", name: "courses", description: "course hubs, term, source links, and notes.", schema: coursesSchema,
     views: tableView(coursesSchema, { visible: ["title", "code", "term", "source_url"] }) },
   { id: "coursework", name: "coursework", description: "course tasks with deadlines, completion evidence, and import provenance.", schema: courseworkSchema,

@@ -1,13 +1,14 @@
 # Arkivel contributor instructions
 
-Arkivel is an open-source knowledge base with two interfaces, chosen by `ARKIVEL_SITE_MODE`:
+Arkivel is an open-source knowledge base with three interfaces, chosen by `ARKIVEL_SITE_MODE`:
 
 - `wiki`: the knowledge base.
+- `docs`: a versioned reading index over published articles in the documentation collection.
 - `media`: a personal film and series library (the worked example of Arkivel serving a non-wiki domain), on the same backend, database, accounts, and admin. It runs the `watchlist` kit and the `media` module; `src/media/` composes them into the library the shell reads.
 
 The core is fixed: articles, wiki links, search, spaces (categories), tags, revisions, users, sessions, audit, admin, and settings. Everything else is either a **module** (graph, assets, import, export, api, feeds, share, collections, media — enabled per deployment via `ARKIVEL_MODULES` and `/admin/modules`) or a **collection template** on the generic collections engine. Read `docs/modules-and-collections.md` before adding anything: no new table without first asking whether a collection template covers the need; a module never imports another module (route handlers, kits, and `src/media/` are where modules compose); there are no third-party plugins or a marketplace. Live collaboration, gamification, and social feeds remain outside the product. AI stays optional and behind a key: the only use is the media library's mood pick, which falls back to local matching.
 
-Product decisions on record: the two built-in skins (`folio`, `wiki`) with a per-user choice in settings and the `⌘K` command palette are part of the core retrieval path. Skins may expand layout, typography, density, and component presentation while sharing behavior, accessibility, and permissions. Instance branding belongs in runtime settings; avoid arbitrary executable themes or a marketplace. Per-deployment modules, the collections engine, and starter kits are the configurability model. A **site mode** is a shell (pages and presentation) over the shared backend; each shell owns its look, so the media shell's dark coral theme is part of that mode, not a third wiki skin.
+Product decisions on record: the four built-in skins (`folio`, `wiki`, `editorial`, `compact`) with a per-user choice in settings and the `⌘K` command palette are part of the core retrieval path. Skins may expand layout, typography, density, and component presentation while sharing behavior, accessibility, and permissions. Instance branding belongs in runtime settings; avoid arbitrary executable themes or a marketplace. Per-deployment modules, the collections engine, and starter kits are the configurability model. A **site mode** is a shell (pages and presentation) over the shared backend; each shell owns its look, so the media shell's dark coral theme is part of that mode, not a third wiki skin.
 
 ## Safety
 

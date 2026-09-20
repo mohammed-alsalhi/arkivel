@@ -209,3 +209,7 @@ The check applies the watchlist kit and exercises authentication, catalogue sear
 Backup restore uses a single collection transaction, preserves the original added time and exact watched timestamps, and imports saved descriptive metadata without requiring TMDB. Existing titles keep their fields; missing episode marks are added. Older watchlist kits gain the `watched_at` and `release_date` properties during restore. Watched timestamps fall back to the edited date if a collection editor changes the day. The library is shared within one deployment; reads are public and writes require an editor account. Very large backups still perform individual inserts and may reach the transaction timeout; failure rolls the entire restore back.
 
 For Vercel, create a project from this repository with a PostgreSQL database. Set `ARKIVEL_SITE_MODE=media`, `NEXT_PUBLIC_ARKIVEL_NAME="My library"`, `NEXT_PUBLIC_BASE_URL` to its deployment origin, and its own `DATABASE_URL`, `ADMIN_SECRET`, and authentication configuration before building. Apply migrations explicitly, create the administrator account, and apply the watchlist kit. Keep independently operated instances and their credentials isolated. Provider keys are optional; without TMDB, discovery uses the bundled catalogue and restored titles remain viewable from saved metadata.
+
+## documentation mode
+
+`ARKIVEL_SITE_MODE=docs` composes published articles with the documentation collection template. It adds version and section navigation without new tables. See [documentation mode](documentation-mode.md).

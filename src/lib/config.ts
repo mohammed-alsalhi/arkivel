@@ -3,10 +3,11 @@ import { resolveSiteMode } from "./site-mode";
 
 type Env = Record<string, string | undefined>;
 
-export type WikiSkin = "wiki" | "folio";
+export const WIKI_SKINS = ["folio", "wiki", "editorial", "compact"] as const;
+export type WikiSkin = typeof WIKI_SKINS[number];
 
 export function resolveWikiSkin(value: string | undefined): WikiSkin {
-  return value === "wiki" ? "wiki" : "folio";
+  return WIKI_SKINS.includes(value as WikiSkin) ? value as WikiSkin : "folio";
 }
 
 function read(env: Env, key: string, fallback: string): string {
