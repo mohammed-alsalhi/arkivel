@@ -1,0 +1,276 @@
+/* ── Wiki portal boxes ── */
+.wiki-portal {
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+
+.wiki-portal-header {
+  display: flex;
+  min-width: 0;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--color-infobox-header);
+  color: var(--color-infobox-header-text);
+  padding: 0.4rem 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+  overflow-wrap: anywhere;
+}
+
+.wiki-portal-header-link {
+  flex: 0 0 auto;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.wiki-portal-header-link:hover {
+  color: var(--color-foreground);
+  text-decoration: underline;
+}
+
+.wiki-portal-body {
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.wiki-compact-list {
+  display: grid;
+  min-width: 0;
+}
+
+.wiki-compact-list-item {
+  display: grid;
+  min-width: 0;
+  gap: 0.2rem;
+  border-bottom: 1px solid var(--color-border-light);
+  padding: 0.55rem 0.75rem;
+}
+
+.wiki-compact-list-item:last-child {
+  border-bottom: 0;
+}
+
+.wiki-compact-list-item:hover {
+  background: var(--color-surface-hover);
+}
+
+.wiki-compact-list-ranked {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.55rem;
+}
+
+.wiki-compact-rank {
+  width: 1.2rem;
+  color: var(--color-muted);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  text-align: right;
+}
+
+.wiki-compact-list-title {
+  min-width: 0;
+  color: var(--color-wiki-link);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.25;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.wiki-compact-list-title:hover {
+  text-decoration: underline;
+}
+
+.wiki-compact-list-meta {
+  color: var(--color-muted);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.wiki-compact-list-meta:hover {
+  color: var(--color-foreground);
+  text-decoration: underline;
+}
+
+/* ── Focused all-pages home ── */
+.focused-home {
+  width: min(100%, calc(58rem + var(--page-pad-x, 2.5rem) * 2));
+  margin: 0;
+  padding: var(--page-pad-top, 2.5rem) var(--page-pad-x, 2.5rem) var(--page-pad-bottom, 2.5rem);
+}
+
+.focused-home-header {
+  margin-top: clamp(3rem, 7vw, 6rem);
+}
+
+.focused-home-count {
+  margin: 0 0 0.65rem;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+}
+
+.focused-home-header h1 {
+  color: var(--color-heading);
+  font-family: var(--font-sans);
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight: 470;
+  letter-spacing: -0.055em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.focused-home-header > p:last-child {
+  max-width: 44rem;
+  margin-top: 1.7rem;
+  color: var(--color-foreground);
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.focused-home-index {
+  margin-top: clamp(3.25rem, 7vw, 6rem);
+}
+
+.focused-home-index-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.8rem;
+}
+
+.focused-home-index-heading h2 {
+  color: var(--color-heading);
+  font-size: 1.35rem;
+  font-weight: 520;
+  letter-spacing: -0.025em;
+}
+
+.focused-home-index-heading a,
+.focused-home-empty a {
+  color: var(--color-foreground);
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.focused-home-index-heading a:hover,
+.focused-home-empty a:hover {
+  text-decoration: underline;
+}
+
+.focused-page-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.focused-page-list > li {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, auto);
+  gap: 2rem;
+  border-bottom: 1px solid var(--color-border-light);
+  padding: 1.35rem 0;
+}
+
+.focused-page-list-main {
+  min-width: 0;
+}
+
+.focused-page-list-title {
+  color: var(--color-heading);
+  font-size: 1.12rem;
+  font-weight: 560;
+  line-height: 1.3;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.focused-page-list-title:hover,
+.focused-page-list-title:focus-visible {
+  text-decoration: underline;
+}
+
+.focused-page-list-main p {
+  display: -webkit-box;
+  max-width: 44rem;
+  margin-top: 0.35rem;
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.focused-page-list-meta {
+  display: grid;
+  align-content: start;
+  justify-items: end;
+  gap: 0.25rem;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  line-height: 1.35;
+  text-align: right;
+}
+
+.focused-page-list-meta a {
+  color: var(--color-foreground);
+  text-decoration: none;
+}
+
+.focused-page-list-meta a:hover {
+  text-decoration: underline;
+}
+
+.focused-home-empty {
+  border-bottom: 1px solid var(--color-border-light);
+  padding: 2rem 0;
+}
+
+.focused-home-empty p {
+  margin-bottom: 0.5rem;
+  color: var(--color-muted);
+}
+
+@media (max-width: 39.999rem) {
+  .focused-home-header {
+    margin-top: 2.75rem;
+  }
+
+  .focused-home-header h1 {
+    font-size: clamp(2.6rem, 14vw, 3.8rem);
+  }
+
+  .focused-home-index {
+    margin-top: 3.5rem;
+  }
+
+  .focused-page-list > li {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .focused-page-list-meta {
+    justify-items: start;
+    text-align: left;
+  }
+}

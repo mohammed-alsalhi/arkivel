@@ -1,0 +1,268 @@
+/* ── #21: Print styles ── */
+@media print {
+  /* Hide all chrome */
+  header, aside, footer, nav,
+  .wiki-tabs,
+  button,
+  [data-print-hide] { display: none !important; }
+
+  /* Full-width content */
+  body { background: white !important; color: #000 !important; font-size: 12pt; margin: 0; }
+  .wiki-content, main, [role="main"] { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+
+  /* Typography */
+  h1, h2, h3, h4 { color: #000 !important; page-break-after: avoid; }
+  h1 { font-size: 20pt; }
+  h2 { font-size: 15pt; }
+  h3 { font-size: 13pt; }
+  p, li { orphans: 3; widows: 3; }
+
+  /* Links */
+  a { color: #000 !important; text-decoration: underline !important; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
+  a[href^="/"]::after { content: ""; } /* suppress relative links */
+
+  /* Infobox */
+  .wiki-infobox { float: none !important; width: 100% !important; margin: 1rem 0 !important; border: 1px solid #ccc !important; }
+
+  /* Code */
+  pre, code { font-size: 10pt; white-space: pre-wrap; border: 1px solid #ccc; background: #f8f8f8 !important; color: #000 !important; }
+
+  /* Tables */
+  table { border-collapse: collapse !important; width: 100% !important; }
+  th, td { border: 1px solid #999 !important; padding: 4pt 6pt !important; }
+
+  /* Page breaks */
+  .wiki-portal { page-break-inside: avoid; }
+  img { max-width: 100% !important; page-break-inside: avoid; }
+
+}
+
+/* ── #22: Focus-visible styles for keyboard nav ── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+/* ── #23: Loading skeleton animation ── */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+.skeleton {
+  background: var(--color-surface-hover);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+.skeleton-text { height: 0.875rem; margin-bottom: 0.5rem; }
+.skeleton-text-sm { height: 0.75rem; margin-bottom: 0.4rem; }
+.skeleton-title { height: 1.5rem; width: 60%; margin-bottom: 0.75rem; }
+.skeleton-avatar { width: 2rem; height: 2rem; border-radius: 50%; }
+
+/* ── #24: Toast notification styles ── */
+.toast-container {
+  position: fixed;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  right: max(1rem, env(safe-area-inset-right, 0px));
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+.toast {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-surface);
+  box-shadow: var(--shadow-overlay);
+  animation: toast-in 0.3s ease-out;
+  max-width: min(360px, calc(100vw - 2rem));
+}
+.toast-success { border-left: 3px solid var(--color-success); }
+.toast-error { border-left: 3px solid var(--color-danger); }
+.toast-warning { border-left: 3px solid var(--color-warning); }
+.toast-info { border-left: 3px solid var(--color-accent); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(1rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── #25: Badge/pill styles for tags ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+.badge-sm { padding: 0.1rem 0.35rem; font-size: 0.7rem; }
+.badge-accent { background: var(--color-accent-soft); border-color: var(--color-accent); color: var(--color-accent); }
+.badge-success { background: var(--color-success-soft); border-color: var(--color-success-border); color: var(--color-success); }
+.badge-warning { background: var(--color-warning-soft); border-color: var(--color-warning-border); color: var(--color-warning); }
+.badge-danger { background: var(--color-danger-soft); border-color: var(--color-danger-border); color: var(--color-danger); }
+
+/* ── #26: Breadcrumb styles ── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  margin-bottom: 0.75rem;
+}
+.breadcrumb a { color: var(--color-wiki-link); }
+.breadcrumb-separator { color: var(--color-border); }
+.breadcrumb-current { color: var(--color-foreground); font-weight: 500; }
+
+/* ── #27: Tooltip styles ── */
+.tooltip-wrapper { position: relative; display: inline-block; }
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.3rem 0.6rem;
+  background: var(--color-heading);
+  color: var(--color-surface);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 50;
+}
+.tooltip-wrapper:hover .tooltip { opacity: 1; }
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--color-heading);
+}
+
+/* ── #28: Modal/dialog styles ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.15s ease-out;
+}
+.modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  max-width: 480px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-overlay);
+}
+.modal-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.modal-body { padding: 1rem; font-size: 0.85rem; }
+.modal-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── #29: Empty state styles ── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--color-muted);
+}
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.4; }
+.empty-state-title { font-size: 1rem; font-weight: 600; color: var(--color-heading); margin-bottom: 0.25rem; }
+.empty-state-description { font-size: 0.85rem; max-width: 320px; margin: 0 auto 1rem; }
+
+/* ── #31: Alert/banner styles ── */
+.alert {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border-light);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+.alert-info { border-left: 3px solid var(--color-accent); background: var(--color-accent-soft); }
+.alert-success { border-left: 3px solid var(--color-success); background: var(--color-success-soft); }
+.alert-warning { border-left: 3px solid var(--color-warning); background: var(--color-warning-soft); }
+.alert-error { border-left: 3px solid var(--color-danger); background: var(--color-danger-soft); }
+
+/* ── #32: Card hover effect ── */
+.card-hover {
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.card-hover:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-border);
+}
+html[data-theme="dark"] .card-hover:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ── #33: Kbd styles for keyboard shortcuts ── */
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  color: var(--color-muted);
+  line-height: 1.4;
+  min-width: 1.4em;
+  text-align: center;
+}
+
+/* ── #34: Tag cloud styles ── */
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tag-cloud-item {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-background);
+  font-size: 0.8rem;
+  color: var(--color-wiki-link);
+  text-decoration: none;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.tag-cloud-item:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  text-decoration: none;
+}
+.tag-cloud-item-lg { font-size: 1rem; font-weight: 600; }
+.tag-cloud-item-md { font-size: 0.85rem; }
+.tag-cloud-item-sm { font-size: 0.75rem; color: var(--color-muted); }

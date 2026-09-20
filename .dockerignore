@@ -1,0 +1,14 @@
+node_modules
+.next
+test-results
+playwright-report
+.git
+.gitignore
+.env*
+!.env.example
+*.md
+!CHANGELOG.md
+.github
+.vscode
+.vercel
+.claude

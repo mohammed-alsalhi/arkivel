@@ -1,0 +1,666 @@
+.wiki-sidebar-brand {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  color: var(--color-heading);
+}
+
+.wiki-layout {
+  min-width: 0;
+}
+
+.wiki-sidebar {
+  left: 0;
+  border-right: 1px solid var(--color-border);
+}
+
+.wiki-content-shell {
+  min-width: 0;
+}
+
+.wiki-main-menu-button {
+  color: var(--color-heading);
+}
+
+.wiki-main-menu-button:hover,
+.wiki-main-menu-button:focus-visible {
+  border-color: var(--color-accent);
+  background: var(--color-surface-hover);
+}
+
+.wiki-sidebar-brand:hover {
+  text-decoration: none;
+}
+
+.wiki-sidebar-brand-mark {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  color: var(--color-brand-mark);
+  line-height: 0;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.wiki-sidebar-brand:hover .wiki-brand-mark {
+  color: var(--color-accent);
+}
+
+.wiki-brand-mark-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+[data-theme="dark"] .wiki-brand-mark-image {
+  filter: invert(1);
+}
+
+.wiki-sidebar-brand {
+  width: 100%;
+  gap: 0.6rem;
+  text-align: left;
+}
+
+.wiki-sidebar-brand-mark {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+/* iOS Safari zooms the page when a focused form control is under 16px.
+   Keep every native control at 16px on phones so focus never zooms. */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Readable base type on phones; the desktop UI stays at its dense 14px. */
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Touch ergonomics: on coarse pointers nothing interactive should be
+   smaller than ~36-40px, regardless of viewport width. */
+@media (pointer: coarse) {
+  .ui-button {
+    height: 2.25rem;
+    padding: 0 0.7rem;
+    font-size: 0.8125rem;
+  }
+
+  .ui-icon-button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .ui-input,
+  .ui-select {
+    height: 2.5rem;
+  }
+
+  .ui-textarea {
+    min-height: 7rem;
+  }
+
+  .ui-dropdown-item {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.875rem;
+  }
+
+  .article-tab {
+    min-height: 2.5rem;
+  }
+
+  /* Grow the switch's tap area to ~37px without growing the visual track.
+     (.ui-toggle-switch is position: relative, so the pseudo-element covers
+     the touch strip above and below the pill and stays part of the button.) */
+  .ui-toggle-switch::after {
+    content: "";
+    position: absolute;
+    inset: -0.4rem 0;
+  }
+}
+
+@media (max-width: 639px) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  .ui-page-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .ui-page-actions {
+    justify-content: flex-start;
+  }
+
+  .ui-section-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .ui-section-actions {
+    justify-content: flex-start;
+  }
+
+  /* The table sizes to its content; its keyboard-focusable DataTable wrapper
+     (overflow-x: auto) is the scroll region, so the table itself never is. */
+  .ui-table {
+    width: max-content;
+    min-width: 100%;
+    table-layout: auto;
+  }
+
+  .category-tree-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .category-tree-description {
+    flex-basis: 100%;
+  }
+}
+
+/* ── Focused three-pane wiki shell ── */
+html:not([data-site-mode="product"]) body {
+  overflow: hidden;
+}
+
+.wiki-layout {
+  --wiki-frame-inset: clamp(0rem, 4vw, 3.875rem);
+  display: flex;
+  width: min(94rem, calc(100% - 2rem));
+  height: calc(100dvh - (var(--wiki-frame-inset) * 2));
+  min-height: 32rem;
+  margin: var(--wiki-frame-inset) auto;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  box-shadow: 0 1.25rem 3.5rem rgba(15, 23, 42, 0.09);
+}
+
+html[data-skin="folio"] .wiki-layout {
+  --wiki-frame-inset: 0rem;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.wiki-content-shell {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-left: 0;
+  background: var(--color-surface);
+}
+
+/* Pages own their padding (via --page-pad-*) so the sticky topbar can sit
+   flush at the top of the scroll area. */
+.wiki-main-content {
+  --page-pad-top: clamp(2.5rem, 5vw, 5rem);
+  --page-pad-x: clamp(2.5rem, 5vw, 5rem);
+  --page-pad-bottom: clamp(2.5rem, 5vw, 5rem);
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  flex-direction: column;
+  padding: 0;
+}
+
+.wiki-main-content > * {
+  min-width: 0;
+}
+
+.wiki-main-content > .ui-page,
+.wiki-main-content > .article-page {
+  flex: 1 0 auto;
+}
+
+.wiki-sidebar {
+  position: relative;
+  inset: auto;
+  z-index: 1;
+  display: flex;
+  width: clamp(17rem, 22vw, 21.5rem);
+  height: 100%;
+  min-height: 0;
+  flex: 0 0 clamp(17rem, 22vw, 21.5rem);
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-sidebar-bg);
+  transition: none;
+}
+
+/* Only the navigation scrolls; the workspace row and footer stay pinned. */
+.wiki-sidebar-scroll {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Workspace row: mark + wiki name. The wiki skin keeps its larger mark. */
+.wiki-sidebar-brand {
+  display: inline-flex;
+  width: fit-content;
+  max-width: calc(100% - 3.4rem);
+  margin: 2.8rem 0 2.1rem 1.7rem;
+  padding: 0;
+  border: 0;
+}
+
+.wiki-sidebar-brand-mark {
+  width: 2.6rem;
+  height: 2.2rem;
+}
+
+/* The wiki's name is operator-authored; keep its casing in both skins. */
+.wiki-sidebar-brand-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wiki-sidebar-navigation {
+  display: grid;
+  gap: 2rem;
+  padding: 0 1.7rem 2rem;
+}
+
+/* Header row: the title, or a hairline divider once the folio rail collapses. */
+.wiki-sidebar-section-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.wiki-sidebar-section-title {
+  margin: 0 0 0.8rem 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  line-height: 1.2;
+}
+
+.wiki-sidebar-section-links {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.wiki-sidebar-link {
+  display: flex;
+  min-width: 0;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 0.55rem;
+  color: var(--color-foreground);
+  padding: 0.62rem 1rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.wiki-sidebar-link:hover,
+.wiki-sidebar-link:focus-visible,
+.wiki-sidebar-link-active {
+  background: var(--color-surface-hover);
+  color: var(--color-heading);
+  text-decoration: none;
+}
+
+/* Keyboard focus reads apart from hover: an inset ring that survives
+   forced-colors, unlike a box-shadow. */
+.wiki-sidebar-link:focus-visible,
+.wiki-sidebar-brand:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.wiki-sidebar-link-active {
+  font-weight: 550;
+}
+
+.wiki-sidebar-link-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+/* The classic wiki skin keeps a text-only navigation list. */
+html[data-skin="wiki"] .wiki-sidebar-link-icon {
+  display: none;
+}
+
+/* Space rows: [chevron | spacer] + link. The chevron is its own button so no
+   interactive element nests inside the link; depth indents via --depth. */
+.wiki-sidebar-row {
+  --depth: 0;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  border-radius: 0.55rem;
+  padding-left: calc(var(--depth) * 1.1rem);
+}
+
+.wiki-sidebar-row:hover,
+.wiki-sidebar-row:focus-within,
+.wiki-sidebar-row-active {
+  background: var(--color-surface-hover);
+}
+
+/* The row carries the fill, so the link inside stays flat. */
+.wiki-sidebar-row > .wiki-sidebar-link {
+  min-width: 0;
+  flex: 1 1 auto;
+  border-radius: 0;
+  background: transparent;
+  padding-left: 0.35rem;
+}
+
+.wiki-sidebar-row:hover > .wiki-sidebar-link,
+.wiki-sidebar-row-active > .wiki-sidebar-link {
+  color: var(--color-heading);
+}
+
+.wiki-sidebar-chevron,
+.wiki-sidebar-chevron-spacer {
+  display: inline-flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.wiki-sidebar-chevron {
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--color-muted);
+  padding: 0;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.wiki-sidebar-chevron:hover,
+.wiki-sidebar-chevron:focus-visible {
+  background: var(--color-surface-hover);
+  color: var(--color-heading);
+}
+
+.wiki-sidebar-chevron > svg {
+  transition: transform 120ms ease;
+}
+
+.wiki-sidebar-chevron-open > svg {
+  transform: rotate(90deg);
+}
+
+/* The classic skin draws the chevron as a small text triangle instead. */
+html[data-skin="wiki"] .wiki-sidebar-chevron > svg {
+  display: none;
+}
+
+html[data-skin="wiki"] .wiki-sidebar-chevron::before {
+  content: "▸";
+  display: inline-block;
+  font-size: 0.8rem;
+  line-height: 1;
+  transition: transform 120ms ease;
+}
+
+html[data-skin="wiki"] .wiki-sidebar-chevron-open::before {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wiki-sidebar-chevron > svg,
+  html[data-skin="wiki"] .wiki-sidebar-chevron::before {
+    transition: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .wiki-sidebar-chevron,
+  .wiki-sidebar-chevron-spacer {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+.wiki-sidebar-empty {
+  padding: 0.5rem 1rem;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.wiki-sidebar-footer {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: auto;
+  border-top: 1px solid var(--color-border-light);
+  padding: 0.75rem 1.7rem 1rem;
+}
+
+.wiki-sidebar-footer-row,
+.wiki-sidebar-footer-copy,
+.wiki-sidebar-footer-actions {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+}
+
+.wiki-sidebar-footer-row {
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-left: 1rem;
+}
+
+.wiki-sidebar-footer-copy {
+  min-width: 0;
+  gap: 0.35rem;
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.wiki-sidebar-footer-actions {
+  flex: 0 0 auto;
+  gap: 0.25rem;
+}
+
+.wiki-sidebar-footer-actions .ui-icon-button {
+  border-color: transparent;
+  background: transparent;
+}
+
+@media (pointer: fine) {
+  .wiki-sidebar-footer-actions .ui-icon-button {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.wiki-sidebar-footer-actions .ui-dropdown {
+  top: auto;
+  right: 0;
+  bottom: calc(100% + 0.35rem);
+  margin-top: 0;
+}
+
+/* Collapse toggle: a navigation row that happens to be a button. Only the
+   folio skin has a collapse mode; the classic skin never shows it. */
+.wiki-sidebar-collapse-toggle {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+html[data-skin="wiki"] .wiki-sidebar-collapse-toggle {
+  display: none;
+}
+
+/* Collapsed-rail tooltip: portalled to <body>, anchored beside the hovered
+   or focused row. Tier 50 (above content, below dialogs); flat, no shadow. */
+.wiki-sidebar-tooltip {
+  position: fixed;
+  z-index: 50;
+  transform: translateY(-50%);
+  pointer-events: none;
+  border: 1px solid var(--color-border-light);
+  border-radius: 0.375rem;
+  background: var(--color-popover);
+  padding: 0.25rem 0.5rem;
+  color: var(--color-heading);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+
+}
+
+.wiki-main-menu-button,
+.wiki-sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .wiki-layout {
+    --wiki-frame-inset: 0rem;
+    width: 100%;
+    height: 100dvh;
+    min-height: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .wiki-content-shell {
+    width: 100%;
+  }
+
+  .wiki-main-content {
+    --page-pad-top: 1.25rem;
+    --page-pad-x: 1.25rem;
+    --page-pad-bottom: 2.5rem;
+    --ui-topbar-height: 4.75rem;
+  }
+
+  /* The fixed menu button sits over the topbar's left edge; keep the trail
+     clear of it and vertically centered on the button. */
+  .ui-topbar {
+    padding-left: 4.25rem;
+  }
+
+  .wiki-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 70;
+    width: min(22rem, 88vw);
+    height: 100dvh;
+    min-height: 0;
+    flex-basis: auto;
+    transform: translateX(-102%);
+    transition: transform 0.2s ease;
+    box-shadow: 1.25rem 0 3rem rgba(0, 0, 0, 0.12);
+  }
+
+  .wiki-sidebar-open {
+    transform: translateX(0);
+  }
+
+  /* The drawer never collapses; the toggle only belongs to the desktop rail. */
+  .wiki-sidebar-collapse-toggle {
+    display: none;
+  }
+
+  /* Clear the fixed menu button so banner text isn't covered by it. */
+  .wiki-site-banner {
+    padding-inline: 4.25rem;
+  }
+
+  .wiki-main-menu-button {
+    position: fixed;
+    top: 1rem;
+    inset-inline-start: max(1rem, env(safe-area-inset-left));
+    z-index: 60;
+    display: inline-flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-heading);
+    box-shadow: 0 0.4rem 1.25rem rgba(0, 0, 0, 0.08);
+  }
+
+  .wiki-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: rgba(0, 0, 0, 0.38);
+  }
+}
+
+@media (max-width: 639px) {
+  .wiki-sidebar-brand {
+    margin-top: 2rem;
+  }
+
+  /* Phones show only the parent and current crumb. */
+  .ui-trail li:not(:nth-last-child(-n + 2)) {
+    display: none;
+  }
+
+  .ui-trail li:nth-last-child(2) > .ui-trail-separator {
+    display: none;
+  }
+
+  .ui-topbar-meta {
+    display: none;
+  }
+}

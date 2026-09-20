@@ -1,0 +1,141 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-type-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      - run: npm run release:docs-sync
+      - run: npm run lint
+      - run: npx tsc --noEmit
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      - run: npm run test
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ARKIVEL_SITE_MODE: product
+      DATABASE_URL: postgresql://fake:fake@localhost:5432/fake
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Verify standalone server output
+        run: test -f .next/standalone/server.js
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: [lint-and-type-check, test, build]
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        skin: [folio, wiki]
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: arkivel_e2e
+          POSTGRES_PASSWORD: arkivel
+          POSTGRES_USER: arkivel
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U arkivel -d arkivel_e2e"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      ARKIVEL_SITE_MODE: wiki
+      ADMIN_SECRET: arkivel-e2e-auth-required
+      BASE_URL: http://127.0.0.1:3000
+      DATABASE_URL: postgresql://arkivel:arkivel@127.0.0.1:5432/arkivel_e2e
+      NEXT_PUBLIC_BASE_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_ARKIVEL_SKIN: ${{ matrix.skin }}
+      SMOKE_ADMIN_PASSWORD: arkivel-smoke-admin
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      - name: Apply migrations to the empty test database
+        run: npm run db:deploy
+      - name: Seed focused smoke fixtures
+        run: npm run qa:seed-smoke
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Start Arkivel
+        run: |
+          cp -r public .next/standalone/
+          cp -r .next/static .next/standalone/.next/
+          HOSTNAME=127.0.0.1 PORT=3000 node .next/standalone/server.js > /tmp/arkivel-next.log 2>&1 &
+          echo $! > /tmp/arkivel-next.pid
+      - name: Wait for Arkivel
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent --max-time 5 --output /dev/null "$BASE_URL"; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/arkivel-next.log
+          exit 1
+      - run: npx playwright test
+      - name: Upload browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-${{ matrix.skin }}
+          path: |
+            playwright-report/
+            test-results/
+            /tmp/arkivel-next.log
+          retention-days: 7
+      - name: Print server log after failure
+        if: failure()
+        run: cat /tmp/arkivel-next.log || true

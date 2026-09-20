@@ -1,0 +1,510 @@
+/* ── Article page shell ── */
+.article-page {
+  min-width: 0;
+}
+
+.article-tabbar {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.2rem;
+  border: 1px solid var(--color-border);
+  border-bottom: 0;
+  background: var(--color-background);
+  padding: 0.35rem 0.45rem 0;
+}
+
+.article-tab {
+  display: inline-flex;
+  min-width: 0;
+  min-height: 1.85rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: -1px;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid transparent;
+  border-bottom-color: var(--color-border);
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.article-tab:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-foreground);
+  text-decoration: none;
+}
+
+.article-tab-active {
+  border-color: var(--color-border);
+  border-bottom-color: var(--color-surface);
+  background: var(--color-surface);
+  color: var(--color-heading);
+}
+
+.article-shell {
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+/* Article prose spans the full shell by default; ArticleWidthPreference
+   injects #wiki-width-pref-style to opt into narrow/reading measures. */
+
+#article-content .wiki-content {
+  font-family: var(--font-display);
+}
+
+@media (max-width: 767px) {
+  .article-shell {
+    padding: 0.75rem 0.85rem 1rem;
+  }
+
+  .article-tabbar {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: thin;
+  }
+
+  .article-tab {
+    padding-inline: 0.7rem;
+  }
+}
+
+/* The floated 280px infobox leaves too little room for prose below lg,
+   not just on phones — stack it on tablets too. */
+@media (max-width: 1023px) {
+  .wiki-infobox {
+    float: none;
+    width: 100%;
+    margin: 0.75rem 0 1rem;
+  }
+
+  .wiki-toc {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* ── Focused article reader and context rail ── */
+.wiki-main-content:has(> .article-page) {
+  padding: 0 !important;
+}
+
+.article-page,
+.article-reader-grid {
+  min-height: 100%;
+}
+
+.article-reader-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(20rem, 28vw, 27.5rem);
+  align-items: stretch;
+}
+
+.article-shell.article-reader {
+  display: flex;
+  min-width: 0;
+  min-height: 100%;
+  flex-direction: column;
+  border: 0;
+  background: var(--color-surface);
+  padding: clamp(3.25rem, 5.5vw, 6rem) clamp(2.25rem, 3.5vw, 3.75rem) 5rem;
+}
+
+.article-reader > .ui-page-footer,
+.article-reader-header,
+.article-reader-notice,
+.article-reader-content,
+.article-reader > .article-reader-details,
+.article-reader > [class] > .article-reader-content,
+.article-reader > [class] > .article-reader-details {
+  /* 44rem keeps the measure near 75 characters at the 1rem reading size. */
+  width: min(100%, 44rem);
+  margin-inline: auto;
+}
+
+.article-reader-header {
+  margin-top: clamp(3.6rem, 5vw, 4.5rem);
+  margin-bottom: 3.5rem;
+}
+
+.article-reader-header h1 {
+  min-width: 0;
+  color: var(--color-heading);
+  font-family: var(--font-sans);
+  font-size: clamp(2.9rem, 4vw, 3.6rem);
+  font-weight: 450;
+  letter-spacing: -0.06em;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.article-reader-notice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-inline-start: 2px solid var(--color-border);
+  background: var(--color-background);
+}
+
+.article-reader-content {
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+.article-reader-content > :first-child {
+  margin-top: 0;
+}
+
+.article-reader-content h1,
+.article-reader-content h2,
+.article-reader-content h3,
+.article-reader-content h4 {
+  color: var(--color-heading);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.article-reader-content h2 {
+  margin-top: 3.25rem;
+  margin-bottom: 1rem;
+  border: 0;
+  font-size: 1.6rem;
+}
+
+.article-reader-content h3 {
+  margin-top: 2.4rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.article-reader-content p,
+.article-reader-content ul,
+.article-reader-content ol,
+.article-reader-content blockquote,
+.article-reader-content pre,
+.article-reader-content table {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.article-reader-details {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: 0.9rem;
+}
+
+.article-reader-details > summary {
+  width: fit-content;
+  cursor: pointer;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+  list-style-position: inside;
+}
+
+.article-reader-details[open] > summary {
+  margin-bottom: 1rem;
+  color: var(--color-heading);
+}
+
+.article-reader-detail-actions {
+  display: flex;
+  gap: 1rem;
+  margin: 0.75rem 0 1rem;
+  font-size: 0.78rem;
+}
+
+.article-reader-details .wiki-infobox {
+  float: none;
+  width: 100%;
+  margin: 0;
+}
+
+/* The reader's footer lives inside the document column, which already pads
+   itself, so the footer keeps only its top rule and vertical spacing. */
+.article-reader > .ui-page-footer {
+  margin-top: auto;
+  padding-top: 3rem;
+  padding-inline: 0;
+}
+
+/* The section switcher (edit / history / diff / blame) now sits flat under
+   the sticky topbar instead of capping a framed box: keep a single bottom
+   rule for the tabs to hang from. */
+.ui-page-body > .article-tabbar {
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  padding: 0;
+}
+
+.wiki-right-sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  min-width: 0;
+  height: calc(100dvh - (var(--wiki-frame-inset, 0rem) * 2));
+  max-height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-sidebar-bg);
+}
+
+.article-context-tabs {
+  display: flex;
+  min-height: 5.8rem;
+  align-items: end;
+  gap: 2.6rem;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 2.2rem 1.55rem;
+}
+
+.article-context-tabs button {
+  position: relative;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 1rem;
+  font-weight: 450;
+  line-height: 1;
+}
+
+.article-context-tabs button:hover,
+.article-context-tabs button:focus-visible,
+.article-context-tabs .article-context-tab-active {
+  color: var(--color-heading);
+}
+
+.article-context-tabs button:focus-visible::after,
+.article-context-tabs .article-context-tab-active::after {
+  position: absolute;
+  right: 0;
+  bottom: -1.58rem;
+  left: 0;
+  height: 2px;
+  background: var(--color-heading);
+  content: "";
+}
+
+.article-context-panel {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.article-context-graph {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.article-local-graph {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  justify-items: center;
+}
+
+.article-local-graph-canvas {
+  display: block;
+  width: 100%;
+  height: min(30rem, calc(100dvh - 15rem));
+  min-height: 20rem;
+}
+
+.article-local-graph-open {
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.article-local-graph-open:hover,
+.article-local-graph-open:focus-visible {
+  color: var(--color-heading);
+  text-decoration: underline;
+}
+
+.article-context-outline ol,
+.article-context-outline ul {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article-context-outline a {
+  display: block;
+  border-radius: 0.35rem;
+  color: var(--color-muted);
+  padding: 0.45rem 0.55rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.article-context-outline a:hover,
+.article-context-outline a:focus-visible,
+.article-context-outline a[aria-current="location"] {
+  background: var(--color-surface-hover);
+  color: var(--color-heading);
+}
+
+/* Touch ergonomics for the context drawer. These selectors live here (not in
+   shell.css's coarse block) so they win the cascade over the base rules above. */
+@media (pointer: coarse) {
+  .article-context-tabs button {
+    /* Tabs align to the container's bottom edge, so min-height grows the tap
+       area upward and the active-tab underline stays anchored on the border. */
+    min-height: 2.75rem;
+  }
+
+  .article-context-outline a {
+    padding-block: 0.65rem;
+  }
+}
+
+.article-context-backlinks {
+  margin-top: 2.5rem;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: 1.25rem;
+}
+
+.article-context-backlinks h2 {
+  margin: 0 0 0.75rem 0.55rem;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.article-context-empty {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+.article-context-toggle,
+.article-context-backdrop {
+  display: none;
+}
+
+/* With a sticky topbar above the reader grid, the context rail starts
+   below it on the three-pane layout (the drawer form below resets this). */
+@media (min-width: 75rem) {
+  .article-page > .ui-topbar ~ .article-reader-grid .wiki-right-sidebar {
+    top: var(--ui-topbar-height);
+    height: calc(100dvh - (var(--wiki-frame-inset, 0rem) * 2) - var(--ui-topbar-height));
+  }
+}
+
+/* 74.999rem is the sanctioned three-pane collapse breakpoint (deliberate
+   layout constant, intentionally off the Tailwind scale). */
+@media (max-width: 74.999rem) {
+  .article-reader-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wiki-right-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    width: min(24rem, 90vw);
+    height: 100dvh;
+    max-height: none;
+    transform: translateX(102%);
+    border-left: 1px solid var(--color-border);
+    box-shadow: -1.25rem 0 3rem rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease;
+  }
+
+  .wiki-right-sidebar-open {
+    transform: translateX(0);
+  }
+
+  .article-context-toggle {
+    position: fixed;
+    inset-inline-end: max(1.25rem, env(safe-area-inset-right));
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    z-index: 30;
+    display: inline-flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-heading);
+    box-shadow: 0 0.4rem 1.25rem rgba(0, 0, 0, 0.1);
+  }
+
+  .article-context-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: rgba(0, 0, 0, 0.38);
+  }
+}
+
+@media (max-width: 1023px) {
+  .wiki-main-content:has(> .article-page) {
+    padding: 0 !important;
+  }
+
+  .article-shell.article-reader {
+    padding-top: 5.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .article-shell.article-reader {
+    padding: 5rem 1.25rem 4rem;
+  }
+
+  .article-reader-header {
+    margin-top: 3rem;
+  }
+
+  .article-reader-header h1 {
+    font-size: clamp(2.6rem, 14vw, 3.75rem);
+  }
+
+  .article-context-tabs {
+    min-height: 4.75rem;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .article-context-panel {
+    padding: 1.5rem;
+  }
+}

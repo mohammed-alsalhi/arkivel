@@ -1,0 +1,130 @@
+/* ── Category browse tree ── */
+.category-tree {
+  max-width: 54rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.category-tree-row {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 0.45rem;
+  border-bottom: 1px solid var(--color-border-light);
+  padding-top: 0.45rem;
+  padding-right: 0.65rem;
+  padding-bottom: 0.45rem;
+}
+
+.category-tree-row:last-child {
+  border-bottom: 0;
+}
+
+.category-tree-row:hover {
+  background: var(--color-surface-hover);
+}
+
+.category-tree-depth {
+  flex: 0 0 auto;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-left: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.category-tree-title {
+  min-width: 0;
+  color: var(--color-wiki-link);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.category-tree-count {
+  flex: 0 0 auto;
+  color: var(--color-muted);
+  font-size: 0.6875rem;
+}
+
+.category-tree-description {
+  min-width: 0;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+/* ── Wiki notice/message box ── */
+.wiki-notice {
+  border: 1px solid var(--color-border-light);
+  background: var(--color-background);
+  padding: 0.6rem 0.75rem;
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+/* Links inside running notice text read apart from it by more than color. */
+.wiki-notice a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* ── Diff styles ── */
+.diff-added {
+  background: var(--color-diff-added);
+}
+.diff-removed {
+  background: var(--color-diff-removed);
+  text-decoration: line-through;
+}
+.diff-inline-added {
+  background: var(--color-diff-added);
+  padding: 0.1rem 0;
+}
+.diff-inline-removed {
+  background: var(--color-diff-removed);
+  text-decoration: line-through;
+  padding: 0.1rem 0;
+}
+
+/* ── Search result highlighting ── */
+mark, .search-highlight {
+  background: rgba(255, 215, 0, 0.35);
+  padding: 0.1rem 0.15rem;
+  border-radius: 2px;
+}
+html[data-theme="dark"] mark,
+html[data-theme="dark"] .search-highlight {
+  background: rgba(255, 215, 0, 0.2);
+}
+
+/* ── Disambiguation notice ── */
+.wiki-disambiguation-notice {
+  border: 1px solid var(--color-border-light);
+  border-inline-start: 3px solid var(--color-accent);
+  background: var(--color-accent-soft);
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+/* Keep styling serialized by the retired detector for existing article HTML. */
+.potential-link {
+  border-bottom: 2px dashed var(--color-accent);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.potential-link:hover {
+  background: var(--color-accent-soft);
+}
+
+/* ── Theme switch: suspend every transition for one frame so the whole page
+   snaps together instead of each control cross-fading at its own pace ── */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: none !important;
+}

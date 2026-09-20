@@ -1,0 +1,508 @@
+.shell {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border-light);
+  border-radius: 0.25rem;
+  background: var(--color-surface);
+}
+
+.header {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-surface);
+  padding: 0.5rem 0.65rem;
+}
+
+.identity,
+.headerActions,
+.selectionSummary,
+.statusStats,
+.statusState {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.identity {
+  flex: 1 1 auto;
+}
+
+.titleBlock {
+  display: grid;
+  min-width: 0;
+  gap: 0.1rem;
+}
+
+.title {
+  color: var(--color-heading);
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.subtitle {
+  color: var(--color-muted);
+  font-size: 0.7rem;
+}
+
+.headerActions {
+  flex: 0 1 auto;
+  justify-content: flex-end;
+}
+
+.trayToggle {
+  display: inline-flex;
+  min-height: 1.65rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 0.2rem;
+  background: transparent;
+  color: var(--color-muted);
+  padding: 0 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.trayToggle:hover,
+.trayToggle[aria-pressed="true"] {
+  border-color: var(--color-border-light);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.trayToggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.tray {
+  display: grid;
+  min-width: 0;
+  gap: 0.5rem;
+  border-top: 1px solid var(--color-border-light);
+  background: var(--color-background);
+  padding: 0.6rem 0.65rem;
+}
+
+.trayHeader {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.trayTitle,
+.trayPanel h4 {
+  margin: 0;
+  color: var(--color-heading);
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.trayDescription,
+.emptyNote {
+  margin: 0.12rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.commandSections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.55rem;
+}
+
+.commandSection {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 0.3rem;
+}
+
+.commandSectionTitle {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.commandList {
+  display: grid;
+  min-width: 0;
+  gap: 0.25rem;
+}
+
+.commandButton {
+  display: flex;
+  min-width: 0;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  border: 1px solid var(--color-border-light);
+  border-radius: 0.25rem;
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  padding: 0.35rem 0.48rem;
+  text-align: left;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.commandButton:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.commandButton span {
+  overflow-wrap: anywhere;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.commandButton small {
+  flex: 0 0 auto;
+  color: var(--color-muted);
+  font-size: 0.62rem;
+  white-space: nowrap;
+}
+
+.traySplit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.55rem;
+}
+
+.trayPanel,
+.disclosure {
+  min-width: 0;
+  border: 1px solid var(--color-border-light);
+  border-radius: 0.25rem;
+  background: var(--color-surface);
+  padding: 0.55rem;
+}
+
+.scorePanel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.reviewStrip {
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.scoreRing {
+  position: relative;
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border-radius: 999px;
+  background: conic-gradient(var(--color-accent) var(--editor-score), var(--color-surface-hover) 0);
+  color: var(--color-heading);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.scoreRing::after {
+  content: "";
+  position: absolute;
+  inset: 0.32rem;
+  border-radius: 999px;
+  background: var(--color-surface);
+}
+
+.scoreRing span {
+  position: relative;
+  z-index: 1;
+}
+
+.scoreCopy {
+  display: grid;
+  min-width: 0;
+  gap: 0.15rem;
+}
+
+.scoreCopy strong {
+  color: var(--color-heading);
+  font-size: 0.85rem;
+}
+
+.scoreCopy span {
+  color: var(--color-muted);
+  font-size: 0.72rem;
+}
+
+.signalRow {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.signalRow span {
+  min-width: 0;
+  border: 1px solid var(--color-border-light);
+  border-radius: 999px;
+  background: var(--color-surface);
+  padding: 0.18rem 0.45rem;
+  color: var(--color-muted);
+  font-size: 0.68rem;
+}
+
+.signalRow strong {
+  color: var(--color-heading);
+  font-size: 0.72rem;
+}
+
+.disclosure {
+  padding: 0;
+}
+
+.disclosure summary {
+  cursor: pointer;
+  color: var(--color-heading);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.2;
+  list-style-position: inside;
+  padding: 0.5rem 0.55rem;
+}
+
+.disclosureBody {
+  border-top: 1px solid var(--color-border-light);
+  padding: 0.55rem;
+}
+
+.checkList,
+.outlineList {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+
+.checkItem {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.45rem;
+}
+
+.checkItem > span {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  margin-top: 0.28rem;
+  background: var(--color-info);
+}
+
+.checkItem[data-status="good"] > span {
+  background: var(--color-success);
+}
+
+.checkItem[data-status="warn"] > span {
+  background: var(--color-warning);
+}
+
+.checkItem strong {
+  display: block;
+  color: var(--color-heading);
+  font-size: 0.75rem;
+}
+
+.checkItem p {
+  margin: 0.05rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.outlineList button {
+  min-width: 0;
+  border: 0;
+  border-left: 2px solid var(--color-border);
+  background: transparent;
+  color: var(--color-muted);
+  padding: 0.22rem 0.35rem;
+  text-align: left;
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.outlineList button:hover {
+  border-left-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.outlineList button[data-level="3"] {
+  margin-left: 0.75rem;
+}
+
+.workspace {
+  min-width: 0;
+  background: var(--color-surface);
+}
+
+.markdownWorkspace {
+  display: block;
+}
+
+.mainPanel {
+  min-width: 0;
+}
+
+.selectionBar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-info-soft);
+  padding: 0.4rem 0.65rem;
+  color: var(--color-info);
+  font-size: 0.74rem;
+}
+
+.selectionSummary strong {
+  color: inherit;
+}
+
+.selectionActions {
+  display: flex;
+  min-width: 0;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.selectionActions button {
+  min-height: 1.55rem;
+  border: 1px solid var(--color-info-border);
+  border-radius: 0.25rem;
+  background: var(--color-surface);
+  color: var(--color-info);
+  padding: 0 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.canvas :global(.tiptap) {
+  min-height: 470px;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+}
+
+.markdownPlane {
+  min-height: 470px;
+  width: 100%;
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  padding: 1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.markdownPlane:focus {
+  outline: none;
+}
+
+.statusbar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--color-border-light);
+  background: var(--color-surface);
+  padding: 0.45rem 0.65rem;
+  color: var(--color-muted);
+  font-size: 0.68rem;
+}
+
+.statusStats span,
+.statusState span {
+  border: 1px solid var(--color-border-light);
+  border-radius: 0.25rem;
+  background: var(--color-surface);
+  padding: 0.1rem 0.35rem;
+}
+
+@media (max-width: 767px) {
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .headerActions {
+    justify-content: flex-start;
+  }
+
+  .trayToggle {
+    flex: 1 1 auto;
+  }
+
+  .commandSections,
+  .reviewStrip {
+    grid-template-columns: 1fr;
+  }
+
+  .canvas :global(.tiptap),
+  .markdownPlane {
+    min-height: 360px;
+    padding: 0.85rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .commandSections,
+  .traySplit,
+  .reviewStrip {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Touch ergonomics: these CSS-module classes can't be reached from the global
+   coarse-pointer block in shell.css, so they get their own. */
+@media (pointer: coarse) {
+  .trayToggle {
+    min-height: 2.25rem;
+    padding: 0 0.6rem;
+  }
+
+  .commandButton {
+    min-height: 2.5rem;
+  }
+
+  .selectionActions button {
+    min-height: 2.25rem;
+    padding: 0 0.6rem;
+  }
+}
