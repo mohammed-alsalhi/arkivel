@@ -34,6 +34,8 @@ test.describe("documentation reading", () => {
         await page.goto("/");
         await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
         expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(2);
+        const frame = await page.locator(".wiki-layout").boundingBox();
+        expect(frame).toEqual({ x: 0, y: 0, ...page.viewportSize() });
         const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
         expect(results.violations.filter(v => ["serious", "critical"].includes(v.impact || ""))).toEqual([]);
         await page.screenshot({ path: `test-results/docs-${skin}-${theme}-${test.info().project.name}.png` });
