@@ -50,7 +50,14 @@ export function imagePath(value: unknown): string | null {
   return match ? match[1] : value.startsWith("/") ? value : null;
 }
 
-const dateOnly = (value: unknown): string | null => (typeof value === "string" && value ? new Date(`${value}T00:00:00Z`).toISOString() : null);
+function watchedAt(properties: ItemDTO["properties"]): string | null {
+  const day = properties.watched_on;
+  if (typeof day !== "string" || !Number.isFinite(Date.parse(day))) return null;
+  const exact = properties.watched_at;
+  // A manual collection edit to the day invalidates an older imported timestamp.
+  return typeof exact === "string" && Number.isFinite(Date.parse(exact)) && new Date(exact).toISOString().slice(0, 10) === day
+    ? new Date(exact).toISOString() : new Date(`${day}T00:00:00Z`).toISOString();
+}
 const num = (value: unknown): number | null => (typeof value === "number" && Number.isFinite(value) ? value : null);
 const str = (value: unknown): string => (typeof value === "string" ? value : "");
 
@@ -70,7 +77,7 @@ function metadataOf(item: ItemDTO, identity: { media_type: MediaType; tmdb_id: n
     overview: str(p.overview) || bundled?.overview || "",
     vote_average: num(p.score) ?? bundled?.score ?? 0,
   };
-  if (year) base[identity.media_type === "tv" ? "first_air_date" : "release_date"] = `${year}-01-01`;
+  if (p.release_date || year) base[identity.media_type === "tv" ? "first_air_date" : "release_date"] = str(p.release_date) || `${year}-01-01`;
   return {
     ...base,
     backdrop_path: imagePath(p.backdrop) ?? imagePath(bundled?.backdrop),
@@ -102,7 +109,7 @@ export function toWatchlistItem(item: ItemDTO, episodes: EpisodeProgress[] = [])
     status: STATUS_LABELS[String(item.properties.status)] ?? "plan_to_watch",
     moods,
     added_at: item.createdAt,
-    watched_at: dateOnly(item.properties.watched_on),
+    watched_at: watchedAt(item.properties),
     metadata,
     episodes_watched: watched.length,
     total_episodes: !process.env.TMDB_API_KEY && withinSample && totalBundled ? totalBundled : undefined,
@@ -121,7 +128,7 @@ export function toEpisodeProgress(item: ItemDTO): EpisodeProgress | null {
     watchlist_item_id: show,
     season_number: season,
     episode_number: episode,
-    watched_at: dateOnly(item.properties.watched_on) ?? item.updatedAt,
+    watched_at: watchedAt(item.properties) ?? item.updatedAt,
   };
 }
 

@@ -27,7 +27,7 @@ async function collections(): Promise<{ watchlist: CollectionDTO; episodes: Coll
 // ponytail: reads every row; a library past a few thousand titles wants a property index.
 async function allRows(collection: CollectionDTO): Promise<ItemDTO[]> {
   const rows: ItemDTO[] = [];
-  for (let page = 1; page <= 100; page += 1) {
+  for (let page = 1; true; page += 1) {
     const result = await listItems(collection, { page });
     rows.push(...result.items);
     if (!result.hasMore) break;
@@ -97,6 +97,7 @@ export async function patchTitle(id: string, patch: { status?: WatchStatus; mood
   if (patch.status) {
     properties.status = statusId(patch.status);
     properties.watched_on = patch.status === "watched" ? (row.properties.watched_on ?? today()) : null;
+    if (patch.status !== "watched") properties.watched_at = null;
   }
   if (patch.moods) properties.moods = patch.moods.map(moodId);
   const updated = await updateItem(watchlist, id, { properties });

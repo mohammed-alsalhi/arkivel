@@ -8,7 +8,7 @@ import { api } from '@/lib/media-client'
 
 type Counts = { added: number; existing: number; episodesAdded: number; episodesExisting: number }
 
-export default function LibraryBackup({ canEdit }: { canEdit: boolean }) {
+export default function LibraryBackup({ canEdit, onPendingChange }: { canEdit: boolean; onPendingChange: (pending: boolean) => void }) {
   const input = useRef<HTMLInputElement>(null)
   const message = useRef<HTMLDivElement>(null)
   const busy = useRef(false)
@@ -23,7 +23,7 @@ export default function LibraryBackup({ canEdit }: { canEdit: boolean }) {
 
   async function review(file: File) {
     if (busy.current) return
-    busy.current = true; setPending(true); setError(''); setCounts(null); setBackup(null); setRestored(false)
+    busy.current = true; setPending(true); onPendingChange(true); setError(''); setCounts(null); setBackup(null); setRestored(false)
     try {
       if (!file.name.toLowerCase().endsWith('.json') || file.size > 10_000_000) throw new Error('Choose a Vistara JSON backup under 10 MB.')
       let source: unknown
@@ -31,17 +31,17 @@ export default function LibraryBackup({ canEdit }: { canEdit: boolean }) {
       const result = await api<Counts>('/api/media/library', { method: 'POST', body: JSON.stringify({ backup: source }) })
       setBackup(source); setCounts(result); setFilename(file.name)
     } catch (cause) { setError(cause instanceof TypeError ? 'Could not connect to Vistara. Choose the backup again to retry.' : cause instanceof Error ? cause.message : 'Could not read this backup.') }
-    finally { busy.current = false; setPending(false); if (input.current) input.current.value = '' }
+    finally { busy.current = false; setPending(false); onPendingChange(false); if (input.current) input.current.value = '' }
   }
 
   async function restore() {
     if (busy.current || !backup) return
-    busy.current = true; setPending(true); setError('')
+    busy.current = true; setPending(true); onPendingChange(true); setError('')
     try {
       const result = await api<Counts>('/api/media/library', { method: 'PUT', body: JSON.stringify({ backup }) })
       setCounts(result); setRestored(true); setBackup(null)
     } catch (cause) { setError(cause instanceof TypeError ? 'Could not connect to Vistara. Your backup is still ready; try again.' : cause instanceof Error ? cause.message : 'Could not restore this backup. You can try again.') }
-    finally { busy.current = false; setPending(false) }
+    finally { busy.current = false; setPending(false); onPendingChange(false) }
   }
 
   return <section aria-label="Move your library" className="space-y-3">

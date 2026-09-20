@@ -203,3 +203,17 @@ Repeated input is a no-op. A record with an older `generated_at` than its stored
 | shell | the library, discover, title, mood, and import pages, the navigation, the dark coral look | `src/components/media/`, `src/styles/media-site.css`, the media block in `tokens.css` |
 
 Reads are public like a wiki; every write requires a signed-in collection editor, so the library's `health` reports `can_edit` and the pages hide their controls when it is false. Kit rows carry `sample: true` until they are edited, which is what "remove sample titles" deletes. The mode forces the `collections` and `media` modules on regardless of `ARKIVEL_MODULES`.
+
+### media release checks
+
+Use a dedicated local database (never the wiki database), apply migrations, seed the smoke account, and start media mode in its own terminal. The database name for the destructive-fixture check must begin with `arkivel_vistara_release_` and both database and app must be on loopback:
+
+```sh
+DATABASE_URL=postgresql://mohammed@localhost:5432/arkivel_vistara_release_20260920 BASE_URL=http://127.0.0.1:3107 node scripts/check-media.mjs
+```
+
+The check applies the watchlist kit and exercises authentication, catalogue search, status, episode marks, mood picks, backup preview, repeat restore, metadata and exact timestamp preservation, offline saved-title details, and transaction rollback. It leaves synthetic records in that disposable database. `SMOKE_ADMIN_PASSWORD` overrides the smoke account password.
+
+Backup restore uses a single collection transaction, preserves the original added time and exact watched timestamps, and imports saved descriptive metadata without requiring TMDB. Existing titles keep their fields; missing episode marks are added. Older watchlist kits gain the `watched_at` and `release_date` properties during restore. Watched timestamps fall back to the edited date if a collection editor changes the day. The library is shared within one deployment; reads are public and writes require an editor account. Very large backups still perform individual inserts and may reach the transaction timeout; failure rolls the entire restore back.
+
+For Vercel, create a separate Vistara project from this repository with a dedicated database. Set `ARKIVEL_SITE_MODE=media`, `NEXT_PUBLIC_ARKIVEL_NAME=Vistara`, `NEXT_PUBLIC_BASE_URL` to its deployment origin, and its own `DATABASE_URL`, `ADMIN_SECRET`, and authentication configuration before building. Apply migrations explicitly, create the administrator account, and apply the watchlist kit. Do not reuse the WorldWiki project linkage, database, or secrets. Provider keys are optional; without TMDB, discovery uses the bundled catalogue and restored titles remain viewable from saved metadata.

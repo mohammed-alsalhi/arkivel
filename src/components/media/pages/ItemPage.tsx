@@ -19,7 +19,7 @@ type Detail = {
   tmdb: TmdbMovie | TmdbShow
   ratings: AggregatedRatings
   seasons?: TmdbSeason[]
-  source?: 'catalog' | 'tmdb'
+  source?: 'catalog' | 'tmdb' | 'library'
   notice?: string
   episode_scope?: string
 }

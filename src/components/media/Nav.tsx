@@ -29,6 +29,7 @@ export default function Nav() {
   const [confirmClear, setConfirmClear] = useState(false)
   const [health, setHealth] = useState<LibraryHealth | null>(null)
   const [clearing, setClearing] = useState(false)
+  const [backupPending, setBackupPending] = useState(false)
   const [error, setError] = useState('')
   const canEdit = health?.can_edit === true
   useEffect(() => {
@@ -86,14 +87,14 @@ export default function Nav() {
         </div>
       </header>
       {menuOpen && <nav aria-label="Mobile navigation" className="absolute top-[72px] right-4 left-4 z-40 rounded-xl border border-border bg-card p-2 shadow-xl md:hidden">{navigation.map(({ href, label, icon: Icon }) => <Link key={href} href={href} onClick={() => setMenuOpen(false)} aria-current={pathname === href ? 'page' : undefined} className={cn('flex min-h-12 items-center gap-3 rounded-lg px-4 text-sm', pathname === href ? 'bg-primary/10 text-primary' : 'text-muted-foreground')}><Icon size={18} aria-hidden="true" />{label}</Link>)}<button onClick={() => { setMenuOpen(false); setInfoOpen(true) }} className="flex h-12 w-full items-center gap-3 px-4 text-sm text-muted-foreground"><HardDrive size={18} />Your library</button>{health && (canEdit ? <button type="button" onClick={() => void logout()} className="flex h-12 w-full items-center gap-3 px-4 text-sm text-muted-foreground"><LogOut size={18} aria-hidden="true" />Log out</button> : <Link href="/login" onClick={() => setMenuOpen(false)} className="flex min-h-12 items-center gap-3 rounded-lg px-4 text-sm text-muted-foreground"><LogIn size={18} aria-hidden="true" />Log in</Link>)}</nav>}
-      <Dialog open={infoOpen} onOpenChange={(open) => { setInfoOpen(open); setConfirmClear(false); setError('') }}>
-        <DialogContent className="p-6 sm:max-w-md">
+      <Dialog open={infoOpen} onOpenChange={(open) => { if (backupPending || clearing) return; setInfoOpen(open); setConfirmClear(false); setError('') }}>
+        <DialogContent showCloseButton={!backupPending && !clearing} className="p-6 sm:max-w-md">
           <HardDrive className="mb-2 text-primary" size={28} aria-hidden="true" />
           <DialogTitle className="text-xl">Your library, on your Arkivel.</DialogTitle>
           <DialogDescription>Titles and episode progress are saved in this Arkivel&rsquo;s database, so they follow you across devices.</DialogDescription>
           <p className="muted">{health?.catalog === 'live' ? 'Live movie search is connected.' : 'You’re exploring a curated sample catalogue. Full catalogue search is available when a TMDB key is configured.'}</p>
-          <LibraryBackup canEdit={canEdit} />
-          {health?.sample_library && canEdit && <div className="mt-2 border-t border-border pt-4"><p className="muted mb-3">We included sample titles to help you explore. Titles you added or edited will stay when you remove them.</p><Button variant="destructive" className="w-full" disabled={clearing} onClick={() => confirmClear ? clearSamples() : setConfirmClear(true)}>{clearing ? 'Removing…' : confirmClear ? 'Confirm: remove sample titles' : 'Remove sample titles'}</Button></div>}
+          <LibraryBackup canEdit={canEdit} onPendingChange={setBackupPending} />
+          {health?.sample_library && canEdit && <div className="mt-2 border-t border-border pt-4"><p className="muted mb-3">We included sample titles to help you explore. Titles you added or edited will stay when you remove them.</p><Button variant="destructive" className="w-full" disabled={clearing || backupPending} onClick={() => confirmClear ? clearSamples() : setConfirmClear(true)}>{clearing ? 'Removing…' : confirmClear ? 'Confirm: remove sample titles' : 'Remove sample titles'}</Button></div>}
           {error && <p role="alert" className="error-message">{error}</p>}
         </DialogContent>
       </Dialog>

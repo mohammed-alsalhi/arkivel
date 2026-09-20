@@ -19,6 +19,8 @@ export default function DiscoverPage() {
   const [health, setHealth] = useState<LibraryHealth | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [libraryError, setLibraryError] = useState('')
+  const [searchError, setSearchError] = useState('')
   const [pending, setPending] = useState<string | null>(null)
   const [message, setMessage] = useState('')
   const [attempt, setAttempt] = useState(0)
@@ -28,8 +30,8 @@ export default function DiscoverPage() {
   useEffect(() => {
     const controller = new AbortController()
     Promise.all([api<WatchlistItem[]>('/api/media/watchlist', { signal: controller.signal }), api<LibraryHealth>('/api/media/health', { signal: controller.signal })])
-      .then(([items, health]) => { setSaved(new Set(items.map(item => `${item.media_type}-${item.tmdb_id}`))); setHealth(health); setLibraryReady(true) })
-      .catch(error => { if (!controller.signal.aborted) setError(error.message) })
+      .then(([items, health]) => { setSaved(new Set(items.map(item => `${item.media_type}-${item.tmdb_id}`))); setHealth(health); setLibraryReady(true); setLibraryError('') })
+      .catch(error => { if (!controller.signal.aborted) setLibraryError(error.message) })
     return () => controller.abort()
   }, [attempt])
 
@@ -37,8 +39,8 @@ export default function DiscoverPage() {
     const controller = new AbortController()
     const timeout = setTimeout(() => {
       api<TmdbSearchResult[]>(`/api/media/titles?q=${encodeURIComponent(query.trim())}`, { signal: controller.signal })
-        .then(items => { setResults(items); setLoading(false) })
-        .catch(error => { if (!controller.signal.aborted) { setError(error.message); setLoading(false) } })
+        .then(items => { if (!controller.signal.aborted) { setResults(items); setSearchError(''); setLoading(false) } })
+        .catch(error => { if (!controller.signal.aborted) { setResults([]); setSearchError(error.message); setLoading(false) } })
     }, query ? 300 : 0)
     return () => { clearTimeout(timeout); controller.abort() }
   }, [query, attempt])
@@ -61,11 +63,11 @@ export default function DiscoverPage() {
       <div><h1 className="page-heading">There’s a whole world to watch.</h1><p className="muted mt-2">Find a new favorite. Save it for the right moment.</p></div>
       <div className="relative max-w-3xl"><Search className="pointer-events-none absolute top-4 left-4 size-5 text-muted-foreground" strokeWidth={1.5} aria-hidden="true" /><Input aria-label="Search titles" placeholder="Search for a film or series…" value={query} maxLength={300} onChange={event => { setQuery(event.target.value); setLoading(true); setError('') }} className="h-14! bg-card! pl-12! pr-12! text-base!" autoFocus />{query && <Button variant="ghost" size="icon" className="absolute top-1.5 right-1.5" aria-label="Clear search" onClick={() => { setQuery(''); setLoading(true); setError('') }}><X /></Button>}</div>
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4"><div role="group" aria-label="Discover media type" className="flex gap-2">{([{ value: 'all', label: 'All titles' }, { value: 'movie', label: 'Films' }, { value: 'tv', label: 'Series' }] as const).map(tab => <Button static key={tab.value} variant={type === tab.value ? 'secondary' : 'ghost'} size="sm" onClick={() => setType(tab.value)} aria-pressed={type === tab.value}>{tab.label}</Button>)}</div><span className="text-xs text-muted-foreground">{health?.catalog === 'live' ? 'Live search · powered by TMDB' : 'Exploring the sample catalogue'}</span></div>
-      {error && <div role="alert" className="error-message flex flex-wrap items-center justify-between gap-3"><span>{error}</span><Button variant="outline" size="sm" onClick={() => { setError(''); setLoading(true); setAttempt(attempt + 1) }}>Try again</Button></div>}
+      {(libraryError || searchError || error) && <div role="alert" className="error-message flex flex-wrap items-center justify-between gap-3"><span>{libraryError || searchError || error}</span><Button variant="outline" size="sm" onClick={() => { setError(''); setLoading(true); setAttempt(attempt + 1) }}>Try again</Button></div>}
       {health && !canEdit ? <p role="status" className="h-5 truncate text-sm leading-5 text-muted-foreground">Log in to edit your library. <Link href="/login" className="text-foreground underline underline-offset-4 hover:text-primary">Log in</Link></p> : <p role="status" title={message} className="h-5 truncate text-sm leading-5 text-primary">{message}</p>}
       <section aria-labelledby="discover-heading" aria-busy={loading}>
-        <div className="mb-5 flex items-center gap-3"><h2 id="discover-heading" className="section-heading">{query.trim() ? `Results for “${query.trim()}”` : 'Worth a place in your collection'}</h2>{!loading && <span className="text-xs text-muted-foreground tabular-nums">{visible.length} {visible.length === 1 ? 'title' : 'titles'}</span>}</div>
-        {loading ? <div className="poster-grid" aria-label="Searching titles">{Array.from({ length: 6 }, (_, i) => <div key={i} className="aspect-[2/3] animate-pulse rounded-lg bg-muted" />)}</div> : visible.length ? <div className="poster-grid">{visible.map(item => {
+        <div className="mb-5 flex items-center gap-3"><h2 id="discover-heading" className="section-heading min-w-0">{query.trim() ? `Results for “${query.trim()}”` : 'Worth a place in your collection'}</h2>{!loading && !searchError && <span className="text-xs text-muted-foreground tabular-nums">{visible.length} {visible.length === 1 ? 'title' : 'titles'}</span>}</div>
+        {loading ? <div className="poster-grid" aria-label="Searching titles">{Array.from({ length: 6 }, (_, i) => <div key={i} className="aspect-[2/3] animate-pulse rounded-lg bg-muted" />)}</div> : searchError ? null : visible.length ? <div className="poster-grid">{visible.map(item => {
           const key = `${item.media_type}-${item.id}`
           const isSaved = saved.has(key)
           return <article key={key} className="min-w-0">

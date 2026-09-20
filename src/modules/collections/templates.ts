@@ -140,8 +140,10 @@ const watchlistSchema: PropertySchema = [
     { id: "scary", label: "scary", tone: "danger" },
   ] },
   { id: "year", name: "year", type: "number" },
+  { id: "release_date", name: "release date", type: "date" },
   { id: "rating", name: "my rating", type: "number" },
   { id: "watched_on", name: "watched on", type: "date" },
+  { id: "watched_at", name: "exact watched time", type: "text" },
   { id: "url", name: "link", type: "url" },
   { id: "poster", name: "poster", type: "url" },
   { id: "backdrop", name: "backdrop", type: "url" },
@@ -164,6 +166,7 @@ const episodesSchema: PropertySchema = [
   { id: "episode", name: "episode number", type: "number" },
   { id: "watched", name: "watched", type: "checkbox" },
   { id: "watched_on", name: "watched on", type: "date" },
+  { id: "watched_at", name: "exact watched time", type: "text" },
 ];
 
 export const COLLECTION_TEMPLATES: readonly CollectionTemplate[] = [

@@ -3,6 +3,7 @@ import { fetchImdbId, fetchRatings } from "@/modules/media/ratings";
 import { getSeason, getTitle, hasLiveTmdb } from "@/modules/media/tmdb";
 import type { MediaSeason, MediaTitle } from "@/modules/media/types";
 import { imagePath, toMediaKind, toMediaType } from "./convert";
+import { readLibrary } from "./library";
 import type { AggregatedRatings, MediaType, TmdbMovie, TmdbSearchResult, TmdbSeason, TmdbShow } from "./types";
 
 export const SEASON_ONE_SCOPE = "The starter collection includes season 1. This is not the complete series.";
@@ -86,14 +87,30 @@ export type TitleDetail = {
   tmdb: TmdbMovie | TmdbShow;
   ratings: AggregatedRatings;
   seasons?: TmdbSeason[];
-  source: "catalog" | "tmdb";
+  source: "catalog" | "tmdb" | "library";
+  notice?: string;
   episode_scope?: string;
 };
 
 /** `GET /api/media/tmdb/[id]`: the title, its ratings, and (for series, on request) every season's episodes. */
 export async function titleDetail(type: MediaType, id: number, withSeasons: boolean): Promise<TitleDetail> {
   const media = toMediaKind(type);
-  const [title, imdbId] = await Promise.all([getTitle(media, id), fetchImdbId(media, id)]);
+  let title: MediaTitle;
+  try { title = await getTitle(media, id); }
+  catch (error) {
+    const saved = (await readLibrary()).items.find((item) => item.tmdb_id === id && item.media_type === type);
+    if (!saved) throw error;
+    const metadata = saved.metadata;
+    const released = metadata?.release_date || metadata?.first_air_date || "";
+    const stored: MediaTitle = { id, media, title: saved.title, year: released ? Number(released.slice(0, 4)) : null,
+      overview: metadata?.overview ?? "", poster: saved.poster_path, backdrop: metadata?.backdrop_path ?? null,
+      score: metadata?.vote_average ?? null, runtime: metadata?.runtime ?? null, genres: (metadata?.genres ?? []).map((genre) => genre.name), moods: [] };
+    const tmdb = type === "movie" ? { ...toTmdbMovie(stored), release_date: released } : { ...toTmdbShow(stored), first_air_date: released };
+    return { tmdb, ratings: {}, source: "library",
+      notice: "Showing saved library details. Live metadata is unavailable.",
+      ...(type === "tv" ? { seasons: [], episode_scope: "Saved episode progress is retained. Connect TMDB to load the full episode list." } : {}) };
+  }
+  const imdbId = await fetchImdbId(media, id);
   const ratings = await fetchRatings(title.title, title.year, imdbId);
   const live = hasLiveTmdb();
   const tmdb = type === "movie" ? toTmdbMovie(title) : toTmdbShow(title);
