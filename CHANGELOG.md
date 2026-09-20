@@ -17,3 +17,9 @@ Initial public release.
 - local authentication, optional oauth, role-based access, personal access tokens, and audit logs
 - public api v1, generated api reference, and configurable modules
 - self-hosting with postgresql and prisma migrations, docker, and vercel support
+
+## unreleased
+
+- require operator owner setup; public registration defaults closed and only creates viewers
+- unify local and oauth authorization through revocable database sessions and current internal roles
+- prevent implicit oauth account linking by email; existing oauth users must sign in again after upgrading

@@ -15,7 +15,7 @@ Collaboration, marketplaces, third-party plugins, gamification, and social featu
 ## portability and managed hosting
 
 1. Separate the marketing website from the application and export the API reference.
-2. Unify local and external authentication around internal user IDs; replace first-registration admin assignment with explicit setup and add registration/privacy controls.
+2. Explicit owner setup, closed-by-default registration, and shared revocable local/OAuth sessions are implemented. Add private-instance read access controls before hosting private customer content.
 3. Add Clerk and Supabase Auth integrations with verified identities and revocation behavior.
 4. Expand skins and runtime branding without duplicating feature or permission logic.
 5. Add portable object storage and publish versioned application artifacts.

@@ -25,6 +25,7 @@ export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [registrationOpen, setRegistrationOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function UserMenu() {
       .then((data) => {
         setIsAdmin(!!data.admin);
         setUser(data.user ?? null);
+        setRegistrationOpen(data.registrationOpen === true);
         setLoaded(true);
       })
       .catch(() => setLoaded(true));
@@ -132,9 +134,9 @@ export default function UserMenu() {
               <DropdownLink href="/login" className="text-wiki-link" onClick={() => setOpen(false)}>
                 log in
               </DropdownLink>
-              <DropdownLink href="/register" className="text-wiki-link" onClick={() => setOpen(false)}>
+              {registrationOpen && <DropdownLink href="/register" className="text-wiki-link" onClick={() => setOpen(false)}>
                 register
-              </DropdownLink>
+              </DropdownLink>}
             </>
           )}
         </Dropdown>

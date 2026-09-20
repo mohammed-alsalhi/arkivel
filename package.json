@@ -22,7 +22,8 @@
     "release:docs-sync": "node scripts/verify-docs-sync.mjs",
     "api:inventory": "node scripts/api-inventory.mjs",
     "import": "tsx scripts/import-articles.ts",
-    "api:reference": "tsx scripts/export-api-reference.ts"
+    "api:reference": "tsx scripts/export-api-reference.ts",
+    "setup:owner": "node scripts/bootstrap-owner.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

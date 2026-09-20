@@ -1,5 +1,7 @@
 import { cookies, headers } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { randomBytes } from "node:crypto";
 import { bearerToken, resolveApiToken } from "@/lib/api-tokens";
 import prisma from "@/lib/prisma";
 
@@ -28,45 +30,69 @@ export type SessionUser = {
   role: string;
 };
 
-/**
- * The signed-in user: the browser session cookie, or a personal access
- * token in `Authorization: Bearer ark_…` (see `src/lib/api-tokens.ts`), which
- * is how external apps use every `/api/**` route.
- */
-export async function getSession(): Promise<SessionUser | null> {
+export const SESSION_MAX_AGE = 30 * 24 * 60 * 60;
+
+export async function registrationAllowed(): Promise<boolean> {
+  return process.env.ARKIVEL_REGISTRATION === "open" && !!(await prisma.user.findFirst({
+    where: { role: "admin" }, select: { id: true },
+  }));
+}
+
+export async function createSession(userId: string, request?: NextRequest) {
+  return prisma.session.create({
+    data: {
+      userId,
+      token: randomBytes(32).toString("hex"),
+      expiresAt: new Date(Date.now() + SESSION_MAX_AGE * 1000),
+      userAgent: request?.headers.get("user-agent") ?? null,
+      ipAddress: request?.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? null,
+    },
+  });
+}
+
+// The encrypted OAuth cookie references the same revocable database sessions
+// as password login. Never resolve an identity from a JWT email or cached role.
+export async function getOAuthSessionToken(): Promise<string | null> {
+  if (!process.env.NEXTAUTH_SECRET) return null;
   const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  const token = await getToken({
+    req: new NextRequest(process.env.NEXTAUTH_URL || "http://localhost:3000", {
+      headers: { cookie: cookieStore.toString() },
+    }),
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+  return typeof token?.arkivelSessionToken === "string" ? token.arkivelSessionToken : null;
+}
 
-  if (!token) {
-    const raw = bearerToken((await headers()).get("authorization"));
-    return raw ? resolveApiToken(raw) : null;
-  }
+export async function revokeBrowserSessions() {
+  const cookieStore = await cookies();
+  const tokens = [cookieStore.get(SESSION_COOKIE)?.value, await getOAuthSessionToken()].filter((token): token is string => !!token);
+  if (tokens.length) await prisma.session.deleteMany({ where: { token: { in: tokens } } });
+}
 
+export async function resolveSession(token: string): Promise<SessionUser | null> {
   const session = await prisma.session.findUnique({
     where: { token },
     include: {
-      user: {
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          displayName: true,
-          role: true,
-        },
-      },
+      user: { select: { id: true, username: true, email: true, displayName: true, role: true } },
     },
   });
-
   if (!session) return null;
-
-  // Check if session is expired
-  if (session.expiresAt < new Date()) {
-    // Clean up expired session
+  if (session.expiresAt <= new Date()) {
     await prisma.session.delete({ where: { id: session.id } }).catch(() => {});
     return null;
   }
-
   return session.user;
+}
+
+export async function getSession(): Promise<SessionUser | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  if (token) return resolveSession(token);
+  const oauthToken = await getOAuthSessionToken();
+  if (oauthToken) return resolveSession(oauthToken);
+  const raw = bearerToken((await headers()).get("authorization"));
+  return raw ? resolveApiToken(raw) : null;
 }
 
 export function requireRole(
@@ -83,10 +109,10 @@ export function requireRole(
     admin: 2,
   };
 
-  const userLevel = roleHierarchy[user.role] ?? 0;
-  const requiredLevel = roleHierarchy[role] ?? 0;
+  const userLevel = Object.hasOwn(roleHierarchy, user.role) ? roleHierarchy[user.role] : undefined;
+  const requiredLevel = Object.hasOwn(roleHierarchy, role) ? roleHierarchy[role] : undefined;
 
-  if (userLevel < requiredLevel) {
+  if (userLevel === undefined || requiredLevel === undefined || userLevel < requiredLevel) {
     return NextResponse.json({ error: "Insufficient permissions" }, { status: 403 });
   }
 

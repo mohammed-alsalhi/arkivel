@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import crypto from "crypto";
+import { createSession, revokeBrowserSessions, SESSION_MAX_AGE } from "@/lib/auth";
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  const body = await request.json().catch(() => null);
 
   // Path 1: User-based login (username + password)
-  if (body.username && body.password) {
+  if (typeof body?.username === "string" && typeof body?.password === "string" && body.username.length <= 1024 && body.password.length <= 1024) {
     const user = await prisma.user.findUnique({
       where: { username: body.username },
     });
 
-    if (!user) {
+    if (!user || !user.passwordHash) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
@@ -21,19 +22,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // Create session
-    const token = crypto.randomBytes(32).toString("hex");
-    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
-
-    await prisma.session.create({
-      data: {
-        userId: user.id,
-        token,
-        expiresAt,
-        userAgent: request.headers.get("user-agent") ?? null,
-        ipAddress: request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? null,
-      },
-    });
+    await revokeBrowserSessions();
+    const { token } = await createSession(user.id, request);
 
     const response = NextResponse.json({
       success: true,
@@ -51,9 +41,14 @@ export async function POST(request: NextRequest) {
       secure: request.nextUrl.protocol === "https:",
       sameSite: "strict",
       path: "/",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
+      maxAge: SESSION_MAX_AGE,
     });
 
+    for (const cookie of (await cookies()).getAll()) {
+      if (/^(?:__Secure-)?next-auth\.session-token(?:\.\d+)?$/.test(cookie.name)) {
+        response.cookies.set(cookie.name, "", { httpOnly: true, secure: cookie.name.startsWith("__Secure-") || request.nextUrl.protocol === "https:", sameSite: "lax", path: "/", maxAge: 0 });
+      }
+    }
     return response;
   }
 

@@ -105,6 +105,8 @@ jobs:
       - run: npm ci
       - name: Apply migrations to the empty test database
         run: npm run db:deploy
+      - name: Verify concurrent owner setup
+        run: node scripts/check-owner-setup.mjs
       - name: Seed focused smoke fixtures
         run: npm run qa:seed-smoke
       - run: npm run build

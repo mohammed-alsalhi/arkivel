@@ -19,7 +19,8 @@ type AuthFormShellProps = {
   submitLabel: string;
   loadingLabel: string;
   alternateText: string;
-  alternateHref: string;
+  alternateHref?: string;
+  afterForm?: ReactNode;
   alternateLabel: string;
 };
 
@@ -34,6 +35,7 @@ export function AuthFormShell({
   alternateText,
   alternateHref,
   alternateLabel,
+  afterForm,
 }: AuthFormShellProps) {
   const { title, trail } = AUTH_PAGES[mode];
   return (
@@ -55,12 +57,13 @@ export function AuthFormShell({
           </Button>
         </form>
 
-        <p className="text-[12px] text-muted mt-4">
+        {afterForm}
+        {alternateHref && <p className="text-[12px] text-muted mt-4">
           {alternateText}{" "}
           <Link href={alternateHref} className="text-accent underline">
             {alternateLabel}
           </Link>
-        </p>
+        </p>}
       </div>
     </Page>
   );
