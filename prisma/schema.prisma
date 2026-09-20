@@ -1,0 +1,331 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Article {
+  id              String            @id @default(cuid())
+  title           String
+  slug            String            @unique
+  content         String            @db.Text
+  contentRaw      String?           @db.Text
+  excerpt         String?           @db.Text
+  coverImage      String?
+  published       Boolean           @default(true)
+  redirectTo      String?
+  infobox         Json?
+  categoryId      String?
+  category        Category?         @relation(fields: [categoryId], references: [id])
+  sortOrder       Int               @default(0)
+  status          String            @default("published")
+  isPinned        Boolean           @default(false)
+  userId          String?
+  user            User?             @relation(fields: [userId], references: [id])
+  publishAt       DateTime?
+  archivedAt      DateTime?
+  wikiId          String?
+  summaryShort    String?
+  dir             String            @default("ltr")
+  shareToken      String?           @unique
+  coverFocalX     Float?
+  coverFocalY     Float?
+  accessPassword  String?
+  contentWarnings String[]          @default([])
+  isFeatured      Boolean           @default(false)
+  tags            ArticleTag[]
+  revisions       ArticleRevision[]
+  outgoingLinks   ArticleLink[]     @relation("OutgoingLinks")
+  aliases         Alias[]
+  collectionItem  CollectionItem?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([status])
+  @@index([userId])
+  @@index([wikiId])
+}
+
+model Category {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  slug        String       @unique
+  description String?
+  coverImage  String?
+  sortOrder   Int          @default(0)
+  parentId    String?
+  parent      Category?    @relation("CategoryTree", fields: [parentId], references: [id])
+  children    Category[]   @relation("CategoryTree")
+  articles    Article[]
+  collections Collection[]
+  createdAt   DateTime     @default(now())
+
+  @@index([parentId])
+}
+
+model Tag {
+  id       String       @id @default(cuid())
+  name     String       @unique
+  slug     String       @unique
+  color    String?
+  parentId String?
+  parent   Tag?         @relation("TagTree", fields: [parentId], references: [id])
+  children Tag[]        @relation("TagTree")
+  articles ArticleTag[]
+
+  @@index([parentId])
+}
+
+model ArticleTag {
+  articleId String
+  tagId     String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+  @@index([tagId])
+}
+
+model ArticleRevision {
+  id          String   @id @default(cuid())
+  articleId   String
+  article     Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  content     String   @db.Text
+  contentRaw  String?  @db.Text
+  title       String
+  infobox     Json?
+  editSummary String?
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([articleId])
+  @@index([createdAt])
+  @@index([userId])
+}
+
+model User {
+  id            String            @id @default(cuid())
+  username      String            @unique
+  email         String            @unique
+  passwordHash  String
+  displayName   String?
+  role          String            @default("viewer")
+  articles      Article[]
+  revisions     ArticleRevision[]
+  sessions      Session[]
+  apiTokens     ApiToken[]
+  preferences   UserPreference?
+  oauthAccounts OAuthAccount[]
+  assets        Asset[]
+  createdAt     DateTime          @default(now())
+
+  @@index([role])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userAgent String?
+  ipAddress String?
+
+  @@index([token])
+  @@index([userId])
+}
+
+/// A personal access token: `Authorization: Bearer ark_…` acts as the user
+/// who created it, with that user's role. Only the hash is stored.
+model ApiToken {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  tokenHash  String    @unique
+  prefix     String
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model ArticleLink {
+  id         String   @id @default(cuid())
+  sourceId   String
+  targetSlug String
+  relation   String   @default("related-to")
+  source     Article  @relation("OutgoingLinks", fields: [sourceId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([sourceId, targetSlug, relation])
+  @@index([sourceId])
+  @@index([targetSlug])
+  @@index([relation])
+}
+
+model SystemSetting {
+  id        String   @id
+  enabled   Boolean  @default(false)
+  config    Json?
+  updatedAt DateTime @updatedAt
+
+  @@map("PluginState")
+}
+
+model UserPreference {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  data   Json
+
+  @@index([userId])
+}
+
+model OAuthAccount {
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider          String
+  providerAccountId String
+  accessToken       String?  @db.Text
+  refreshToken      String?  @db.Text
+  expiresAt         Int?
+  createdAt         DateTime @default(now())
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  username    String?
+  action      String
+  entityType  String
+  entityId    String?
+  entityLabel String?
+  severity    String   @default("info")
+  actorType   String   @default("user")
+  ipAddress   String?
+  userAgent   String?
+  success     Boolean  @default(true)
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([action])
+  @@index([userId])
+  @@index([severity])
+  @@index([entityType])
+  @@index([success])
+}
+
+model Redirect {
+  id        String   @id @default(cuid())
+  fromSlug  String   @unique
+  toSlug    String
+  createdAt DateTime @default(now())
+
+  @@index([fromSlug])
+}
+
+model Alias {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  alias     String   @unique
+  createdAt DateTime @default(now())
+
+  @@index([articleId])
+}
+
+model Asset {
+  id        String   @id @default(cuid())
+  filename  String
+  mimeType  String
+  url       String
+  size      Int
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([mimeType])
+}
+
+model ExportHistory {
+  id          String    @id @default(cuid())
+  format      String
+  scope       Json      @default("{}")
+  status      String
+  manifest    Json      @default("{}")
+  warnings    String[]  @default([])
+  omittedData String[]  @default([])
+  fileCount   Int       @default(0)
+  byteCount   Int       @default(0)
+  checksum    String?
+  userId      String?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([createdAt])
+  @@index([format])
+  @@index([status])
+  @@index([userId])
+}
+
+// ── Collections: the generic database engine (docs/modules-and-collections.md) ──
+model Collection {
+  id          String           @id @default(cuid())
+  slug        String           @unique
+  name        String
+  icon        String?
+  description String?
+  categoryId  String?
+  category    Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  schema      Json
+  items       CollectionItem[]
+  views       CollectionView[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([categoryId])
+}
+
+model CollectionItem {
+  id           String     @id @default(cuid())
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  articleId    String?    @unique
+  article      Article?   @relation(fields: [articleId], references: [id], onDelete: SetNull)
+  title        String
+  properties   Json
+  sortOrder    Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([collectionId, sortOrder])
+  @@index([collectionId, updatedAt])
+}
+
+model CollectionView {
+  id           String     @id @default(cuid())
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  slug         String
+  name         String
+  kind         String
+  config       Json
+  isDefault    Boolean    @default(false)
+  sortOrder    Int        @default(0)
+
+  @@unique([collectionId, slug])
+}

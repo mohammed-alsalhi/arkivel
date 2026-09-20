@@ -1,0 +1,529 @@
+.tiptap {
+  outline: none;
+  min-height: 300px;
+  padding: 1rem 1.25rem;
+  line-height: 1.6;
+  background: var(--color-surface);
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: var(--color-border);
+  content: attr(data-placeholder);
+  float: inline-start;
+  height: 0;
+  pointer-events: none;
+  font-style: italic;
+}
+
+.tiptap h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--color-heading);
+  margin: 1.2rem 0 0.4rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.tiptap h2 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--color-heading);
+  margin: 1rem 0 0.3rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.tiptap h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin: 0.8rem 0 0.3rem;
+}
+.tiptap p { margin: 0.4rem 0; line-height: 1.65; }
+.tiptap ul, .tiptap ol { padding-inline-start: 1.75rem; margin: 0.4rem 0; }
+.tiptap ul { list-style: disc; }
+.tiptap ol { list-style: decimal; }
+.tiptap blockquote {
+  border-inline-start: 3px solid var(--color-border-light);
+  padding-inline-start: 1rem;
+  margin: 0.5rem 0;
+  color: var(--color-muted);
+  font-style: italic;
+}
+.tiptap pre {
+  background: var(--color-background);
+  border: 1px solid var(--color-border-light);
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+}
+.tiptap code {
+  background: var(--color-background);
+  padding: 0.1rem 0.3rem;
+  font-size: 0.875em;
+}
+.tiptap pre code { background: none; padding: 0; color: inherit; }
+.tiptap img { max-width: 100%; border: 1px solid var(--color-border-light); margin: 0.5rem 0; }
+.tiptap hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+.tiptap a { color: var(--color-wiki-link); text-decoration: none; }
+.tiptap a:hover { text-decoration: underline; }
+
+/* ── Tables (editor + display) ── */
+.tiptap table, .wiki-content table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 100%;
+  max-width: 100%;
+  margin: 0.5rem 0;
+}
+.tiptap th, .tiptap td,
+.wiki-content th, .wiki-content td {
+  border: 1px solid var(--color-border);
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  font-size: 0.85rem;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.tiptap th > :first-child,
+.tiptap td > :first-child,
+.wiki-content th > :first-child,
+.wiki-content td > :first-child {
+  margin-top: 0;
+}
+.tiptap th > :last-child,
+.tiptap td > :last-child,
+.wiki-content th > :last-child,
+.wiki-content td > :last-child {
+  margin-bottom: 0;
+}
+.tiptap th, .wiki-content th {
+  background: var(--color-surface-hover);
+  font-weight: 700;
+}
+.tiptap .selectedCell {
+  background: var(--color-accent-soft);
+}
+.tiptap .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--color-accent);
+  cursor: col-resize;
+  z-index: 20;
+}
+.tiptap table .grip-column,
+.tiptap table .grip-row {
+  background: var(--color-surface-hover);
+  cursor: pointer;
+}
+.tiptap table .grip-column:hover,
+.tiptap table .grip-row:hover {
+  background: var(--color-accent-soft);
+}
+.tiptap td.has-focus,
+.tiptap th.has-focus {
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+}
+
+/* ── Scrollbar ── */
+/* Scrollbars: native bars are hidden and src/lib/overlayScrollbar.ts draws
+   hover-only overlay thumbs — see primitives.css. */
+
+/* ── Selection ── */
+::selection {
+  background: var(--color-accent-soft);
+}
+
+/* ── Placeholders: the current empty block hints at what to type ── */
+.tiptap .is-empty::before {
+  color: var(--color-border);
+  content: attr(data-placeholder);
+  float: inline-start;
+  height: 0;
+  pointer-events: none;
+}
+
+/* ── Document editor: the page is the editor (folio) ──
+   No frame, no toolbar. Formatting lives in the selection toolbar and the
+   `/` menu; the title, properties, and body read like the article itself. */
+.editor-page > .ui-page-body {
+  gap: 0;
+}
+
+.editor-document-page {
+  display: grid;
+  width: min(100%, 48rem);
+  min-width: 0;
+  align-content: start;
+  gap: 0;
+}
+
+.editor-document-title {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 0.75rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-heading);
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(2.1rem, 3.2vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.editor-document-title::placeholder {
+  color: var(--color-border);
+}
+
+/* Properties: a Notion-style label / value list under the title */
+.editor-props {
+  display: grid;
+  margin: 0 0 1.5rem;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 0.5rem;
+}
+
+.editor-prop {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.25rem;
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.editor-prop > dt {
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+.editor-prop > dd {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.editor-prop > dd > .ui-select,
+.editor-prop > dd > .ui-input {
+  width: auto;
+  min-width: 12rem;
+  max-width: 100%;
+}
+
+.editor-prop-slug {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.editor-prop-slug > .ui-input {
+  flex: 1 1 auto;
+}
+
+.editor-prop-toggle > span {
+  color: var(--color-muted);
+}
+
+.editor-autosave {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.editor-autosave:empty {
+  display: none;
+}
+
+/* The body */
+.editor-document {
+  position: relative;
+  min-width: 0;
+}
+
+.editor-document .tiptap {
+  min-height: 40vh;
+  padding: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.editor-document .tiptap > :first-child {
+  margin-top: 0;
+}
+
+.editor-document .tiptap h1,
+.editor-document .tiptap h2,
+.editor-document .tiptap h3 {
+  border: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.editor-document .tiptap h1 { margin: 2rem 0 0.5rem; font-size: 1.75rem; }
+.editor-document .tiptap h2 { margin: 2.25rem 0 0.6rem; font-size: 1.5rem; }
+.editor-document .tiptap h3 { margin: 1.75rem 0 0.5rem; font-size: 1.2rem; }
+
+.editor-document .tiptap p {
+  margin: 0.2rem 0;
+  padding: 0.15rem 0;
+}
+
+.editor-document .tiptap blockquote {
+  border-inline-start: 3px solid var(--color-heading);
+  color: var(--color-foreground);
+  font-style: normal;
+}
+
+.editor-document .tiptap pre {
+  border-radius: 0.625rem;
+  padding: 0.9rem 1rem;
+}
+
+.editor-document .tiptap code {
+  border-radius: 0.25rem;
+}
+
+.editor-document .tiptap img {
+  border: 0;
+  border-radius: 0.375rem;
+}
+
+.editor-document .tiptap .ProseMirror-selectednode {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.editor-table-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--color-border-light);
+  border-radius: 0.375rem;
+  background: var(--color-background);
+  padding: 0.35rem;
+}
+
+.editor-document-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 3rem;
+  border-top: 1px solid var(--hairline);
+  padding-top: 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+.editor-document-hint kbd {
+  border: 1px solid var(--color-border-light);
+  border-radius: 0.25rem;
+  padding: 0 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.editor-document-delete {
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--color-muted);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.editor-document-delete:hover {
+  background: var(--color-danger-soft, var(--color-surface-hover));
+  color: var(--color-danger, var(--color-heading));
+}
+
+/* ── Slash menu: the `/` block picker ── */
+.editor-slash-menu {
+  position: absolute;
+  z-index: 40;
+  width: 17.5rem;
+  max-width: calc(100vw - 2rem);
+  max-height: 18.5rem;
+  overflow-y: auto;
+  border: 1px solid var(--hairline);
+  border-radius: 0.625rem;
+  background: var(--color-surface);
+  /* 0.625rem outer radius = 0.375rem item radius + this padding. */
+  padding: 0.25rem;
+  box-shadow: var(--shadow-overlay);
+}
+
+.editor-slash-group + .editor-slash-group {
+  margin-top: 0.25rem;
+  border-top: 1px solid var(--hairline);
+  padding-top: 0.25rem;
+}
+
+.editor-slash-group-label {
+  padding: 0.3rem 0.5rem 0.2rem;
+  color: var(--color-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.editor-slash-item {
+  display: grid;
+  width: 100%;
+  min-height: 2.25rem;
+  align-content: center;
+  gap: 0.05rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--color-heading);
+  padding: 0.3rem 0.5rem;
+  text-align: left;
+}
+
+.editor-slash-item[aria-selected="true"] {
+  background: var(--color-surface-hover);
+}
+
+.editor-slash-item-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.editor-slash-item-hint {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+/* ── Selection toolbar ── */
+.editor-bubble {
+  z-index: 40;
+  border: 1px solid var(--hairline);
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  /* 0.5rem outer radius = 0.375rem control radius + this padding. */
+  padding: 0.125rem;
+  box-shadow: var(--shadow-overlay);
+}
+
+.editor-bubble-row {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.editor-bubble-select {
+  height: 1.75rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--color-heading);
+  padding: 0 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.editor-bubble-select:hover,
+.editor-bubble-button:hover {
+  background: var(--color-surface-hover);
+}
+
+.editor-bubble-divider {
+  width: 1px;
+  height: 1.1rem;
+  margin: 0 0.15rem;
+  background: var(--color-border-light);
+}
+
+.editor-bubble-button {
+  display: inline-flex;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--color-heading);
+  padding: 0 0.4rem;
+  font-size: 0.8125rem;
+  line-height: 1;
+}
+
+.editor-bubble-button[aria-pressed="true"] {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.editor-bubble-button strong,
+.editor-bubble-button em,
+.editor-bubble-button s {
+  font-size: 0.875rem;
+}
+
+.editor-bubble-button code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 767px) {
+  .editor-prop {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 0.4rem 0;
+  }
+
+  .editor-prop > dd > .ui-select,
+  .editor-prop > dd > .ui-input {
+    width: 100%;
+  }
+}
+
+@media (pointer: coarse) {
+  .editor-slash-item {
+    min-height: 2.75rem;
+  }
+
+  .editor-bubble-button,
+  .editor-bubble-select {
+    height: 2.25rem;
+    min-width: 2.25rem;
+  }
+}
+
+.editor-document .tiptap:focus,
+.editor-document .tiptap:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.editor-document .tiptap .is-empty::before,
+.editor-document .tiptap p.is-editor-empty:first-child::before {
+  font-style: normal;
+}

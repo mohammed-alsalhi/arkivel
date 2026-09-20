@@ -1,0 +1,43 @@
+/* ── Anchor targets clear the sticky chrome when jumped to ── */
+.wiki-content h1,
+.wiki-content h2,
+.wiki-content h3,
+.wiki-content h4,
+.wiki-content h5,
+.wiki-content h6 {
+  scroll-margin-top: 4.5rem;
+}
+
+/* ── Respect reduced-motion preference globally ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Mobile readability floor ──
+   The desktop UI deliberately uses dense 9-11px meta text. On phones nothing
+   user-facing should render below 12px, so floor the arbitrary-size Tailwind
+   utilities (unlayered rules beat @layer utilities) and the highest-visibility
+   article meta classes instead of editing ~500 call sites. */
+@media (max-width: 767px) {
+  .text-\[9px\],
+  .text-\[10px\],
+  .text-\[11px\] {
+    font-size: 12px;
+  }
+
+  .ui-card-meta {
+    font-size: 0.75rem;
+  }
+}
+
+/* Balanced wrapping for large headings */
+.ui-page-title {
+  text-wrap: balance;
+}

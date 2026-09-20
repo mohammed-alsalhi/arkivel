@@ -1,0 +1,43 @@
+@import "tailwindcss";
+@import "highlight.js/styles/github.css";
+
+/* Bind Tailwind's dark: variant to the app theme toggle (html[data-theme="dark"]),
+   not the OS prefers-color-scheme default, so dark: utilities follow the in-app switch. */
+@custom-variant dark (&:where(html[data-theme="dark"], html[data-theme="dark"] *));
+
+/*
+  Layout conventions (keep new code on these scales):
+
+  Breakpoints — Tailwind boundaries only:
+    sm 640px · md 768px · lg 1024px · xl 1280px
+    (max-width queries use boundary minus 1: 639 / 767 / 1023 / 1279)
+
+  Z-index tiers:
+    1-30  in-page floating elements (TOC, sticky header, grips)
+    40    app chrome (sidebar drawer, mobile bottom nav, bulk bar)
+    50    dropdowns, popovers, tooltips, floating toggles
+    60    full-width overlays that sit over chrome (search shell, editor menus)
+    70    modals and dialog overlays
+    80    toasts and transient notifications
+    100   skip-to-content link (must beat everything when focused)
+*/
+
+@import "../styles/tokens.css";
+@import "../styles/primitives.css";
+@import "../styles/shell.css";
+@import "../styles/links-content.css";
+@import "../styles/article.css";
+@import "../styles/editor.css";
+@import "../styles/home.css";
+@import "../styles/misc.css";
+@import "../styles/overlays.css";
+@import "../styles/modes.css";
+@import "../styles/command-palette.css";
+@import "../styles/folio.css";
+@import "../styles/collections.css";
+@import "../styles/collection-picker.css";
+@import "../styles/media.css";
+@import "../styles/media-site.css";
+@import "../styles/reading-skins.css";
+@import "../styles/documentation.css";
+@import "../styles/mobile-floor.css";

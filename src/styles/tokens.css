@@ -1,0 +1,344 @@
+/* ── Tokens ──
+   The base is the folio skin (the default). The wiki skin and the dark
+   themes only re-point the tokens they differ on. Components read tokens;
+   they never branch on the skin for a color, radius, hairline, or font. */
+@theme {
+  /* Neutral ramp */
+  --color-background: #f6f7f9;
+  --color-foreground: #171719;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f0f1f3;
+  --color-border: #d3d6dc;
+  --color-border-light: #e6e6e3;
+  --color-muted: #555b66;
+  --color-muted-foreground: #555b66;
+  --color-heading: #080808;
+  --color-popover: #ffffff;
+  --color-brand-mark: #111111;
+
+  /* Accent: near-black in folio, blue in wiki */
+  --color-accent: #0b0b0c;
+  --color-accent-hover: #303033;
+  --color-accent-foreground: #ffffff;
+  --color-accent-soft: rgba(0, 0, 0, 0.06);
+
+  /* Semantic state colours (success is dark enough for 11px text on every
+     light surface: 5.9:1 on the wiki page, 5.85:1 on folio) */
+  --color-success: #106d58;
+  --color-success-soft: rgba(20, 134, 109, 0.1);
+  --color-success-border: #70b7a6;
+  --color-warning: #8a5a00;
+  --color-warning-soft: rgba(198, 139, 0, 0.12);
+  --color-warning-border: #d6b05d;
+  --color-danger: #b32424;
+  --color-danger-soft: rgba(179, 36, 36, 0.09);
+  --color-danger-border: #d78b8b;
+  --color-info: #343438;
+  --color-info-soft: rgba(0, 0, 0, 0.06);
+  --color-info-border: #a7a9ae;
+
+  /* Links inside content */
+  --color-wiki-link: #111111;
+  --color-wiki-link-visited: #555555;
+  --color-wiki-link-broken: #a52a2a;
+
+  /* Infobox */
+  --color-infobox-header: #f0f1f3;
+  --color-infobox-header-text: #111111;
+  --color-infobox-bg: #fbfbfc;
+  --color-infobox-border: #d3d6dc;
+  --color-infobox-label: #555b66;
+
+  /* Sidebar */
+  --color-sidebar-bg: #f7f7f5;
+  --color-sidebar-header: #f0f1f3;
+
+  /* Table of contents */
+  --color-toc-bg: #fbfbfc;
+  --color-toc-border: #d3d6dc;
+
+  /* Diff */
+  --color-diff-added: #d4edda;
+  --color-diff-removed: #f8d7da;
+
+  /* Chart palette (legends, bars, sparklines) */
+  --color-chart-1: #111111;
+  --color-chart-2: #3d3d42;
+  --color-chart-3: #626269;
+  --color-chart-4: #85858d;
+  --color-chart-5: #a9a9b0;
+  --color-chart-6: #ccccd1;
+
+  /* Fonts. `--font-display` is what titles and headings use: the sans in
+     folio, the serif stack in wiki. */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: "Linux Libertine", "Georgia", "Times", serif;
+  --font-display: var(--font-geist-sans);
+
+  /* Shape and depth. Controls (buttons, inputs, chips, menu rows) use
+     `--radius-control`; surfaces (menus, dialogs, cards) use
+     `--radius-surface`. `--hairline` is the divider color where a skin
+     draws structure with a line instead of a box. `--shadow-overlay` is the
+     only shadow: menus and dialogs, never anything in the flow. */
+  --radius-control: 0.375rem;
+  --radius-surface: 0.625rem;
+  --hairline: rgba(55, 53, 47, 0.1);
+  --shadow-overlay: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+  /* Roles the media shell was designed against, aliased onto the same ramp
+     so its components read the tokens every skin already defines. */
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: var(--color-accent-foreground);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-foreground);
+  --color-popover-foreground: var(--color-foreground);
+  --color-secondary: var(--color-surface-hover);
+  --color-secondary-foreground: var(--color-foreground);
+  --color-destructive: var(--color-danger);
+  --color-input: var(--color-border);
+  --color-ring: var(--color-accent);
+}
+
+/* ── Folio dark ── */
+html[data-theme="dark"] {
+  --color-background: #0b0b0c;
+  --color-foreground: #e8e8ea;
+  --color-surface: #111113;
+  --color-surface-hover: #1a1a1d;
+  --color-border: #3a3a3f;
+  --color-border-light: #2b2b30;
+  --color-muted: #a6a6ad;
+  --color-muted-foreground: #a6a6ad;
+  --color-heading: #ffffff;
+  --color-popover: #111113;
+  --color-brand-mark: #ffffff;
+  --color-accent: #f5f5f5;
+  --color-accent-hover: #d5d5d8;
+  --color-accent-foreground: #0b0b0c;
+  --color-accent-soft: rgba(255, 255, 255, 0.08);
+  --color-success: #7fd7bd;
+  --color-success-soft: rgba(127, 215, 189, 0.12);
+  --color-success-border: #3e7f71;
+  --color-warning: #f0c56a;
+  --color-warning-soft: rgba(240, 197, 106, 0.13);
+  --color-warning-border: #866f3d;
+  --color-danger: #ff8b8b;
+  --color-danger-soft: rgba(255, 139, 139, 0.12);
+  --color-danger-border: #8c4f57;
+  --color-info: #d1d1d4;
+  --color-info-soft: rgba(255, 255, 255, 0.08);
+  --color-info-border: #606066;
+  --color-wiki-link: #f0f0f2;
+  --color-wiki-link-visited: #b8b8be;
+  --color-wiki-link-broken: #ff9a9a;
+  --color-infobox-header: #1a1a1d;
+  --color-infobox-header-text: #f5f5f5;
+  --color-infobox-bg: #101012;
+  --color-infobox-border: #3a3a3f;
+  --color-infobox-label: #a6a6ad;
+  --color-sidebar-bg: #151517;
+  --color-sidebar-header: #1a1a1d;
+  --color-toc-bg: #101012;
+  --color-toc-border: #3a3a3f;
+  --color-diff-added: #1a3a2a;
+  --color-diff-removed: #3a1a1a;
+  --color-chart-1: #f5f5f5;
+  --color-chart-2: #d6d6da;
+  --color-chart-3: #b6b6bc;
+  --color-chart-4: #909098;
+  --color-chart-5: #686870;
+  --color-chart-6: #46464d;
+  --hairline: rgba(255, 255, 255, 0.1);
+  --shadow-overlay: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Wiki skin: the classic framed palette ── */
+html[data-skin="wiki"] {
+  --color-background: #f8f9fa;
+  --color-foreground: #202122;
+  --color-surface: #ffffff;
+  --color-surface-hover: #eaecf0;
+  --color-border: #a2a9b1;
+  --color-border-light: #c8ccd1;
+  --color-muted: #54595d;
+  --color-muted-foreground: #54595d;
+  --color-heading: #000;
+  --color-popover: #ffffff;
+  --color-brand-mark: #111827;
+  --color-accent: #36c;
+  --color-accent-hover: #2a4b8d;
+  --color-accent-foreground: #ffffff;
+  --color-accent-soft: rgba(51, 102, 204, 0.06);
+  --color-info: #2f5fa8;
+  --color-info-soft: rgba(47, 95, 168, 0.1);
+  --color-info-border: #8da8cf;
+  --color-wiki-link: #0645ad;
+  --color-wiki-link-visited: #0b0080;
+  --color-wiki-link-broken: #ba0000;
+  --color-infobox-header: #cedff2;
+  --color-infobox-header-text: #202122;
+  --color-infobox-bg: #f8f9fa;
+  --color-infobox-border: #a2a9b1;
+  --color-infobox-label: #54595d;
+  --color-sidebar-bg: #f8f9fa;
+  --color-sidebar-header: #eaecf0;
+  --color-toc-bg: #f8f9fa;
+  --color-toc-border: #a2a9b1;
+  --color-chart-1: #3366cc;
+  --color-chart-2: #14866d;
+  --color-chart-3: #c68b00;
+  --color-chart-4: #b32424;
+  --color-chart-5: #6b4ba1;
+  --color-chart-6: #2c7c8a;
+  --font-display: var(--font-serif);
+  --radius-control: 0.25rem;
+  --radius-surface: 0.25rem;
+  --hairline: var(--color-border-light);
+  --shadow-overlay: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+html[data-skin="wiki"][data-theme="dark"] {
+  --color-background: #181a1b;
+  --color-foreground: #d2d6d8;
+  --color-surface: #202224;
+  --color-surface-hover: #2a2d2f;
+  --color-border: #4b5358;
+  --color-border-light: #363d41;
+  --color-muted: #9aa3a8;
+  --color-muted-foreground: #9aa3a8;
+  --color-heading: #f0f3f4;
+  --color-popover: #202224;
+  --color-brand-mark: #8ab4f8;
+  --color-accent: #8ab4f8;
+  --color-accent-hover: #a8c7fa;
+  --color-accent-foreground: #101214;
+  --color-accent-soft: rgba(138, 180, 248, 0.12);
+  --color-info: #9dbdff;
+  --color-info-soft: rgba(157, 189, 255, 0.12);
+  --color-info-border: #526990;
+  --color-wiki-link: #8ab4f8;
+  --color-wiki-link-visited: #c8b6ff;
+  --color-wiki-link-broken: #ff8b8b;
+  --color-infobox-header: #2d3b45;
+  --color-infobox-header-text: #e7ecee;
+  --color-infobox-bg: #1c1f20;
+  --color-infobox-border: #4b5358;
+  --color-infobox-label: #9aa3a8;
+  --color-sidebar-bg: #17191a;
+  --color-sidebar-header: #2a2d2f;
+  --color-toc-bg: #1c1f20;
+  --color-toc-border: #4b5358;
+  --color-chart-1: #8ab4f8;
+  --color-chart-2: #7fd7bd;
+  --color-chart-3: #f0c56a;
+  --color-chart-4: #ff8b8b;
+  --color-chart-5: #c8b6ff;
+  --color-chart-6: #7fd0e0;
+  --shadow-overlay: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Media site mode: the library's own dark, coral look. It is a shell, not a
+   per-user skin, so it sets the shared ramp directly. ── */
+html[data-site-mode="media"] {
+  color-scheme: dark;
+  --color-background: #111113;
+  --color-foreground: #f3f1ef;
+  --color-surface: #1b1b1f;
+  --color-surface-hover: #232327;
+  --color-border: #ffffff16;
+  --color-border-light: #ffffff10;
+  --color-muted: #a1a1a9;
+  --color-muted-foreground: #a1a1a9;
+  --color-heading: #f3f1ef;
+  --color-popover: #1b1b1f;
+  --color-brand-mark: #ed7964;
+  --color-accent: #ed7964;
+  --color-accent-hover: #f08b78;
+  --color-accent-foreground: #211511;
+  --color-accent-soft: rgba(237, 121, 100, 0.12);
+  --color-danger: #fa8a89;
+  --color-danger-soft: rgba(250, 138, 137, 0.08);
+  --color-danger-border: rgba(250, 138, 137, 0.3);
+  --color-success: #6ee7b7;
+  --color-warning: #f0c56a;
+  --color-info: #d1d1d4;
+  --color-wiki-link: #f3f1ef;
+  --color-sidebar-bg: #151517;
+  --color-primary: #ed7964;
+  --color-primary-foreground: #211511;
+  --color-card: #1b1b1f;
+  --color-card-foreground: #f3f1ef;
+  --color-popover-foreground: #f3f1ef;
+  --color-secondary: #252528;
+  --color-secondary-foreground: #f3f1ef;
+  --color-destructive: #fa8a89;
+  --color-input: #ffffff20;
+  --color-ring: #ed7964;
+  --radius-control: 0.5rem;
+  --radius-surface: 0.75rem;
+  --hairline: #ffffff16;
+  --shadow-overlay: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Syntax highlighting: github.css ships a few hues under 4.5:1 on white, so
+   the light theme darkens them (measured 5.0–7.0:1 on #fff and #f6f7f9). */
+.hljs-built_in { color: #953800; }
+.hljs-keyword, .hljs-type { color: #cf222e; }
+.hljs-name, .hljs-selector-tag { color: #116329; }
+.hljs-comment { color: #57606a; }
+
+/* Dark mode syntax highlighting overrides (every class github.css colors,
+   measured ≥ 8.9:1 on both dark page backgrounds) */
+html[data-theme="dark"] .hljs { background: var(--color-background); color: var(--color-foreground); }
+html[data-theme="dark"] .hljs-keyword { color: #ff7b72; }
+html[data-theme="dark"] .hljs-string { color: #a5d6ff; }
+html[data-theme="dark"] .hljs-comment { color: #8b949e; }
+html[data-theme="dark"] .hljs-number { color: #79c0ff; }
+html[data-theme="dark"] .hljs-function { color: #d2a8ff; }
+html[data-theme="dark"] .hljs-title { color: #d2a8ff; }
+html[data-theme="dark"] .hljs-built_in { color: #ffa657; }
+html[data-theme="dark"] .hljs-type { color: #ff7b72; }
+html[data-theme="dark"] .hljs-attr,
+html[data-theme="dark"] .hljs-literal,
+html[data-theme="dark"] .hljs-meta,
+html[data-theme="dark"] .hljs-operator,
+html[data-theme="dark"] .hljs-variable,
+html[data-theme="dark"] .hljs-symbol,
+html[data-theme="dark"] .hljs-section { color: #79c0ff; }
+html[data-theme="dark"] .hljs-regexp,
+html[data-theme="dark"] .hljs-name,
+html[data-theme="dark"] .hljs-quote,
+html[data-theme="dark"] .hljs-selector-tag,
+html[data-theme="dark"] .hljs-addition { color: #7ee787; }
+html[data-theme="dark"] .hljs-bullet { color: #ffa657; }
+html[data-theme="dark"] .hljs-deletion { color: #ffa198; }
+html[data-theme="dark"] .hljs-subst,
+html[data-theme="dark"] .hljs-strong,
+html[data-theme="dark"] .hljs-emphasis { color: inherit; }
+
+/* ── Base element defaults ── */
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: default;
+}

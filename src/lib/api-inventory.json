@@ -1,0 +1,811 @@
+[
+  {
+    "route": "/api/admin/audit-log",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/categories/merge",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/kits",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "every starter kit with, for each, which of its modules are enabled and which of its collections already exist."
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/kits/apply",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "body `{ kit: KitId, seedSampleItems?: boolean }`. Returns the apply report: `{ kit, skin, modulesEnabled, collectionsCreated, collectionsSkipped, itemsCreated }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/maintenance",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "get current mode"
+      },
+      {
+        "method": "POST",
+        "summary": "toggle maintenance mode"
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/maintenance/report",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/modules",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "the registry with the environment default, override, and resolved set"
+      },
+      {
+        "method": "PUT",
+        "summary": "store `{ enabled: ModuleId[] }` as the admin override"
+      },
+      {
+        "method": "DELETE",
+        "summary": "drop the override and return to the environment default"
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/read-only",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/admin/redirects",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PUT",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/aliases",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/blame",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "GET /api/articles/[id]/blame Returns a per-paragraph blame annotation: for each non-empty paragraph in the current article content, finds the earliest revision that introduced it."
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/check-password",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/links",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/revisions/{revisionId}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": "POST = revert to this revision (admin only)"
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/revisions/{revisionId}/restore",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/revisions/export",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "GET — download all revisions as CSV"
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/{id}/share-token",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "POST — generate a share token for a draft article"
+      },
+      {
+        "method": "DELETE",
+        "summary": "DELETE — revoke the share token"
+      }
+    ]
+  },
+  {
+    "route": "/api/articles/import",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/assets",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/auth/check",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/auth/login",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/auth/logout",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/auth/register",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/categories",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/categories/{id}",
+    "methods": [
+      {
+        "method": "PUT",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/collections",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": "Body: `{ name, categoryId?, description?, icon?, template?: \"blank\" | \"tasks\" | \"reading_list\" | \"simple_table\", schema?, views? }`. A template supplies schema and views unless the body overrides them."
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PATCH",
+        "summary": "Body: any of `{ name, slug, description, icon, categoryId, schema }`."
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/import-course-sync",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: { source: canonical course-sync JSON, dryRun?: boolean }. Preview is the default."
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/items",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?page=1&q=title` — 100 items a page, ordered by sortOrder then creation."
+      },
+      {
+        "method": "POST",
+        "summary": "Body: `{ title, properties?, articleId?, sortOrder? }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/items/{itemId}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PATCH",
+        "summary": "Body: any of `{ title, properties (merged), articleId, sortOrder }`."
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/views",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ name, slug?, kind?, config?, isDefault? }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/collections/{id}/views/{viewId}",
+    "methods": [
+      {
+        "method": "PATCH",
+        "summary": "Body: any of `{ name, slug, kind, config, isDefault, sortOrder }`."
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/export/history",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/export/json",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/export/markdown",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/export/zip",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/graph",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/health",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/health/wiki",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/import/notion",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/import/obsidian",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/media/health",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`{ mode, catalog, recommendation, sample_library, can_edit }` — configuration, not provider connectivity."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/import",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ items }` or `{ raw }` (a JSON file's text) — preview matches; nothing is saved."
+      },
+      {
+        "method": "PUT",
+        "summary": "Body: `{ items: [watchlist item inputs] }` (1–100) — saves them as plan_to_watch; `{ imported, skipped, items }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/library",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "Downloads the whole library as `arkivel-library.json`."
+      },
+      {
+        "method": "POST",
+        "summary": "Body: `{ backup }` — previews a merge: `{ added, existing, episodesAdded, episodesExisting }`."
+      },
+      {
+        "method": "PUT",
+        "summary": "Body: `{ backup }` — merges it into the library; same counts as the preview."
+      },
+      {
+        "method": "DELETE",
+        "summary": "Removes untouched starter titles and their marks: `{ removed }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/mood",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ mood, count? }` — `{ mood, source, message, recommendations }` from the unwatched library."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/save",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ media: \"movie\" | \"series\", id, status? }` — saves a title into the watchlist; returns the existing item when it is already there."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/search",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?q=` — matching titles (trending when blank), each flagged with the watchlist item that already has it."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/seasons",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": "Body: `{ itemId, season }` — marks every episode of that season watched for a saved series: one row per episode in the episodes collection (created when missing, updated when present), bound to the watchlist item."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/titles",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?q=&type=` — Search results (trending or the catalogue when `q` is blank)."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/titles/{media}/{id}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "A title's details, its saved watchlist item if any, and `?season=n` episodes for a series."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/tmdb/{id}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?type=movie|tv&seasons=1` — `{ tmdb, ratings, seasons?, source, episode_scope? }`."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/watchlist",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "`?status=&type=&mood=` — saved titles, each with metadata and episode counts."
+      },
+      {
+        "method": "POST",
+        "summary": "Body: a watchlist item input — saves it; an existing `(tmdb_id, media_type)` comes back unchanged."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/watchlist/{id}",
+    "methods": [
+      {
+        "method": "PATCH",
+        "summary": "Body: `{ status?, moods? }` (at least one) — updates the title; `watched` stamps a missing watched date."
+      },
+      {
+        "method": "DELETE",
+        "summary": "Removes the title and its episode marks; 404 when it is already gone."
+      }
+    ]
+  },
+  {
+    "route": "/api/media/watchlist/{id}/episodes",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "Watched episode marks for the title, by season then episode."
+      },
+      {
+        "method": "POST",
+        "summary": "Body: `{ episodes: [{ season_number, episode_number }] }` (1–500) — marks them watched; returns the requested marks."
+      },
+      {
+        "method": "DELETE",
+        "summary": "Body: `{ season_number, episode_number }` — removes that mark; 204 even when it was already absent."
+      }
+    ]
+  },
+  {
+    "route": "/api/preferences",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PUT",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/search",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/sessions",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "list current user's active sessions"
+      }
+    ]
+  },
+  {
+    "route": "/api/sessions/{id}",
+    "methods": [
+      {
+        "method": "DELETE",
+        "summary": "revoke a session (must belong to current user)"
+      }
+    ]
+  },
+  {
+    "route": "/api/tags",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/tags/{id}",
+    "methods": [
+      {
+        "method": "PUT",
+        "summary": null
+      },
+      {
+        "method": "DELETE",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/tokens",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": "the caller's personal access tokens (never the secrets)."
+      },
+      {
+        "method": "POST",
+        "summary": "`{ name, expiresInDays: number | null }`; the response carries the token once."
+      }
+    ]
+  },
+  {
+    "route": "/api/tokens/{id}",
+    "methods": [
+      {
+        "method": "DELETE",
+        "summary": "revoke a token you own (admins may revoke any)."
+      }
+    ]
+  },
+  {
+    "route": "/api/upload",
+    "methods": [
+      {
+        "method": "POST",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/users",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      },
+      {
+        "method": "PATCH",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/articles",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/categories",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/contract",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/openapi.json",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/sdk",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/search",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
+    "route": "/api/v1/tags",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  }
+]

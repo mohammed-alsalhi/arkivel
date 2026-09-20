@@ -1,0 +1,227 @@
+/* ── Command palette (⌘K / Ctrl+K) ── */
+
+/* Overlay: tier 70 (modals and dialog overlays). Top-anchored so the panel
+   sits where a search box is expected, not in the vertical middle. */
+.command-palette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 11vh max(1rem, env(safe-area-inset-right, 0px)) max(1rem, env(safe-area-inset-bottom, 0px))
+    max(1rem, env(safe-area-inset-left, 0px));
+}
+
+.command-palette-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.38);
+}
+
+.command-palette {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 40rem;
+  max-height: calc(100dvh - 11vh - max(1rem, env(safe-area-inset-bottom, 0px)));
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.18);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .command-palette-overlay {
+    animation: command-palette-fade 120ms ease-out;
+  }
+}
+
+@keyframes command-palette-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.command-palette-input {
+  width: 100%;
+  height: 3.25rem;
+  flex: 0 0 auto;
+  border: 0;
+  border-bottom: 1px solid var(--color-border-light);
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  color: var(--color-heading);
+  padding: 0 1.1rem;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.command-palette-input::placeholder {
+  color: var(--color-muted);
+}
+
+.command-palette-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.command-palette-list {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* 0.75rem outer radius = 0.5rem option radius + this padding. */
+  padding: 0.25rem;
+}
+
+.command-palette-section + .command-palette-section {
+  margin-top: 0.35rem;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: 0.35rem;
+}
+
+.command-palette-section-title {
+  padding: 0.45rem 0.75rem 0.3rem;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.command-palette-status {
+  padding: 0.5rem 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.command-palette-option {
+  display: flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  color: var(--color-foreground);
+  font-size: 0.925rem;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.command-palette-option[aria-selected="true"] {
+  background: var(--color-surface-hover);
+  color: var(--color-heading);
+}
+
+.command-palette-option-label {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-palette-option-detail {
+  flex: 0 0 auto;
+  max-width: 40%;
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command-palette-footer {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid var(--color-border-light);
+  padding: 0.5rem 0.9rem;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+}
+
+.command-palette-footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.command-palette-footer kbd,
+.wiki-sidebar-search-trigger kbd {
+  min-width: 1.3em;
+  border: 1px solid var(--hairline);
+  border-bottom-width: 1px;
+  border-radius: 0.3rem;
+  background: transparent;
+  padding: 0.05rem 0.3rem;
+  color: var(--color-muted);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+@media (pointer: coarse) {
+  .command-palette-option {
+    min-height: 2.5rem;
+  }
+
+  .command-palette-input {
+    height: 3.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .command-palette-overlay {
+    padding-top: max(4.5rem, 10vh);
+  }
+
+  .command-palette-footer {
+    display: none;
+  }
+}
+
+/* ── Sidebar search trigger (opens the palette) ──
+   A plain navigation row (it also carries .wiki-sidebar-link, which supplies
+   the row layout, hover fill, and per-skin sizing); this only resets the
+   button chrome and pins the kbd hint to the right edge. */
+.wiki-sidebar-search-trigger {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.wiki-sidebar-search-trigger kbd {
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* Touch devices have no ⌘K; the hint is just noise there. */
+@media (pointer: coarse) {
+  .wiki-sidebar-search-trigger kbd {
+    display: none;
+  }
+}
+
+/* Sidebar nav links now carry an icon span before the label. The icon itself
+   is styled per skin in shell.css / folio.css; this only keeps the label
+   filling the row so the link's space-between layout doesn't push it right. */
+.wiki-sidebar-link-label {
+  min-width: 0;
+  flex: 1 1 auto;
+}

@@ -1,0 +1,59 @@
+x-app-config: &app-config
+  ARKIVEL_SITE_MODE: "${ARKIVEL_SITE_MODE:-wiki}"
+  NEXT_PUBLIC_BASE_URL: "${NEXT_PUBLIC_BASE_URL:-http://localhost:3000}"
+  NEXT_PUBLIC_ARKIVEL_SKIN: "${NEXT_PUBLIC_ARKIVEL_SKIN:-folio}"
+  NEXT_PUBLIC_ARKIVEL_NAME: "${NEXT_PUBLIC_ARKIVEL_NAME:-Arkivel}"
+  NEXT_PUBLIC_ARKIVEL_DESCRIPTION: "${NEXT_PUBLIC_ARKIVEL_DESCRIPTION:-A focused, self-hosted home for durable knowledge.}"
+  NEXT_PUBLIC_ARKIVEL_WELCOME_TEXT: "${NEXT_PUBLIC_ARKIVEL_WELCOME_TEXT:-}"
+  NEXT_PUBLIC_ARKIVEL_LOGO: "${NEXT_PUBLIC_ARKIVEL_LOGO:-/brand/arkivel-logo.png}"
+  NEXT_PUBLIC_ARKIVEL_LOGO_MARK: "${NEXT_PUBLIC_ARKIVEL_LOGO_MARK:-/brand/arkivel-logo.svg}"
+  NEXT_PUBLIC_ARKIVEL_APP_ICON: "${NEXT_PUBLIC_ARKIVEL_APP_ICON:-/brand/arkivel-icon-512.png}"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: wiki
+      POSTGRES_PASSWORD: wiki_password
+      POSTGRES_DB: wiki
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wiki"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: *app-config
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      <<: *app-config
+      DATABASE_URL: "postgresql://wiki:wiki_password@db:5432/wiki"
+      ADMIN_SECRET: "${ADMIN_SECRET:-}"
+      ARKIVEL_REGISTRATION: "${ARKIVEL_REGISTRATION:-closed}"
+      ARKIVEL_MODULES: "${ARKIVEL_MODULES:-}"
+      TMDB_API_KEY: "${TMDB_API_KEY:-}"
+      OMDB_API_KEY: "${OMDB_API_KEY:-}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      BLOB_READ_WRITE_TOKEN: "${BLOB_READ_WRITE_TOKEN:-}"
+      GITHUB_CLIENT_ID: "${GITHUB_CLIENT_ID:-}"
+      GITHUB_CLIENT_SECRET: "${GITHUB_CLIENT_SECRET:-}"
+      GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID:-}"
+      GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET:-}"
+      NEXTAUTH_SECRET: "${NEXTAUTH_SECRET:-}"
+      NEXTAUTH_URL: "${NEXTAUTH_URL:-${NEXT_PUBLIC_BASE_URL:-http://localhost:3000}}"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
