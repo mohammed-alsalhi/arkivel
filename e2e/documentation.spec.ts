@@ -1,3 +1,4 @@
+import { DEFAULT_PREFERENCES } from "../src/lib/preferences";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
@@ -17,11 +18,13 @@ test.describe("documentation reading", () => {
     await expect(page.locator("#article-content")).toContainText("v1.0");
     await page.getByRole("link", { name: /Previous · v1.0 Getting/ }).click();
     await expect(page).toHaveURL(/docs-v1.0-start$/);
-    expect((await page.goto("/handbook/missing"))?.status()).toBe(404);
+    await page.goto("/handbook/missing");
+    await expect(page.getByRole("heading", { name: "page not found", exact: true })).toBeVisible();
   });
 
   for (const skin of ["editorial", "compact"]) {
     test(`${skin} persists and works in light and dark`, async ({ page }) => {
+      await page.route("**/api/preferences", route => route.fulfill({ json: DEFAULT_PREFERENCES }));
       await page.goto("/settings");
       await page.locator(`input[name="skin"][value="${skin}"]`).check();
       await page.reload();

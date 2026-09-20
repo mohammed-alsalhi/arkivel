@@ -8,7 +8,7 @@
 .docs-nav-link:hover { background: var(--color-surface-hover); text-decoration: none; }
 .docs-nav-link[aria-current="page"] { color: var(--color-accent); background: var(--color-accent-soft); font-weight: 600; box-shadow: inset 2px 0 var(--color-accent); }
 .docs-nav-empty { font-size: 0.8125rem; color: var(--color-muted); padding: 1rem 0; }
-.docs-home { max-width: 72rem; margin-inline: auto; }
+.docs-home { width: 100%; max-width: 72rem; margin-inline: auto; }
 .docs-hero { padding: 0.5rem 0 3rem; border-bottom: 1px solid var(--color-border); }
 .docs-hero .docs-eyebrow { display: flex; gap: 0.75rem; align-items: center; }
 .docs-hero h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(2.75rem, 5vw, 5.5rem); line-height: 1.04; letter-spacing: -0.055em; margin: 1.5rem 0; text-wrap: balance; color: var(--color-heading); }

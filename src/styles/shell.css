@@ -531,7 +531,7 @@ html[data-skin="wiki"] .wiki-sidebar-chevron-open::before {
   appearance: none;
 }
 
-html[data-skin="wiki"] .wiki-sidebar-collapse-toggle {
+html:not([data-skin="folio"]) .wiki-sidebar-collapse-toggle {
   display: none;
 }
 

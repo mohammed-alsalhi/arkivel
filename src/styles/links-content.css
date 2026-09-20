@@ -1,9 +1,9 @@
 /* ── Global link styles (the media shell styles its own links) ── */
-html:not([data-site-mode="media"]) a {
+:where(html:not([data-site-mode="media"])) a {
   color: var(--color-wiki-link);
   text-decoration: none;
 }
-html:not([data-site-mode="media"]) a:hover {
+:where(html:not([data-site-mode="media"])) a:hover {
   text-decoration: underline;
 }
 

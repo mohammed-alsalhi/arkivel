@@ -6,6 +6,7 @@ html[data-skin="editorial"] {
   --color-sidebar-bg: #f3eee5; --color-surface-hover: #eee5d8; --color-popover: #fffdf8;
   --color-accent: #8a3e22; --color-accent-hover: #6d2d17; --color-accent-foreground: #fffdf8;
   --color-accent-soft: #f0e1d6; --color-wiki-link: #8a3e22; --color-wiki-link-visited: #715140;
+  --color-success: #0b604d;
   --color-brand-mark: #8a3e22; --font-display: Georgia, "Times New Roman", serif;
   --radius-control: 0.25rem; --radius-surface: 0.4rem;
 }
@@ -16,6 +17,7 @@ html[data-skin="editorial"][data-theme="dark"] {
   --color-sidebar-bg: #191612; --color-surface-hover: #302921; --color-popover: #201d19;
   --color-accent: #efb995; --color-accent-hover: #ffcfaf; --color-accent-foreground: #201d19;
   --color-accent-soft: #443126; --color-wiki-link: #efb995; --color-wiki-link-visited: #d7b8a0;
+  --color-success: #7fd7bd;
   --color-brand-mark: #efb995;
 }
 html[data-skin="compact"] {
