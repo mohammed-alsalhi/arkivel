@@ -51,6 +51,8 @@ CI runs `scripts/check-backup.mjs` on disposable fixtures, comparing restored ar
 
 ## container releases
 
-Tagged releases build and publish `ghcr.io/mohammed-alsalhi/arkivel:vVERSION` and an immutable commit tag. The workflow validates that the tag matches package metadata and belongs to main, builds the image, and checks the non-root runtime, upload permissions, and Prisma tooling. Pull requests affecting the container build run the same image checks without publishing.
+Published releases build and publish `ghcr.io/mohammed-alsalhi/arkivel:vVERSION` and an immutable commit tag. The workflow validates that the tag matches package metadata and belongs to main, builds the image, and checks the non-root runtime, upload permissions, and Prisma tooling. Pull requests affecting the container build run the same image checks without publishing.
 
 The standard image uses default Arkivel public branding and the wiki build configuration. Build from source with the existing Docker build arguments for custom public branding, canonical URL, or a different built default skin; Next.js embeds those public values at build time. Runtime access policy, database, OAuth credentials, and storage settings remain per instance. The initial published architecture is linux/amd64.
+
+Each release also includes a portable `arkivel-vVERSION-linux-amd64.tar.gz` image and its SHA-256 checksum. Verify it with `sha256sum -c`, then use `docker load -i` to import it. These public release downloads work independently of container-registry authentication. GitHub initially makes container packages private; the package owner must enable public visibility before anonymous `docker pull` works.

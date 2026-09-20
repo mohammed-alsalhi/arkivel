@@ -3,8 +3,8 @@ on:
   pull_request:
     branches: [main]
     paths: [Dockerfile, .dockerignore, docker-compose.yml, package.json, package-lock.json, '.github/workflows/container.yml']
-  push:
-    tags: ['v*']
+  release:
+    types: [published]
   workflow_dispatch:
 permissions:
   contents: read
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - uses: actions/checkout@v7
@@ -63,3 +63,13 @@ jobs:
           docker tag arkivel:check "$image:sha-$GITHUB_SHA"
           docker push "$image:$RELEASE_TAG"
           docker push "$image:sha-$GITHUB_SHA"
+      - name: Attach portable image and checksum to the public release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          artifact="arkivel-$RELEASE_TAG-linux-amd64.tar.gz"
+          docker save "ghcr.io/${GITHUB_REPOSITORY,,}:$RELEASE_TAG" | gzip > "$artifact"
+          sha256sum "$artifact" > "$artifact.sha256"
+          gh release upload "$RELEASE_TAG" "$artifact" "$artifact.sha256" --repo "$GITHUB_REPOSITORY" --clobber
