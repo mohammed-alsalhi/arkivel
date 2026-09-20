@@ -63,7 +63,7 @@ export default async function FeaturesPage() {
               <Link href="/search">search page</Link>.
             </FeatureItem>
             <FeatureItem title="skins">
-              choose the flat <em>folio</em> interface or the classic framed <em>wiki</em> skin in{" "}
+              choose <em>folio</em>, <em>wiki</em>, the serif <em>editorial</em> skin, or the dense <em>compact</em> workspace in{" "}
               <Link href="/settings">settings</Link>, in light or dark mode.
             </FeatureItem>
             <FeatureItem title="categories and tags">

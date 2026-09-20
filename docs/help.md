@@ -14,7 +14,7 @@ Press `⌘K` (`Ctrl+K` on Windows and Linux) or click the sidebar search to open
 
 ## personalize
 
-Settings has an appearance section with two skins: **folio**, a flat document interface, and **wiki**, the classic framed layout. Pick one or follow the site default; the choice is remembered in your browser and on your account. The theme toggle in the sidebar switches light and dark mode.
+Settings has an appearance section with four skins: **folio**, a flat document interface; **wiki**, the classic framed layout; **editorial**, warm paper and serif reading; and **compact**, a denser workspace. Pick one or follow the site default; the choice is remembered in your browser and on your account. The theme toggle in the sidebar switches light and dark mode.
 
 ## revise
 
@@ -33,3 +33,7 @@ Starter kits (**admin → starter kits**) apply a preset in one step: a module l
 For courses, apply **course workspace**, then open **coursework**. Switch between table, board, list, and calendar; click a property to edit it or open an item for full details. **filter / sort** saves the view's rules. The calendar keeps undated work below the month grid.
 
 Choose **import course data** and select your scraper's `google-tasks-input.json`. Preview the changes, then import them. Repeating an export does not duplicate items, older snapshots are skipped, and partial exports preserve existing work. Personal notes stay separate from source notes; a score alone never marks work complete. See [the import contract](modules-and-collections.md#course-workspace-and-course-sync-import) for automation and optional deadline fields.
+
+## documentation
+
+Documentation deployments show a versioned reading index. Choose a version in the sidebar to keep reading the same topic when it exists in that version. Previous/next links follow its reading order. Authors can follow the [documentation setup guide](documentation-mode.md).
