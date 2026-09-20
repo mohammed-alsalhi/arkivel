@@ -1,3 +1,4 @@
+import { isPrivateInstance } from "@/lib/instance-access";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -139,7 +140,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isAdmin } = await import("@/lib/auth");
+  const { isAdmin, requireRole } = await import("@/lib/auth");
+
+  // Public login/registration pages must not serialize any instance navigation.
+  if (isPrivateInstance() && requireRole(await getRequestSession(), "viewer")) {
+    const skin = await resolveRequestSkin();
+    return <html lang="en" data-skin={skin} suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: bootstrapScript }} /></head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <EnabledModulesProvider modules={[]}><SkinProvider skin={skin}>
+        <AdminProvider initialAuth={{ admin: false, loggedIn: false }}><ToastProvider>
+          <main id="main-content" style={{ height: "100dvh", overflowY: "auto", maxWidth: "42rem", margin: "auto" }}>{children}</main>
+        </ToastProvider></AdminProvider></SkinProvider></EnabledModulesProvider>
+      </body>
+    </html>;
+  }
 
   if (config.siteMode === "media") {
     // The library shell: media navigation and pages over the same

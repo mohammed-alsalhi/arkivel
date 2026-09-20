@@ -442,6 +442,15 @@
     ]
   },
   {
+    "route": "/api/files/{key...}",
+    "methods": [
+      {
+        "method": "GET",
+        "summary": null
+      }
+    ]
+  },
+  {
     "route": "/api/graph",
     "methods": [
       {

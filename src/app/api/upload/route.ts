@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { moduleDisabledResponse } from "@/modules/enabled";
 import crypto from "crypto";
-import path from "path";
 import { isAdmin, requireAdmin } from "@/lib/auth";
-import { getStorage } from "@/lib/storage";
+import { getStorage, MAX_UPLOAD_BYTES, uploadExtension } from "@/lib/storage";
 
 export async function POST(request: NextRequest) {
   const disabled = await moduleDisabledResponse("assets");
@@ -15,11 +14,12 @@ export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const file = formData.get("file") as File | null;
 
-  if (!file) {
+  if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const ext = path.extname(file.name) || ".png";
+  if (file.size > MAX_UPLOAD_BYTES) return NextResponse.json({ error: "Maximum upload size is 20 MiB" }, { status: 413 });
+  const ext = uploadExtension(file.name);
   const filename = `uploads/${crypto.randomUUID()}${ext}`;
 
   const buffer = Buffer.from(await file.arrayBuffer());

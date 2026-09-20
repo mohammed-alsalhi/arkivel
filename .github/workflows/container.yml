@@ -1,0 +1,76 @@
+name: container
+on:
+  pull_request:
+    branches: [main]
+    paths: [Dockerfile, .dockerignore, docker-compose.yml, package.json, package-lock.json, '.github/workflows/container.yml']
+  release:
+    types: [published]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify release version
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          test "$RELEASE_TAG" = "v$(node -p 'require("./package.json").version')"
+          git merge-base --is-ancestor HEAD origin/main
+      - name: Build image
+        run: docker build --label org.opencontainers.image.source=https://github.com/${{ github.repository }} --label org.opencontainers.image.revision=${{ github.sha }} -t arkivel:check .
+      - name: Verify non-root runtime and migration tooling
+        run: |
+          docker run --rm --entrypoint sh arkivel:check -ec 'test "$(id -u)" = 1001; test -f server.js; test -f scripts/bootstrap-owner.mjs; test -w /app/data/uploads; test -f scripts/backup/create.mjs; pg_dump --version; node node_modules/prisma/build/index.js --version'
+      - name: Smoke test container against disposable PostgreSQL
+        run: |
+          docker network create arkivel-check
+          docker run -d --name arkivel-db --network arkivel-check -e POSTGRES_USER=arkivel -e POSTGRES_PASSWORD=test-only -e POSTGRES_DB=arkivel postgres:16-alpine
+          for attempt in {1..30}; do
+            if docker exec arkivel-db pg_isready -U arkivel; then break; fi
+            sleep 1
+          done
+          docker run -d --name arkivel-app --network arkivel-check -p 3000:3000 -e DATABASE_URL=postgresql://arkivel:test-only@arkivel-db:5432/arkivel -e ARKIVEL_ACCESS=private -e ARKIVEL_STORAGE=local arkivel:check
+          for attempt in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:3000/api/health; then break; fi
+            sleep 1
+          done
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3000/)" = 307
+          printf 'test-only-owner-password\n' | docker exec -i arkivel-app node scripts/bootstrap-owner.mjs --username container_owner --email owner@example.test
+          docker exec arkivel-app node scripts/backup/create.mjs /tmp/container-backup
+          curl --fail --silent -H 'Content-Type: application/json' --data '{"username":"container_owner","password":"test-only-owner-password"}' http://127.0.0.1:3000/api/auth/login
+      - name: Container failure logs
+        if: failure()
+        run: docker logs arkivel-app 2>/dev/null || true
+      - name: Publish versioned image
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker tag arkivel:check "$image:$RELEASE_TAG"
+          docker tag arkivel:check "$image:sha-$GITHUB_SHA"
+          docker push "$image:$RELEASE_TAG"
+          docker push "$image:sha-$GITHUB_SHA"
+      - name: Attach portable image and checksum to the public release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          artifact="arkivel-$RELEASE_TAG-linux-amd64.tar.gz"
+          docker save "ghcr.io/${GITHUB_REPOSITORY,,}:$RELEASE_TAG" | gzip > "$artifact"
+          sha256sum "$artifact" > "$artifact.sha256"
+          gh release upload "$RELEASE_TAG" "$artifact" "$artifact.sha256" --repo "$GITHUB_REPOSITORY" --clobber

@@ -106,3 +106,5 @@ npm run seed:demo
 License: MIT.
 
 See [documentation mode](docs/documentation-mode.md) for version navigation and authoring.
+
+For sign-in-only instances, local/S3 uploads, member setup, and verified backups, see [private self-hosting](docs/private-self-hosting.md).

@@ -12,3 +12,6 @@ playwright-report
 .vscode
 .vercel
 .claude
+
+/data/
+/backups/

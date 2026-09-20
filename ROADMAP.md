@@ -1,6 +1,6 @@
 # roadmap
 
-Arkivel 1.0.0 provides a knowledge base, typed collections, and a media library on one backend. The configurability model is described in `docs/modules-and-collections.md`.
+Arkivel 1.1.0 provides a knowledge base, typed collections, and a media library on one backend. The configurability model is described in `docs/modules-and-collections.md`.
 
 Near-term work:
 
@@ -15,10 +15,10 @@ Collaboration, marketplaces, third-party plugins, gamification, and social featu
 ## portability and managed hosting
 
 1. Separate the marketing website from the application and export the API reference.
-2. Explicit owner setup, closed-by-default registration, and shared revocable local/OAuth sessions are implemented. Add private-instance read access controls before hosting private customer content.
+2. Explicit owner setup, closed-by-default registration, and shared revocable local/OAuth sessions are implemented. Private-instance read access, local/S3 uploads, and backup restore rehearsal are implemented. Hosted customer provisioning remains separate.
 3. Add Clerk and Supabase Auth integrations with verified identities and revocation behavior.
 4. Expand skins and runtime branding without duplicating feature or permission logic.
-5. Add portable object storage and publish versioned application artifacts.
+5. Verify live S3 provider configuration and operate scheduled off-host backups; versioned container publication is automated.
 6. Build hosted provisioning, backups, and verified subdomain/custom-domain routing around isolated instances.
 
 The hosting service is separate from this repository. Hosted signup, billing, and customer provisioning are not implemented in the application.

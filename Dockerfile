@@ -1,5 +1,5 @@
 FROM node:24-alpine AS base
-RUN apk add --no-cache openssl
+RUN apk add --no-cache openssl postgresql-client
 
 # ── Stage 1: Dependencies ──
 FROM base AS deps
@@ -58,7 +58,10 @@ COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./
 COPY --from=builder /app/scripts/bootstrap-owner.mjs ./scripts/bootstrap-owner.mjs
+COPY --from=builder /app/scripts/backup ./scripts/backup
 COPY --from=builder /app/node_modules ./node_modules
+
+RUN mkdir -p /app/data/uploads && chown -R nextjs:nodejs /app/data
 
 USER nextjs
 

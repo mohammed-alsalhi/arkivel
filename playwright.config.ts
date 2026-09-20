@@ -5,6 +5,7 @@ const skin = process.env.NEXT_PUBLIC_ARKIVEL_SKIN;
 
 export default defineConfig({
   testDir: "./e2e",
+  testMatch: process.env.ARKIVEL_ACCESS === "private" ? /private-instance\.spec\.ts/ : undefined,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
