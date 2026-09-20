@@ -13,7 +13,7 @@ export const SKIN_LABELS: Record<WikiSkin, { name: string; description: string }
   },
   wiki: {
     name: "wiki",
-    description: "classic framed wiki with the traditional palette, borders, and tables",
+    description: "classic wiki with the traditional palette, borders, and tables",
   },
 };
 

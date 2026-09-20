@@ -1,6 +1,6 @@
 /* ── Folio skin: flat, document-first surfaces on the shared primitives ──
    Everything here is scoped to html[data-skin="folio"]. The wiki skin keeps
-   the classic framed palette; folio reads like a notes app: hairline
+   the classic palette; folio reads like a notes app: hairline
    dividers instead of boxes, soft hover fills instead of borders, restrained
    radius, sans-serif everywhere, and a centered document column. */
 
