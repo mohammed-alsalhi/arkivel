@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { config } from "@/lib/config";
 import {
   createPublicApiV1OpenApiSpec,
-  PUBLIC_API_V1_EXAMPLE_BASE_URL,
 } from "@/lib/public-api-v1";
 import { TRAIL_ROOTS } from "@/lib/trail";
 import inventory from "@/lib/api-inventory.json";
@@ -27,9 +25,7 @@ export const metadata: Metadata = {
 
 export default async function ApiDocsPage() {
   await requireModule("api");
-  const baseUrl = config.siteMode === "product"
-    ? PUBLIC_API_V1_EXAMPLE_BASE_URL
-    : process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const spec = createPublicApiV1OpenApiSpec(baseUrl);
   const operations = Object.entries(spec.paths).flatMap(([path, pathItem]) =>
     Object.entries(pathItem).map(([method, operation]) => ({
@@ -41,7 +37,6 @@ export default async function ApiDocsPage() {
 
   return (
     <Page
-      className={config.siteMode === "product" ? "product-docs-page" : undefined}
       trail={[TRAIL_ROOTS.reference, { label: "api reference" }]}
       width="wide"
     >

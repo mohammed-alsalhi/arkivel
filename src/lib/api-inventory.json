@@ -44,7 +44,7 @@
       },
       {
         "method": "POST",
-        "summary": "get current mode */ export async function GET() { const admin = await isAdmin(); if (!admin) return NextResponse.json({ error: \"Forbidden\" }, { status: 403 }); const record = await prisma.systemSetting.findUnique({ where: { id: KEY } }); return NextResponse.json({ enabled: record?.enabled ?? false }); } /** POST /api/admin/maintenance — toggle maintenance mode"
+        "summary": "toggle maintenance mode"
       }
     ]
   },
@@ -70,11 +70,11 @@
       },
       {
         "method": "PUT",
-        "summary": "the registry with the environment default, override, and resolved set */ export async function GET() { const admin = await isAdmin(); if (!admin) return NextResponse.json({ error: \"Forbidden\" }, { status: 403 }); return NextResponse.json(await state()); } /** PUT /api/admin/modules — store `{ enabled: ModuleId[] }` as the admin override"
+        "summary": "store `{ enabled: ModuleId[] }` as the admin override"
       },
       {
         "method": "DELETE",
-        "summary": "the registry with the environment default, override, and resolved set */ export async function GET() { const admin = await isAdmin(); if (!admin) return NextResponse.json({ error: \"Forbidden\" }, { status: 403 }); return NextResponse.json(await state()); } /** PUT /api/admin/modules — store `{ enabled: ModuleId[] }` as the admin override */ export async function PUT(request: NextRequest) { const admin = await isAdmin(); if (!admin) return NextResponse.json({ error: \"Forbidden\" }, { status: 403 }); const body = await request.json().catch(() => null); const requested = body && typeof body === \"object\" ? (body as { enabled?: unknown }).enabled : undefined; if (!Array.isArray(requested)) { return NextResponse.json({ error: \"enabled must be an array of module ids\" }, { status: 400 }); } const enabled = normalizeModuleIds(requested); await prisma.systemSetting.upsert({ where: { id: MODULES_SETTING_KEY }, update: { enabled: true, config: { enabled } }, create: { id: MODULES_SETTING_KEY, enabled: true, config: { enabled } }, }); return NextResponse.json(await state()); } /** DELETE /api/admin/modules — drop the override and return to the environment default"
+        "summary": "drop the override and return to the environment default"
       }
     ]
   },
@@ -362,7 +362,7 @@
       },
       {
         "method": "POST",
-        "summary": "`?page=1&q=title` — 100 items a page, ordered by sortOrder then creation. */ export async function GET(request: NextRequest, { params }: Params) { const disabled = await moduleDisabledResponse(\"collections\"); if (disabled) return disabled; const { id } = await params; const collection = await resolveCollection(id); if (!collection) return notFound(); const page = Number.parseInt(request.nextUrl.searchParams.get(\"page\") ?? \"1\", 10); const q = request.nextUrl.searchParams.get(\"q\") ?? undefined; return NextResponse.json(await listItems(collection, { page: Number.isFinite(page) ? page : 1, q })); } /** Body: `{ title, properties?, articleId?, sortOrder? }`."
+        "summary": "Body: `{ title, properties?, articleId?, sortOrder? }`."
       }
     ]
   },
@@ -504,7 +504,7 @@
       },
       {
         "method": "PUT",
-        "summary": "Body: `{ items }` or `{ raw }` (a JSON file's text) — preview matches; nothing is saved. */ export async function POST(request: NextRequest) { return mediaRoute(async () => { const input = await readBody(request); let source: unknown = input.items; if (input.raw !== undefined) { if (typeof input.raw !== \"string\") throw new InputError(\"Upload a JSON text file.\"); try { source = JSON.parse(input.raw); } catch { throw new InputError(\"This file is not valid JSON.\"); } } return NextResponse.json(await matchTitles(importTitles(source))); }); } /** Body: `{ items: [watchlist item inputs] }` (1–100) — saves them as plan_to_watch; `{ imported, skipped, items }`."
+        "summary": "Body: `{ items: [watchlist item inputs] }` (1–100) — saves them as plan_to_watch; `{ imported, skipped, items }`."
       }
     ]
   },
@@ -517,15 +517,15 @@
       },
       {
         "method": "POST",
-        "summary": "Downloads the whole library as `arkivel-library.json`. */ export async function GET() { return mediaRoute(async () => NextResponse.json(await readLibrary(), { headers: { \"Content-Disposition\": 'attachment; filename=\"arkivel-library.json\"' } }), ); } /** Body: `{ backup }` — previews a merge: `{ added, existing, episodesAdded, episodesExisting }`."
+        "summary": "Body: `{ backup }` — previews a merge: `{ added, existing, episodesAdded, episodesExisting }`."
       },
       {
         "method": "PUT",
-        "summary": "Downloads the whole library as `arkivel-library.json`. */ export async function GET() { return mediaRoute(async () => NextResponse.json(await readLibrary(), { headers: { \"Content-Disposition\": 'attachment; filename=\"arkivel-library.json\"' } }), ); } /** Body: `{ backup }` — previews a merge: `{ added, existing, episodesAdded, episodesExisting }`. */ export async function POST(request: NextRequest) { return mediaRoute(async () => NextResponse.json(await previewRestore(parseBackup((await readBody(request, BACKUP_BYTES)).backup))), { write: true }); } /** Body: `{ backup }` — merges it into the library; same counts as the preview."
+        "summary": "Body: `{ backup }` — merges it into the library; same counts as the preview."
       },
       {
         "method": "DELETE",
-        "summary": "Downloads the whole library as `arkivel-library.json`. */ export async function GET() { return mediaRoute(async () => NextResponse.json(await readLibrary(), { headers: { \"Content-Disposition\": 'attachment; filename=\"arkivel-library.json\"' } }), ); } /** Body: `{ backup }` — previews a merge: `{ added, existing, episodesAdded, episodesExisting }`. */ export async function POST(request: NextRequest) { return mediaRoute(async () => NextResponse.json(await previewRestore(parseBackup((await readBody(request, BACKUP_BYTES)).backup))), { write: true }); } /** Body: `{ backup }` — merges it into the library; same counts as the preview. */ export async function PUT(request: NextRequest) { return mediaRoute(async () => NextResponse.json(await restoreBackup(parseBackup((await readBody(request, BACKUP_BYTES)).backup))), { write: true }); } /** Removes untouched starter titles and their marks: `{ removed }`."
+        "summary": "Removes untouched starter titles and their marks: `{ removed }`."
       }
     ]
   },
@@ -601,7 +601,7 @@
       },
       {
         "method": "POST",
-        "summary": "`?status=&type=&mood=` — saved titles, each with metadata and episode counts. */ export async function GET(request: NextRequest) { return mediaRoute(async () => { const params = request.nextUrl.searchParams; const status = params.get(\"status\") ? watchStatus(params.get(\"status\")) : undefined; const type = params.get(\"type\") ? mediaType(params.get(\"type\")) : undefined; const mood = params.get(\"mood\") ? moodTags([params.get(\"mood\")])[0] : undefined; const { items } = await readLibrary(); return NextResponse.json(items.filter((item) => (!status || item.status === status) && (!type || item.media_type === type) && (!mood || item.moods.includes(mood)))); }); } /** Body: a watchlist item input — saves it; an existing `(tmdb_id, media_type)` comes back unchanged."
+        "summary": "Body: a watchlist item input — saves it; an existing `(tmdb_id, media_type)` comes back unchanged."
       }
     ]
   },
@@ -614,7 +614,7 @@
       },
       {
         "method": "DELETE",
-        "summary": "Body: `{ status?, moods? }` (at least one) — updates the title; `watched` stamps a missing watched date. */ export async function PATCH(request: NextRequest, context: Context) { return mediaRoute(async () => { const { id } = await context.params; const input = await readBody(request); if (input.status === undefined && input.moods === undefined) throw new InputError(\"Choose a status or mood to update.\"); const status = input.status === undefined ? undefined : watchStatus(input.status); const moods = input.moods === undefined ? undefined : moodTags(input.moods); return NextResponse.json(await patchTitle(id, { status, moods })); }, { write: true }); } /** Removes the title and its episode marks; 404 when it is already gone."
+        "summary": "Removes the title and its episode marks; 404 when it is already gone."
       }
     ]
   },
@@ -627,11 +627,11 @@
       },
       {
         "method": "POST",
-        "summary": "Watched episode marks for the title, by season then episode. */ export async function GET(_request: NextRequest, context: Context) { return mediaRoute(async () => NextResponse.json(await listEpisodes((await context.params).id))); } /** Body: `{ episodes: [{ season_number, episode_number }] }` (1–500) — marks them watched; returns the requested marks."
+        "summary": "Body: `{ episodes: [{ season_number, episode_number }] }` (1–500) — marks them watched; returns the requested marks."
       },
       {
         "method": "DELETE",
-        "summary": "Watched episode marks for the title, by season then episode. */ export async function GET(_request: NextRequest, context: Context) { return mediaRoute(async () => NextResponse.json(await listEpisodes((await context.params).id))); } /** Body: `{ episodes: [{ season_number, episode_number }] }` (1–500) — marks them watched; returns the requested marks. */ export async function POST(request: NextRequest, context: Context) { return mediaRoute(async () => { const { id } = await context.params; const input = await readBody(request); if (!Array.isArray(input.episodes) || !input.episodes.length || input.episodes.length > 500) throw new InputError(\"Choose between 1 and 500 episodes.\"); return NextResponse.json(await markEpisodes(id, input.episodes.map(episode)), { status: 201 }); }, { write: true }); } /** Body: `{ season_number, episode_number }` — removes that mark; 204 even when it was already absent."
+        "summary": "Body: `{ season_number, episode_number }` — removes that mark; 204 even when it was already absent."
       }
     ]
   },
@@ -710,7 +710,7 @@
       },
       {
         "method": "POST",
-        "summary": "the caller's personal access tokens (never the secrets). */ export async function GET() { const user = await getSession(); if (!user) return NextResponse.json({ error: \"Authentication required\" }, { status: 401 }); return NextResponse.json(await listApiTokens(user.id)); } /** POST /api/tokens — `{ name, expiresInDays: number | null }`; the response carries the token once."
+        "summary": "`{ name, expiresInDays: number | null }`; the response carries the token once."
       }
     ]
   },

@@ -1,5 +1,11 @@
 # changelog
 
+## unreleased
+
+- separated the marketing website from the self-hostable application
+- exported versioned api reference files for external documentation sites
+- rejected removed product mode to prevent accidental wiki exposure during migration
+
 ## 1.0.0
 
 Initial public release.

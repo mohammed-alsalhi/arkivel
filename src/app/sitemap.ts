@@ -6,14 +6,6 @@ export const dynamic = "force-dynamic";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = config.baseUrl;
 
-  if (config.siteMode === "product") {
-    return [
-      { url: `${baseUrl}/`, changeFrequency: "weekly", priority: 1 },
-      { url: `${baseUrl}/docs`, changeFrequency: "monthly", priority: 0.8 },
-      { url: `${baseUrl}/api-docs`, changeFrequency: "monthly", priority: 0.6 },
-    ];
-  }
-
   // A personal library has nothing to index beyond its front door.
   if (config.siteMode === "media") {
     return [{ url: `${baseUrl}/`, changeFrequency: "daily", priority: 1 }];

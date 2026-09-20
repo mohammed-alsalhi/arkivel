@@ -21,7 +21,8 @@
     "db:status": "prisma migrate status",
     "release:docs-sync": "node scripts/verify-docs-sync.mjs",
     "api:inventory": "node scripts/api-inventory.mjs",
-    "import": "tsx scripts/import-articles.ts"
+    "import": "tsx scripts/import-articles.ts",
+    "api:reference": "tsx scripts/export-api-reference.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

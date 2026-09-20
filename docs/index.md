@@ -6,4 +6,4 @@
 - [maintainer guide](maintainer-guide.md): setup, deploy, backup, and recovery
 - [modules and collections](modules-and-collections.md): how one codebase serves different deployments — modules, the collections engine, starter kits
 
-The live product site serves installation docs at `/docs` and the generated API reference at `/api-docs`.
+Every instance serves installation docs at `/docs` and the generated API reference at `/api-docs`. `npm run api:reference` exports database-free reference JSON for external documentation sites.

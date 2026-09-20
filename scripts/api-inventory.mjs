@@ -18,7 +18,7 @@ function walk(dir, out = []) {
 
 function summaryFor(source, method) {
   // The JSDoc (or line comment) immediately above the handler, first sentence, without a leading `METHOD /path —` echo.
-  const pattern = new RegExp(`(?:/\\*\\*([\\s\\S]*?)\\*/|((?://[^\\n]*\\n)+))\\s*export (?:async )?function ${method}\\b`);
+  const pattern = new RegExp(`(?:/\\*\\*((?:(?!\\*/)[\\s\\S])*?)\\*/|((?://[^\\n]*\\n)+))\\s*export (?:async )?function ${method}\\b`);
   const match = source.match(pattern);
   const raw = (match?.[1] ?? match?.[2] ?? "").replace(/^\s*(\/\/|\*)\s?/gm, "").replace(/\s+/g, " ").trim();
   return raw.replace(/^(GET|POST|PUT|PATCH|DELETE)\s+\/\S+\s*[—-]\s*/, "").trim() || null;
