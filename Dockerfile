@@ -66,4 +66,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["sh", "-ec", "if [ \"$ARKIVEL_SITE_MODE\" != \"product\" ]; then node node_modules/prisma/build/index.js migrate deploy; fi; exec node server.js"]
+CMD ["sh", "-ec", "node node_modules/prisma/build/index.js migrate deploy; exec node server.js"]

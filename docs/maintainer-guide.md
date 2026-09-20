@@ -2,7 +2,7 @@
 
 ## deploy
 
-Choose a site mode and configure your instance with its own domain and environment variables. Product mode can run without database, admin, or blob credentials. See the README for Vercel, Docker, and local setup.
+Choose a site mode and configure your instance with its own domain and environment variables. The marketing website is a separate static application. See the README for Vercel, Docker, and local setup.
 
 ## data safety
 

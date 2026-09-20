@@ -6,7 +6,6 @@ Choose a site mode for your instance:
 
 | interface | mode | purpose |
 | --- | --- | --- |
-| product | `ARKIVEL_SITE_MODE=product` | branding, installation docs, and API reference |
 | wiki | `ARKIVEL_SITE_MODE=wiki` | a knowledge base |
 | media | `ARKIVEL_SITE_MODE=media` | a personal film and series library on the same backend |
 
@@ -14,7 +13,7 @@ Each deployment keeps its own domains, environment variables, database, and blob
 
 The media mode is the worked example of Arkivel serving a domain that is not a wiki. Set `NEXT_PUBLIC_ARKIVEL_NAME="My library"`, `ARKIVEL_SITE_MODE=media`, and `ARKIVEL_MODULES=collections,media,assets,export,import`, then apply the `watchlist` kit from `/admin/kits`. Optional keys: `TMDB_API_KEY` for the full catalogue, `OMDB_API_KEY` for IMDb and Rotten Tomatoes ratings, `ANTHROPIC_API_KEY` for Claude-assisted mood picks. Without keys the library searches a bundled starter catalogue and matches moods locally.
 
-Vercel builds use its native Next.js adapter. Self-hosted builds produce a standalone server; wiki containers run the pinned Prisma migrations before starting it. Product containers skip database migrations.
+Vercel builds use its native Next.js adapter. Self-hosted builds produce a standalone server; containers run the pinned Prisma migrations before starting it.
 
 Wiki deployments default to the lowercase, full-viewport `folio` skin. Set `NEXT_PUBLIC_ARKIVEL_SKIN=wiki` to make the classic framed wiki skin the site default; signed-in readers can override either default from the appearance section in settings. Press `⌘K` / `Ctrl+K` anywhere for the command palette.
 
@@ -52,11 +51,7 @@ Pick which modules a deployment runs with `ARKIVEL_MODULES` (for example `graph,
 
 To populate a fresh local database with a realistic demo dataset (categories, tags, cross-linked articles, and semantic relations), run `npm run seed:demo`. The seed is idempotent — it upserts by slug and name, so re-running it is safe.
 
-The wiki opens at `http://localhost:3000`. To preview the database-free product site:
-
-```bash
-ARKIVEL_SITE_MODE=product npm run dev
-```
+The application opens at `http://localhost:3000`. The marketing website is deployed separately; this repository contains the self-hostable application and its documentation.
 
 ## required configuration
 
@@ -81,7 +76,7 @@ docker compose up --build -d
 
 Compose passes the public settings to both the image build and the running app, starts its bundled PostgreSQL service, and applies pending wiki migrations before serving on port 3000. It uses the bundled database URL instead of `.env`'s `DATABASE_URL`; that value is for running the app directly against your own database. OAuth's `NEXTAUTH_URL` defaults to `NEXT_PUBLIC_BASE_URL` in Compose. Set a separate Compose project name with `docker compose -p <instance> ...` for each instance so their database volumes stay separate.
 
-After changing public settings, rerun `docker compose up --build -d`; restarting an old image does not update its compiled settings. For direct `docker build`, provide the same public values with `--build-arg`; the image retains them as runtime defaults. An image built with `--build-arg ARKIVEL_SITE_MODE=product` can run without a database. `docker compose down` stops the services while retaining the database volume.
+After changing public settings, rerun `docker compose up --build -d`; restarting an old image does not update its compiled settings. For direct `docker build`, provide the same public values with `--build-arg`; the image retains them as runtime defaults. `docker compose down` stops the services while retaining the database volume.
 
 ## commands
 

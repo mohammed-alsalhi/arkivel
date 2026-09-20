@@ -1,30 +1,29 @@
 # architecture
 
-Arkivel is one Next.js application with two runtime surfaces selected by `ARKIVEL_SITE_MODE`.
+Arkivel is a self-hostable Next.js application with wiki and media interfaces selected by `ARKIVEL_SITE_MODE`. Each instance has one PostgreSQL database, its own accounts, and its own configuration. The marketing website and managed-hosting operations are deployed separately.
 
-## product mode
+## application
 
-Product mode serves the public Arkivel website, documentation, and API reference. `src/proxy.ts` blocks wiki routes, so this deployment does not require the wiki database or its secrets.
+Server components and route handlers access PostgreSQL through `src/lib/prisma.ts`. Core data includes articles, revisions, links, categories, tags, users, sessions, audit logs, assets, and settings. Collections provide typed records and views; modules and starter kits compose additional workflows. Media mode presents the watchlist collections through a dedicated shell.
 
-## wiki mode
+The current upload implementation uses Vercel Blob. A portable storage implementation is planned; database hosting and authentication provider selection remain separate concerns.
 
-Wiki mode renders the three-pane knowledge interface and the retained API routes. Server components and route handlers access PostgreSQL through the singleton in `src/lib/prisma.ts`. Vercel Blob is the only supported upload backend.
+## presentation
 
-`NEXT_PUBLIC_ARKIVEL_SKIN` selects the default wiki presentation without changing routes or data. `folio` is the full-viewport default; `wiki` preserves the classic framed skin on the same shared page components. The root layout resolves the effective skin per request as `arkivel-skin` cookie → the signed-in user's saved `skin` preference → the env default, and stamps it as `data-skin` on `<html>`; `src/styles/folio.css` holds every folio-only override so the wiki skin's rules stay untouched. Page chrome is a `Page` concern: it takes a `trail` (`src/lib/trail.ts`) and renders the sticky `PageTopbar` and `PageFooter`; `src/lib/trail-server.ts` walks category ancestors, and `src/app/articles/[slug]/layout.tsx` shares an article's title and category path with every article-workflow route through `ArticleTrailContext`.
+`NEXT_PUBLIC_ARKIVEL_SKIN` selects the default wiki skin. The request resolves skin from the reader cookie, then the saved user preference, then the environment default. The shared components render both folio and wiki. Skins own presentation; editors, permission checks, and collection behavior stay shared. Media mode owns its shell.
 
-The core data graph is deliberately small:
+Branding currently uses build-time `NEXT_PUBLIC_*` settings. Runtime branding and a broader skin registry are planned, not yet implemented.
 
-- users, OAuth accounts, sessions, API keys, and preferences
-- articles, revisions, aliases, redirects, categories, tags, and article links
-- assets, export history, audit logs, and runtime settings
+## identity and permissions
 
-Legacy physical tables may remain in an upgraded database even when they are absent from the application Prisma schema. That preserves data while the focused application runs. Physical deletion is a separate operation requiring a fresh backup, disposable restore rehearsal, explicit dependency-ordered SQL without `CASCADE`, and retained-table count verification.
+The application owns its user IDs, content ownership, and viewer/editor/admin permissions. Local credentials create database sessions; API tokens resolve to the same user. Existing OAuth callbacks use a separate NextAuth session and still need unification with application session lookup. Clerk and Supabase Auth integrations are planned. A hosted service must not bypass instance permission checks.
 
-## request flow
+## deployment boundary
 
-1. `src/proxy.ts` selects the allowed surface and adds browser security headers.
-2. `src/app/layout.tsx` selects `ProductShell` or the wiki `LayoutShell`.
-3. routes use shared auth, audit, import/export, and wiki-link helpers.
-4. Prisma talks to PostgreSQL; uploads go to Vercel Blob.
+The public repository owns migrations, generic Docker/Node setup, the API contract, and self-hosting documentation. A hosting service owns customer billing, domain verification, provisioning, deployment credentials, backups, and release rollout. It deploys a pinned application version rather than duplicating application logic.
 
-The build runs `prisma generate` and `next build`. It never migrates production.
+Start managed hosting with an isolated application and database per customer. There is no shared-database tenant isolation in the current schema. Custom domains must be verified and routed only to their registered instance, with instance-specific authentication callbacks.
+
+`npm run api:reference` produces a static reference from the API contract with version and commit provenance. External websites consume that artifact; the application never imports their code.
+
+Builds generate Prisma and compile Next.js. They do not migrate production. Containers apply pending migrations before starting; other hosts must run `npm run db:deploy` explicitly. Removing product mode requires moving the marketing deployment before merging this change; the old mode now fails configuration validation rather than falling through to wiki mode.

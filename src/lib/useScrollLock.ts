@@ -25,9 +25,7 @@ function lock(element: HTMLElement): { overflow: string; paddingRight: string } 
  * Locks page scrolling while `locked` is true. Reference-counted so nested
  * overlays (drawer + modal) don't unlock the page when the inner one closes.
  *
- * In product mode the body is the scroll container, so locking body overflow
- * is enough. In wiki mode the body is already `overflow: hidden` and the real
- * scroll container is `.wiki-content-shell`, so that element gets locked too.
+ * Locks the body and, when present, the wiki content shell.
  */
 export function useScrollLock(locked: boolean) {
   useEffect(() => {

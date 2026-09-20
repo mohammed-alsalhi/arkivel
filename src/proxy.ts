@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { corsHeaders, parseCorsOrigins } from "@/lib/cors";
-import { isProductRouteAllowed, resolveSiteMode } from "@/lib/site-mode";
 
 const corsOrigins = parseCorsOrigins(process.env.ARKIVEL_API_CORS_ORIGINS);
 
@@ -22,11 +21,7 @@ export function proxy(request: NextRequest) {
     return new NextResponse(null, { status: 204, headers: cors });
   }
 
-  const productRouteBlocked = resolveSiteMode(process.env.ARKIVEL_SITE_MODE) === "product"
-    && !isProductRouteAllowed(pathname);
-  const response = productRouteBlocked
-    ? new NextResponse("Not Found", { status: 404 })
-    : NextResponse.next({ request });
+  const response = NextResponse.next({ request });
 
   for (const [key, value] of Object.entries(securityHeaders)) {
     response.headers.set(key, value);

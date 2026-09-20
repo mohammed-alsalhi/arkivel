@@ -16,7 +16,6 @@ import { getEnabledModules } from "@/modules/enabled";
 import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { cache } from "react";
-import ProductShell from "@/components/product/ProductShell";
 import MediaShell from "@/components/media/MediaShell";
 
 const geistSans = Geist({
@@ -66,11 +65,7 @@ const resolveRequestSkin = cache(async (): Promise<WikiSkin> => {
 
 export async function generateViewport(): Promise<Viewport> {
   const base: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
-  // The product site is always light (white), the media library always dark;
-  // the wiki follows the color scheme.
-  if (config.siteMode === "product") {
-    return { ...base, themeColor: "#ffffff" };
-  }
+  // The media library is dark; the wiki follows the selected color scheme.
   if (config.siteMode === "media") {
     return { ...base, themeColor: "#111113" };
   }
@@ -142,18 +137,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  if (config.siteMode === "product") {
-    return (
-      <html lang="en" data-site-mode="product" data-scroll-behavior="smooth">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <a href="#main-content" className="skip-to-content">skip to content</a>
-          <ProductShell>{children}</ProductShell>
-          <OverlayScrollbar />
-        </body>
-      </html>
-    );
-  }
-
   const { isAdmin } = await import("@/lib/auth");
 
   if (config.siteMode === "media") {

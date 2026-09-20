@@ -12,11 +12,9 @@ export const MODULES_SETTING_KEY = "modules";
 
 /**
  * The stored admin override, or null when the deployment runs on its
- * environment default. The product site has no admin and no wiki database,
- * so it never reads one.
+ * environment default.
  */
 export const getModuleOverride = cache(async (): Promise<unknown> => {
-  if (config.siteMode === "product") return null;
   const { default: prisma } = await import("@/lib/prisma");
   const record = await prisma.systemSetting
     .findUnique({ where: { id: MODULES_SETTING_KEY }, select: { config: true } })
