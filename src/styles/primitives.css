@@ -334,11 +334,16 @@ html:not([data-site-mode="media"]) *::-webkit-scrollbar {
 .ui-textarea:focus {
   border-color: var(--color-accent);
   outline: none;
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
 }
 
 .ui-input:focus-visible,
 .ui-select:focus-visible,
-.ui-textarea:focus-visible,
+.ui-textarea:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 0;
+}
+
 .ui-button:focus-visible,
 .ui-icon-button:focus-visible,
 .article-tab:focus-visible {

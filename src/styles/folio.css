@@ -613,9 +613,7 @@ html[data-skin="folio"] .ui-textarea {
 html[data-skin="folio"] .ui-input:focus,
 html[data-skin="folio"] .ui-select:focus,
 html[data-skin="folio"] .ui-textarea:focus {
-  border-color: var(--color-border);
   background: var(--color-surface);
-  box-shadow: 0 0 0 3px var(--color-accent-soft);
 }
 
 html[data-skin="folio"] .ui-label {
