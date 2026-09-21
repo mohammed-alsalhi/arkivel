@@ -14,7 +14,7 @@ Press `⌘K` (`Ctrl+K` on Windows and Linux) or click the sidebar search to open
 
 ## personalize
 
-Settings has an appearance section with four skins: **folio**, a flat document interface; **wiki**, the classic framed layout; **editorial**, warm paper and serif reading; and **compact**, a denser workspace. Pick one or follow the site default; the choice is remembered in your browser and on your account. The theme toggle in the sidebar switches light and dark mode.
+Settings has an appearance section with four skins: **folio**, a flat document interface; **wiki**, the classic wiki layout; **editorial**, warm paper and serif reading; and **compact**, a denser workspace. Pick one or follow the site default; the choice is remembered in your browser and on your account. The theme toggle in the sidebar switches light and dark mode.
 
 ## revise
 

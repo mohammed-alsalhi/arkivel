@@ -29,6 +29,7 @@ test("core routes stay inside the phone and desktop viewport", async ({ page }) 
       expect(response?.status()).toBeLessThan(400);
       await expect(page.locator("#main-content")).toBeVisible();
       await expectNoHorizontalOverflow(page, route);
+      expect(await page.locator(".wiki-layout").boundingBox()).toEqual({ x: 0, y: 0, ...page.viewportSize() });
     });
   }
 });

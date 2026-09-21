@@ -259,7 +259,7 @@
   top: 0;
   display: flex;
   min-width: 0;
-  height: calc(100dvh - (var(--wiki-frame-inset, 0rem) * 2));
+  height: 100dvh;
   max-height: 100%;
   flex-direction: column;
   overflow: hidden;
@@ -416,7 +416,7 @@
 @media (min-width: 75rem) {
   .article-page > .ui-topbar ~ .article-reader-grid .wiki-right-sidebar {
     top: var(--ui-topbar-height);
-    height: calc(100dvh - (var(--wiki-frame-inset, 0rem) * 2) - var(--ui-topbar-height));
+    height: calc(100dvh - var(--ui-topbar-height));
   }
 }
 
