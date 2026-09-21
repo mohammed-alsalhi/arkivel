@@ -304,7 +304,7 @@ html:not([data-site-mode="media"]) *::-webkit-scrollbar {
 .ui-textarea {
   width: 100%;
   border: 1px solid var(--color-border);
-  border-radius: 0;
+  border-radius: var(--radius-control);
   background: var(--color-surface);
   color: var(--color-foreground);
   font-size: 0.75rem;
