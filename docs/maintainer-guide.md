@@ -2,7 +2,7 @@
 
 ## deploy
 
-Choose a site mode and configure your instance with its own domain and environment variables. The marketing website is a separate static application. See the README for Docker and local setup.
+Choose a site mode and configure your instance with its own domain and environment variables. The marketing website is a separate static application. Deployment files for Docker, a VPS, Fly, Railway, Render, and Vercel are under [deploy/](../deploy/README.md).
 
 ## data safety
 

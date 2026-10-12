@@ -70,17 +70,17 @@ Optional variables include OAuth credentials, S3 storage, and public brand asset
 
 Set `ARKIVEL_SITE_MODE` and every `NEXT_PUBLIC_*` value before building. Public URLs, branding, the default skin, and generated metadata must use the same values at build time and runtime. Rebuild after changing them. Database credentials, module selection, storage settings, and OAuth secrets remain runtime settings. GitHub OAuth uses `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`; outside Compose, set `NEXTAUTH_URL` to the public origin when enabling OAuth.
 
-## docker compose
+## deploy
 
-Copy `.env.example` to `.env` and edit the deployment settings, then run:
+Copy `.env.example` to `.env`, edit the deployment settings, then run from the repository root:
 
 ```bash
-docker compose up --build -d
+docker compose -f deploy/docker/compose.yml --env-file .env up -d --build
 ```
 
-Compose passes the public settings to both the image build and the running app, starts its bundled PostgreSQL service, and applies pending wiki migrations before serving on port 3000. It uses the bundled database URL instead of `.env`'s `DATABASE_URL`; that value is for running the app directly against your own database. OAuth's `NEXTAUTH_URL` defaults to `NEXT_PUBLIC_BASE_URL` in Compose. Set a separate Compose project name with `docker compose -p <instance> ...` for each instance so their database volumes stay separate.
+Compose builds the image with the public settings, starts PostgreSQL, applies pending migrations, and serves on port 3000. It uses its own database URL instead of `.env`'s `DATABASE_URL`; that value is for running the app directly against your own database. Rerun with `--build` after changing public settings.
 
-After changing public settings, rerun `docker compose up --build -d`; restarting an old image does not update its compiled settings. For direct `docker build`, provide the same public values with `--build-arg`; the image retains them as runtime defaults. `docker compose down` stops the services while retaining the database volume.
+Everything deployment-related lives in [deploy/](deploy/README.md): the Dockerfile and Compose stack, a VPS overlay with automatic HTTPS, and configs for Fly, Railway, Render, and notes for Vercel. All of them run the same image.
 
 ## commands
 
@@ -95,6 +95,7 @@ npm run seed:demo
 
 ## documentation
 
+- [deploying](deploy/README.md)
 - [owner setup and authentication](docs/authentication.md)
 - [user guide](docs/help.md)
 - [feature boundary](docs/features.md)

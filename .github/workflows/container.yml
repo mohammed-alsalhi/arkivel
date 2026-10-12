@@ -2,7 +2,7 @@ name: container
 on:
   pull_request:
     branches: [main]
-    paths: [Dockerfile, .dockerignore, docker-compose.yml, package.json, package-lock.json, '.github/workflows/container.yml']
+    paths: ['deploy/docker/**', .dockerignore, package.json, package-lock.json, '.github/workflows/container.yml']
   release:
     types: [published]
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
           test "$RELEASE_TAG" = "v$(node -p 'require("./package.json").version')"
           git merge-base --is-ancestor HEAD origin/main
       - name: Build image
-        run: docker build --label org.opencontainers.image.source=https://github.com/${{ github.repository }} --label org.opencontainers.image.revision=${{ github.sha }} -t arkivel:check .
+        run: docker build -f deploy/docker/Dockerfile --label org.opencontainers.image.source=https://github.com/${{ github.repository }} --label org.opencontainers.image.revision=${{ github.sha }} -t arkivel:check .
       - name: Verify non-root runtime and migration tooling
         run: |
           docker run --rm --entrypoint sh arkivel:check -ec 'test "$(id -u)" = 1001; test -f server.js; test -f scripts/bootstrap-owner.mjs; test -w /app/data/uploads; test -f scripts/backup/create.mjs; pg_dump --version; node node_modules/prisma/build/index.js --version'
