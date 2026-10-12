@@ -98,9 +98,9 @@ npm run seed:demo
 - [owner setup and authentication](docs/authentication.md)
 - [user guide](docs/help.md)
 - [feature boundary](docs/features.md)
-- [api v1 contract](docs/api-v1-migration.md)
+- [api v1 contract](docs/api.md)
 - [maintainer guide](docs/maintainer-guide.md)
-- [architecture](ARCHITECTURE.md)
+- [architecture](docs/architecture.md)
 
 License: MIT.
 
