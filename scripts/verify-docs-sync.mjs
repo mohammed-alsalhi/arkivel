@@ -4,13 +4,13 @@ const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
 const lock = JSON.parse(fs.readFileSync("package-lock.json", "utf8"));
 const required = [
   "README.md",
-  "ARCHITECTURE.md",
-  "DESIGN.md",
   "CHANGELOG.md",
   "docs/index.md",
   "docs/help.md",
   "docs/features.md",
-  "docs/api-v1-migration.md",
+  "docs/api.md",
+  "docs/architecture.md",
+  "docs/design.md",
   "docs/maintainer-guide.md",
   "src/app/help/page.tsx",
   "src/app/features/page.tsx",
