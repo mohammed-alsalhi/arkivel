@@ -6,7 +6,6 @@
  * - each kit collection is created once, keyed by slug — an existing
  *   collection is skipped untouched, and sample items are only seeded into a
  *   collection this call created;
- * - the kit's skin is reported, never written: skins are env/per-user.
  *
  * Idempotent, like `prisma/seed-demo.mjs`: applying twice changes nothing.
  */
@@ -122,7 +121,6 @@ export async function applyKit(kitId: unknown, options: ApplyKitOptions = {}): P
 
   const report: ApplyKitReport = {
     kit: kit.id,
-    skin: kit.skin,
     modulesEnabled: enabled,
     collectionsCreated: [],
     collectionsSkipped: [],

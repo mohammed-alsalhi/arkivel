@@ -7,7 +7,7 @@ import { fileHeaders, getStorage, storageProvider, validStorageKey } from "../st
 afterEach(() => vi.unstubAllEnvs());
 it("stores private local files, rejects traversal, and downloads active content safely", async () => {
   const directory = await mkdtemp(path.join(os.tmpdir(), "arkivel-storage-"));
-  vi.stubEnv("ARKIVEL_STORAGE", "local"); vi.stubEnv("ARKIVEL_UPLOAD_DIR", directory); vi.stubEnv("VERCEL", "0");
+  vi.stubEnv("ARKIVEL_STORAGE", "local"); vi.stubEnv("ARKIVEL_UPLOAD_DIR", directory);
   const key = "uploads/12345678-1234-1234-1234-123456789012.svg";
   try {
     const body = Buffer.from("<svg onload='alert(1)'/>");
@@ -18,8 +18,8 @@ it("stores private local files, rejects traversal, and downloads active content 
     expect(fileHeaders(key)["Content-Disposition"]).toContain("attachment");
     expect(fileHeaders(key)["Content-Security-Policy"]).toContain("sandbox");
     await expect(getStorage().upload(body, key, "image/svg+xml")).rejects.toMatchObject({ code: "EEXIST" });
-    vi.stubEnv("ARKIVEL_STORAGE", "vercel"); vi.stubEnv("ARKIVEL_ACCESS", "private");
-    expect(storageProvider).toThrow("Private instances require");
+    vi.stubEnv("ARKIVEL_STORAGE", "vercel");
+    expect(storageProvider).toThrow("Unknown ARKIVEL_STORAGE provider");
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 

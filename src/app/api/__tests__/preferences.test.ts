@@ -50,7 +50,7 @@ describe("preferences API", () => {
     expect(prisma.userPreference.upsert).not.toHaveBeenCalled();
   });
 
-  it("stores a valid skin alongside existing preferences", async () => {
+  it("stores a valid skin and drops retired stored keys", async () => {
     vi.mocked(prisma.userPreference.findUnique).mockResolvedValue({
       data: { editorMode: "markdown" },
     } as never);
@@ -58,7 +58,7 @@ describe("preferences API", () => {
     const res = await PUT(putRequest({ skin: "wiki" }));
 
     expect(res.status).toBe(200);
-    expect(upsertedData()).toEqual({ editorMode: "markdown", skin: "wiki" });
+    expect(upsertedData()).toEqual({ skin: "wiki" });
     expect((await res.json()).skin).toBe("wiki");
   });
 
@@ -80,7 +80,7 @@ describe("preferences API", () => {
 
     const res = await PUT(putRequest({ skin: "neon", bogus: true, locale: "fr" }));
 
-    expect(upsertedData()).toEqual({ skin: "wiki", locale: "fr" });
+    expect(upsertedData()).toEqual({ skin: "wiki" });
     expect((await res.json()).skin).toBe("wiki");
   });
 

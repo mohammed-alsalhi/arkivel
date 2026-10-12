@@ -85,7 +85,6 @@ describe("applyKit", () => {
     });
     expect(report).toEqual({
       kit: "notes-and-tasks",
-      skin: "folio",
       modulesEnabled: ["collections", "graph"],
       collectionsCreated: ["tasks", "reading-list"],
       collectionsSkipped: [],
@@ -145,7 +144,6 @@ describe("applyKit", () => {
     const report = await applyKit("wiki");
     expect(report).toEqual({
       kit: "wiki",
-      skin: "wiki",
       modulesEnabled: ["graph", "api", "feeds", "share"],
       collectionsCreated: [],
       collectionsSkipped: [],

@@ -98,7 +98,6 @@ jobs:
       ARKIVEL_UPLOAD_DIR: /tmp/arkivel-e2e-uploads
       NEXTAUTH_SECRET: arkivel-e2e-session-secret
       NEXTAUTH_URL: http://127.0.0.1:3000
-      ADMIN_SECRET: arkivel-e2e-auth-required
       BASE_URL: http://127.0.0.1:3000
       DATABASE_URL: postgresql://arkivel:arkivel@127.0.0.1:5432/arkivel_e2e
       NEXT_PUBLIC_BASE_URL: http://127.0.0.1:3000

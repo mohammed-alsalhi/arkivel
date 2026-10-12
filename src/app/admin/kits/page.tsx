@@ -45,7 +45,7 @@ function describeReport(name: string, report: ApplyKitReport): string {
   ];
   if (report.collectionsSkipped.length) parts.push(`${report.collectionsSkipped.length} already there`);
   if (report.itemsCreated) parts.push(`${plural(report.itemsCreated, "sample item", "sample items")}`);
-  return `applied ${name}: ${parts.join(", ")}. recommended skin: ${report.skin}.`;
+  return `applied ${name}: ${parts.join(", ")}.`;
 }
 
 export default function KitsPage() {
@@ -164,7 +164,6 @@ export default function KitsPage() {
                 <tr key={kit.id}>
                   <td className="font-medium text-heading">
                     {kit.name}
-                    <div className="text-[11px] font-normal text-muted">skin: {kit.skin}</div>
                   </td>
                   <td className="text-muted">{kit.description}</td>
                   <td>
@@ -216,8 +215,7 @@ export default function KitsPage() {
 
       <Notice className="mt-3">
         applying a kit stores its module list in the <InlineCode>modules</InlineCode> system setting (see{" "}
-        <a href="/admin/modules" className="underline">modules</a>) and creates its collections by slug, so applying twice is safe. a
-        kit&apos;s skin is a recommendation: pick it in settings or with <InlineCode>NEXT_PUBLIC_ARKIVEL_SKIN</InlineCode>.
+        <a href="/admin/modules" className="underline">modules</a>) and creates its collections by slug, so applying twice is safe.
       </Notice>
     </Page>
   );

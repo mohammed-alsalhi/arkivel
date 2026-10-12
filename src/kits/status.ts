@@ -41,7 +41,6 @@ export function kitStatus(kit: KitDefinition, environment: KitEnvironment): KitS
     id: kit.id,
     name: kit.name,
     description: kit.description,
-    skin: kit.skin,
     modules: kit.modules,
     modulesEnabled,
     collections,

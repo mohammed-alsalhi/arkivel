@@ -11,7 +11,7 @@ Arkivel supports:
 - revision history, diff, blame, restore, redirects, and draft share links
 - Markdown, JSON, ZIP, Notion, and Obsidian import/export paths
 - users, roles, sessions, local credentials, and optional OAuth
-- assets, audit logs, health checks, maintenance mode, and read-only mode
+- assets, audit logs, and health checks
 - a documented `/api/v1` contract and OpenAPI document, plus personal access tokens (`Authorization: Bearer ark_…`) that make every `/api` route usable from scripts and other apps with the token owner's role; created and revoked under `/settings/tokens`, logged to the audit trail, with `ARKIVEL_API_CORS_ORIGINS` for browser apps on other origins
 - collections with table, board, list, and calendar views, searchable typed properties, filters, sorting, and linked records
 - starter kits (`documentation`, `wiki`, `notes and tasks`, `team knowledge base`, `course workspace`, `watchlist`) applied from `/admin/kits`: a module preset plus seeded collections, idempotent by collection slug

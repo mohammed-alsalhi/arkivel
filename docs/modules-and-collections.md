@@ -130,7 +130,7 @@ Collection choice fields use a shared searchable label picker: option colors sta
 
 ## starter kits
 
-A kit is `{ modules: ModuleId[], skin, seed }` in `src/kits/`. `ARKIVEL_KIT` picks one for a fresh database; `/admin/kits` can apply a kit's seed later (idempotent, like the demo seed). Kits: `wiki` (core + graph + api), `notes-and-tasks` (core + collections with a tasks collection: status / due / priority / assignee, table + board views), `team-knowledge-base` (everything), `course-workspace` (linked courses and coursework, with table, board, list, and calendar views), and `watchlist` (a film and series library: a `watchlist` collection with type / status / moods / year / rating / watched on and table, board, and list views, plus an `episodes` collection bound to it for per-episode marks; with assets, export, and import).
+A kit is `{ modules: ModuleId[], seed }` in `src/kits/`. Kits are applied from `/admin/kits` (idempotent, like the demo seed). Kits: `wiki` (core + graph + api), `notes-and-tasks` (core + collections with a tasks collection: status / due / priority / assignee, table + board views), `team-knowledge-base` (everything), `course-workspace` (linked courses and coursework, with table, board, list, and calendar views), and `watchlist` (a film and series library: a `watchlist` collection with type / status / moods / year / rating / watched on and table, board, and list views, plus an `episodes` collection bound to it for per-episode marks; with assets, export, and import).
 
 The `watchlist` kit is the worked example of using Arkivel for a domain that is not a wiki: set `NEXT_PUBLIC_ARKIVEL_NAME` to the product name, apply the kit from `/admin/kits`, and the same image, database, and admin become a media library. Nothing in the kit is code; it is two templates and a seed.
 
@@ -196,19 +196,9 @@ Repeated input is a no-op. A record with an older `generated_at` than its stored
 
 Reads are public like a wiki; every write requires a signed-in collection editor, so the library's `health` reports `can_edit` and the pages hide their controls when it is false. Kit rows carry `sample: true` until they are edited, which is what "remove sample titles" deletes. The mode forces the `collections` and `media` modules on regardless of `ARKIVEL_MODULES`.
 
-### media release checks
-
-Use a dedicated local database (never the wiki database), apply migrations, seed the smoke account, and start media mode in its own terminal. The database name for the destructive-fixture check must begin with `arkivel_media_test_` and both database and app must be on loopback:
-
-```sh
-DATABASE_URL=postgresql://user:password@localhost:5432/arkivel_media_test_local BASE_URL=http://127.0.0.1:3107 node scripts/check-media.mjs
-```
-
-The check applies the watchlist kit and exercises authentication, catalogue search, status, episode marks, mood picks, backup preview, repeat restore, metadata and exact timestamp preservation, offline saved-title details, and transaction rollback. It leaves synthetic records in that disposable database. `SMOKE_ADMIN_PASSWORD` overrides the smoke account password.
-
 Backup restore uses a single collection transaction, preserves the original added time and exact watched timestamps, and imports saved descriptive metadata without requiring TMDB. Existing titles keep their fields; missing episode marks are added. Older watchlist kits gain the `watched_at` and `release_date` properties during restore. Watched timestamps fall back to the edited date if a collection editor changes the day. The library is shared within one deployment; reads are public and writes require an editor account. Very large backups still perform individual inserts and may reach the transaction timeout; failure rolls the entire restore back.
 
-For Vercel, create a project from this repository with a PostgreSQL database. Set `ARKIVEL_SITE_MODE=media`, `NEXT_PUBLIC_ARKIVEL_NAME="My library"`, `NEXT_PUBLIC_BASE_URL` to its deployment origin, and its own `DATABASE_URL`, `ADMIN_SECRET`, and authentication configuration before building. Apply migrations explicitly, create the administrator account, and apply the watchlist kit. Keep independently operated instances and their credentials isolated. Provider keys are optional; without TMDB, discovery uses the bundled catalogue and restored titles remain viewable from saved metadata.
+For a hosted library, set `ARKIVEL_SITE_MODE=media`, `NEXT_PUBLIC_ARKIVEL_NAME="My library"`, `NEXT_PUBLIC_BASE_URL` to its deployment origin, and its own `DATABASE_URL` and authentication configuration before building. Apply migrations explicitly, create the administrator account, and apply the watchlist kit. Keep independently operated instances and their credentials isolated. Provider keys are optional; without TMDB, discovery uses the bundled catalogue and restored titles remain viewable from saved metadata.
 
 ## documentation mode
 

@@ -9,7 +9,7 @@ try {
   const destinations = args.filter(arg => arg !== "--database-only");
   if (destinations.length !== 1 || destinations[0].startsWith("-")) throw new Error("Usage: npm run backup -- NEW_DIRECTORY [--database-only]");
   if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
-  const provider = process.env.ARKIVEL_STORAGE || (process.env.BLOB_READ_WRITE_TOKEN ? "vercel" : "local");
+  const provider = process.env.ARKIVEL_STORAGE || "local";
   if (provider !== "local" && !databaseOnly) throw new Error("Remote storage needs its own object backup; use --database-only explicitly");
   const destination = path.resolve(destinations[0]);
   const source = path.resolve(process.env.ARKIVEL_UPLOAD_DIR || "data/uploads");

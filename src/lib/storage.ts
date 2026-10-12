@@ -1,16 +1,12 @@
-import { put } from "@vercel/blob";
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { isPrivateInstance } from "./instance-access";
 
 export const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
 export function storageProvider() {
-  const provider = process.env.ARKIVEL_STORAGE || (process.env.BLOB_READ_WRITE_TOKEN ? "vercel" : "local");
-  if (!["local", "s3", "vercel"].includes(provider)) throw new Error("Unknown ARKIVEL_STORAGE provider");
-  if (provider === "vercel" && isPrivateInstance()) throw new Error("Private instances require local or private S3 storage; public Blob URLs are not private");
-  if (provider === "local" && process.env.VERCEL === "1") throw new Error("Local storage needs persistent disk; configure S3 on Vercel");
+  const provider = process.env.ARKIVEL_STORAGE || "local";
+  if (!["local", "s3"].includes(provider)) throw new Error("Unknown ARKIVEL_STORAGE provider");
   return provider;
 }
 
@@ -54,10 +50,6 @@ const storage = {
   async upload(file: Buffer, filename: string, contentType: string) {
     if (!validStorageKey(filename) || file.length > MAX_UPLOAD_BYTES) throw new Error("Invalid or oversized upload");
     const provider = storageProvider();
-    if (provider === "vercel") {
-      const blob = await put(filename, file, { access: "public", contentType });
-      return { url: blob.url };
-    }
     if (provider === "local") {
       const target = localPath(filename);
       await mkdir(path.dirname(target), { recursive: true, mode: 0o700 });

@@ -36,32 +36,6 @@
     ]
   },
   {
-    "route": "/api/admin/maintenance",
-    "methods": [
-      {
-        "method": "GET",
-        "summary": "get current mode"
-      },
-      {
-        "method": "POST",
-        "summary": "toggle maintenance mode"
-      }
-    ]
-  },
-  {
-    "route": "/api/admin/maintenance/report",
-    "methods": [
-      {
-        "method": "GET",
-        "summary": null
-      },
-      {
-        "method": "POST",
-        "summary": null
-      }
-    ]
-  },
-  {
     "route": "/api/admin/modules",
     "methods": [
       {
@@ -75,19 +49,6 @@
       {
         "method": "DELETE",
         "summary": "drop the override and return to the environment default"
-      }
-    ]
-  },
-  {
-    "route": "/api/admin/read-only",
-    "methods": [
-      {
-        "method": "GET",
-        "summary": null
-      },
-      {
-        "method": "POST",
-        "summary": null
       }
     ]
   },

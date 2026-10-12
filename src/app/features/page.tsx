@@ -97,7 +97,7 @@ export default async function FeaturesPage() {
           <ul className="list-disc space-y-2 pl-5">
             <FeatureItem title="accounts and admin">
               account sessions protect write operations. administrators manage users, categories,
-              tags, redirects, modules, imports, maintenance, read-only mode, and the audit log from{" "}
+              tags, redirects, modules, imports, and the audit log from{" "}
               <Link href="/admin">admin</Link>.
             </FeatureItem>
             <FeatureItem title="modules">

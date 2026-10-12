@@ -6,13 +6,13 @@ Arkivel is a self-hostable Next.js application with wiki and media interfaces se
 
 Server components and route handlers access PostgreSQL through `src/lib/prisma.ts`. Core data includes articles, revisions, links, categories, tags, users, sessions, audit logs, assets, and settings. Collections provide typed records and views; modules and starter kits compose additional workflows. Media mode presents the watchlist collections through a dedicated shell.
 
-The current upload implementation uses Vercel Blob. A portable storage implementation is planned; database hosting and authentication provider selection remain separate concerns.
+Uploads go to local disk or a private S3-compatible bucket; database hosting and authentication provider selection remain separate concerns.
 
 ## presentation
 
 `NEXT_PUBLIC_ARKIVEL_SKIN` selects the default wiki skin. The request resolves skin from the reader cookie, then the saved user preference, then the environment default. The shared components render both folio and wiki. Skins own presentation; editors, permission checks, and collection behavior stay shared. Media mode owns its shell.
 
-Branding currently uses build-time `NEXT_PUBLIC_*` settings. Runtime branding and a broader skin registry are planned, not yet implemented.
+Branding uses build-time `NEXT_PUBLIC_*` settings whose defaults live in `src/lib/config.ts`.
 
 ## identity and permissions
 

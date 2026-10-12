@@ -18,13 +18,13 @@ The same command inside the app container is `node scripts/bootstrap-owner.mjs -
 
 ## storage
 
-`ARKIVEL_STORAGE=local` stores uploads outside the public directory, under `ARKIVEL_UPLOAD_DIR` (default `data/uploads`). Compose mounts a persistent uploads volume. Local storage requires persistent disk and is rejected on Vercel. Keep this directory backed up with PostgreSQL.
+`ARKIVEL_STORAGE=local` stores uploads outside the public directory, under `ARKIVEL_UPLOAD_DIR` (default `data/uploads`). Compose mounts a persistent uploads volume. Local storage requires persistent disk. Keep this directory backed up with PostgreSQL.
 
 `ARKIVEL_STORAGE=s3` uses the official AWS client and the standard AWS credential chain. Set `ARKIVEL_S3_BUCKET`, `ARKIVEL_S3_REGION`, and optionally `ARKIVEL_S3_ENDPOINT` for an S3-compatible service. Set `ARKIVEL_S3_FORCE_PATH_STYLE=true` if required by that service. Use a private bucket, a least-privilege identity limited to GetObject/PutObject for this instance, and HTTPS outside local tests. Do not configure public-read policies. Bucket provisioning and live provider verification require your own account credentials.
 
 Local and S3 uploads use `/api/files/...` URLs and pass through instance authorization. Raster images can display inline; other types, including HTML and SVG, download as attachments with sandbox and no-sniff headers. Uploads are limited to 20 MiB. Stable object keys allow moving local files into a bucket without rewriting those URLs; copy and verify objects before changing providers.
 
-The legacy `vercel` provider preserves existing public Blob behavior. If no provider is selected, an existing Blob token selects it; otherwise storage defaults to local. Private mode rejects new public Blob uploads. **Changing instance visibility cannot revoke an existing public Blob URL or a previously distributed export.** Migrate existing public attachments to private storage and remove their public originals before treating that content as private. External image URLs in articles are also outside Arkivel's access boundary.
+Storage defaults to local when no provider is selected. **Changing instance visibility cannot revoke a previously distributed export.** External image URLs in articles are also outside Arkivel's access boundary.
 
 ## backups
 
@@ -50,7 +50,7 @@ docker compose start app
 
 The temporary backup container runs as root to read the private volume and write the host backup; the web app continues to run as its unprivileged user. Keep `backups` off public serving paths and copy the result to protected off-host storage. Do not run the host backup command against an unrelated empty uploads directory when the app uses a Docker volume.
 
-For S3/Blob, `--database-only` explicitly produces a database-only backup. Enable bucket versioning/backup separately; remote objects are not copied by this command. Store backups off-host with encryption and restricted access: the dump contains account password hashes, sessions, and application content. These commands do not install a backup schedule.
+For S3, `--database-only` explicitly produces a database-only backup. Enable bucket versioning/backup separately; remote objects are not copied by this command. Store backups off-host with encryption and restricted access: the dump contains account password hashes, sessions, and application content. These commands do not install a backup schedule.
 
 Rehearse into a disposable empty database and a new uploads directory:
 

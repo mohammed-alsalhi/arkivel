@@ -84,7 +84,7 @@ const watchlistCollection: KitCollection = {
 export const KITS: readonly KitDefinition[] = [
   {
     id: "documentation", name: "documentation", description: "a versioned documentation index over published articles, with ordered sections and a shared editor",
-    modules: ["collections", "api", "assets", "import", "export"], skin: "editorial",
+    modules: ["collections", "api", "assets", "import", "export"],
     collections: [{ template: "documentation", name: "documentation", views: [{ kind: "table" }] }],
   },
   {
@@ -92,7 +92,6 @@ export const KITS: readonly KitDefinition[] = [
     name: "wiki",
     description: "a personal or public wiki: pages, links, the graph, feeds, share links, and the public api. no collections.",
     modules: ["graph", "api", "feeds", "share"],
-    skin: "wiki",
     collections: [],
   },
   {
@@ -100,7 +99,6 @@ export const KITS: readonly KitDefinition[] = [
     name: "notes and tasks",
     description: "notes plus a tasks board and a reading list on the collections engine, with the graph for the notes.",
     modules: ["collections", "graph"],
-    skin: "folio",
     collections: [tasksCollection, readingListCollection],
   },
   {
@@ -108,7 +106,6 @@ export const KITS: readonly KitDefinition[] = [
     name: "team knowledge base",
     description: "every module on, with an empty tasks collection to start from.",
     modules: [...MODULE_IDS],
-    skin: "folio",
     collections: [{ ...tasksCollection, items: [] }],
   },
   {
@@ -116,7 +113,6 @@ export const KITS: readonly KitDefinition[] = [
     name: "course workspace",
     description: "linked course hubs and coursework, with deadline views and repeatable course-sync imports.",
     modules: ["collections", "graph", "import", "export"],
-    skin: "folio",
     collections: [
       { template: "courses", name: "courses" },
       { template: "coursework", name: "coursework", relations: { course: "courses" }, views: [
@@ -129,7 +125,6 @@ export const KITS: readonly KitDefinition[] = [
     name: "watchlist",
     description: "a film and series library: discovery with posters, a watchlist with a status board, per-episode marks, and export for backups.",
     modules: ["collections", "media", "assets", "export", "import"],
-    skin: "folio",
     collections: [
       watchlistCollection,
       { template: "episodes", name: "episodes", relations: { show: "watchlist" }, views: [{ kind: "table" }] },

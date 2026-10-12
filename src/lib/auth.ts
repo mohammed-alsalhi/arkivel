@@ -8,9 +8,6 @@ import prisma from "@/lib/prisma";
 const SESSION_COOKIE = "session_token";
 
 export async function isAdmin(): Promise<boolean> {
-  const secret = process.env.ADMIN_SECRET;
-  if (!secret && process.env.NODE_ENV === "development") return true;
-
   const session = await getSession();
   return !!(session && session.role === "admin");
 }

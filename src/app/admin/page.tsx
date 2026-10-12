@@ -15,8 +15,6 @@ const tools = [
   ["modules", "/admin/modules"],
   ["starter kits", "/admin/kits"],
   ["import", "/import"],
-  ["maintenance", "/admin/maintenance"],
-  ["read-only mode", "/admin/read-only"],
   ["audit log", "/admin/audit-log"],
 ] as const;
 
