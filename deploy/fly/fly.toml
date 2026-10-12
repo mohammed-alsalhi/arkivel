@@ -1,0 +1,40 @@
+# fly deploy --config deploy/fly/fly.toml
+# Before the first deploy: fly launch --no-deploy --copy-config --config deploy/fly/fly.toml
+# then fly postgres create + fly postgres attach (sets DATABASE_URL),
+# fly volumes create arkivel_uploads, and fly secrets set NEXTAUTH_SECRET=...
+app = "arkivel"
+primary_region = "ams"
+
+[build]
+  dockerfile = "../docker/Dockerfile"
+  # Public values are compiled into the image; set them here, not as secrets.
+  [build.args]
+    ARKIVEL_SITE_MODE = "wiki"
+    NEXT_PUBLIC_BASE_URL = "https://arkivel.fly.dev"
+
+[env]
+  ARKIVEL_REGISTRATION = "closed"
+  ARKIVEL_STORAGE = "local"
+  ARKIVEL_UPLOAD_DIR = "/app/data/uploads"
+
+[[mounts]]
+  source = "arkivel_uploads"
+  destination = "/app/data/uploads"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "30s"
+    method = "GET"
+    path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1gb"

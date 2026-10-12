@@ -1,3 +1,8 @@
+# Arkivel with its own PostgreSQL. Run from the repository root:
+#   docker compose -f deploy/docker/compose.yml --env-file .env up -d --build
+# Set ARKIVEL_IMAGE=ghcr.io/mohammed-alsalhi/arkivel:vX.Y.Z to run a published
+# image instead of building (then drop --build). See deploy/README.md.
+
 x-app-config: &app-config
   # Public settings are compiled into the build; defaults live in src/lib/config.ts.
   ARKIVEL_SITE_MODE: "${ARKIVEL_SITE_MODE:-}"
@@ -15,30 +20,29 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: wiki
-      POSTGRES_PASSWORD: wiki_password
-      POSTGRES_DB: wiki
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: "${POSTGRES_USER:-arkivel}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-arkivel}"
+      POSTGRES_DB: "${POSTGRES_DB:-arkivel}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U wiki"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-arkivel} -d ${POSTGRES_DB:-arkivel}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   app:
+    image: "${ARKIVEL_IMAGE:-arkivel:local}"
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
       args: *app-config
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "${ARKIVEL_PORT:-3000}:3000"
     environment:
       <<: *app-config
-      DATABASE_URL: "postgresql://wiki:wiki_password@db:5432/wiki"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-arkivel}:${POSTGRES_PASSWORD:-arkivel}@db:5432/${POSTGRES_DB:-arkivel}"
       ARKIVEL_ACCESS: "${ARKIVEL_ACCESS:-public}"
       ARKIVEL_STORAGE: "${ARKIVEL_STORAGE:-local}"
       ARKIVEL_UPLOAD_DIR: /app/data/uploads

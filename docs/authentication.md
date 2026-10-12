@@ -22,7 +22,7 @@ For Compose, use the running application's database configuration:
 printf 'Owner password: '
 IFS= read -r -s owner_password
 printf '\n'
-printf '%s' "$owner_password" | docker compose exec -T app node scripts/bootstrap-owner.mjs --username owner --email owner@example.com
+printf '%s' "$owner_password" | docker compose -f deploy/docker/compose.yml exec -T app node scripts/bootstrap-owner.mjs --username owner --email owner@example.com
 unset owner_password
 ```
 

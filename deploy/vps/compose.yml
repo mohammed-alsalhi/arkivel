@@ -1,0 +1,30 @@
+# Overlay for deploy/docker/compose.yml: Caddy in front of the app with
+# automatic HTTPS. Run from the repository root:
+#   docker compose -f deploy/docker/compose.yml -f deploy/vps/compose.yml --env-file .env up -d --build
+# Set ARKIVEL_DOMAIN in .env (and point DNS at the server) before starting.
+
+services:
+  app:
+    ports: !reset []
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      ARKIVEL_DOMAIN: "${ARKIVEL_DOMAIN:?set ARKIVEL_DOMAIN in .env}"
+    volumes:
+      - ../vps/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  caddy_data:
+  caddy_config:
