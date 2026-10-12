@@ -1,5 +1,11 @@
 # changelog
 
+## unreleased
+
+- remove leftover settings: user preferences other than skin, maintenance / read-only / background-task modes, the `ADMIN_SECRET` development bypass, the Vercel build and Blob storage paths, kit skin recommendations, and the unused `NEXT_PUBLIC_APP_VERSION`
+- define public branding defaults once in `src/lib/config.ts`; Compose and the Dockerfile only pass values through
+- drop the duplicate prisma seed, the unwired media release check, and the design qa screenshots
+
 ## 1.1.0
 
 - add private-instance read access with a login-only shell and revocable session checks

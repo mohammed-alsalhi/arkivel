@@ -159,8 +159,7 @@ export default async function HelpPage() {
               the focused <Link href="/admin">admin area</Link>.
             </li>
             <li>
-              admin retains users, categories, tags, redirects, modules, import, maintenance, read-only mode,
-              and audit-log controls.
+              admin retains users, categories, tags, redirects, modules, import, and audit-log controls.
             </li>
           </ul>
         </SectionPanel>

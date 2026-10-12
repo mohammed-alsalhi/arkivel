@@ -40,7 +40,6 @@
     "@tiptap/extension-table": "3.31.3",
     "@tiptap/react": "3.31.3",
     "@tiptap/starter-kit": "3.31.3",
-    "@vercel/blob": "2.8.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "d3": "^7.9.0",
@@ -77,9 +76,6 @@
     "tsx": "^4.22.3",
     "typescript": "^5",
     "vitest": "^5.0.1"
-  },
-  "prisma": {
-    "seed": "node prisma/seed.mjs"
   },
   "overrides": {
     "preact": "^10.24.3",

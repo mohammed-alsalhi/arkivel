@@ -9,7 +9,6 @@ import OverlayScrollbar from "@/components/OverlayScrollbar";
 import { AdminProvider } from "@/components/AdminContext";
 import { SkinProvider } from "@/components/SkinContext";
 import { ToastProvider } from "@/components/Toast";
-import { MaintenanceBanner, ReadOnlyBanner } from "@/components/SiteBanner";
 import { config, type WikiSkin } from "@/lib/config";
 import { SKIN_COOKIE, isWikiSkin } from "@/lib/skin";
 import { EnabledModulesProvider } from "@/modules/client";
@@ -111,7 +110,7 @@ export function generateMetadata(): Metadata {
 const getShellData = unstable_cache(
   async () => {
     const { default: prisma } = await import("@/lib/prisma");
-    const [allCategories, articleCount, maintenanceRecord, readOnlyRecord] = await Promise.all([
+    const [allCategories, articleCount] = await Promise.all([
       prisma.category.findMany({
         orderBy: { sortOrder: "asc" },
         include: {
@@ -121,14 +120,10 @@ const getShellData = unstable_cache(
         },
       }).catch(() => []),
       prisma.article.count({ where: { published: true, status: "published" } }).catch(() => 0),
-      prisma.systemSetting.findUnique({ where: { id: "maintenance_mode" } }).catch(() => null),
-      prisma.systemSetting.findUnique({ where: { id: "read_only_mode" } }).catch(() => null),
     ]);
     return {
       categories: allCategories.filter((category) => !category.parentId),
       articleCount,
-      maintenanceMode: maintenanceRecord?.enabled ?? false,
-      readOnlyMode: readOnlyRecord?.enabled ?? false,
     };
   },
   ["layout-shell-data"],
@@ -183,13 +178,11 @@ export default async function RootLayout({
     );
   }
 
-  const [{ categories, articleCount, maintenanceMode, readOnlyMode }, initialAdmin, initialSession, skin, modules] =
+  const [{ categories, articleCount }, initialAdmin, initialSession, skin, modules] =
     await Promise.all([
       getShellData().catch(() => ({
         categories: [],
         articleCount: 0,
-        maintenanceMode: false,
-        readOnlyMode: false,
       })),
       isAdmin().catch(() => false),
       getRequestSession(),
@@ -247,8 +240,6 @@ export default async function RootLayout({
             />
 
             <div className="wiki-content-shell">
-              {maintenanceMode && <MaintenanceBanner />}
-              {readOnlyMode && <ReadOnlyBanner />}
               <main id="main-content" className="wiki-main-content">
                 {children}
               </main>

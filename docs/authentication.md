@@ -44,7 +44,7 @@ Successful OAuth login creates an ordinary Arkivel database session. The encrypt
 
 After upgrading, OAuth users must sign in again: old JWTs without an Arkivel session reference are intentionally rejected. Existing local sessions and password hashes remain valid. New registrations now require longer passwords; existing passwords continue to work.
 
-`ADMIN_SECRET` is a legacy development guard, not an owner password. In production, administrator access always requires an authenticated admin. In development only, omitting `ADMIN_SECRET` enables the existing local admin bypass; set it when testing real authorization.
+Administrator access always requires an authenticated admin session or token; there is no development bypass.
 
 ## validation
 

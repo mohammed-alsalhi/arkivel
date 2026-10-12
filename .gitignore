@@ -32,21 +32,13 @@ yarn-error.log*
 
 # env files
 .env
-.env*.local
 
 # claude
 .claude/
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# uploads
-/public/uploads/*
-!/public/uploads/.gitkeep
 
 /src/generated/prisma
 .env*

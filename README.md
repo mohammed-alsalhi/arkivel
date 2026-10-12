@@ -1,6 +1,6 @@
 # arkivel
 
-Arkivel is a small, self-hosted knowledge base for writing, linking, searching, and exporting documentation. It uses Next.js, PostgreSQL, Prisma, Tiptap, and optional Vercel Blob uploads.
+Arkivel is a small, self-hosted knowledge base for writing, linking, searching, and exporting documentation. It uses Next.js, PostgreSQL, Prisma, and Tiptap.
 
 Choose a site mode for your instance:
 
@@ -10,11 +10,11 @@ Choose a site mode for your instance:
 | docs | `ARKIVEL_SITE_MODE=docs` | versioned documentation using articles and collections |
 | media | `ARKIVEL_SITE_MODE=media` | a personal film and series library on the same backend |
 
-Each deployment keeps its own domains, environment variables, database, and blob credentials.
+Each deployment keeps its own domains, environment variables, database, and storage.
 
 The media mode is the worked example of Arkivel serving a domain that is not a wiki. Set `NEXT_PUBLIC_ARKIVEL_NAME="My library"`, `ARKIVEL_SITE_MODE=media`, and `ARKIVEL_MODULES=collections,media,assets,export,import`, then apply the `watchlist` kit from `/admin/kits`. Optional keys: `TMDB_API_KEY` for the full catalogue, `OMDB_API_KEY` for IMDb and Rotten Tomatoes ratings, `ANTHROPIC_API_KEY` for Claude-assisted mood picks. Without keys the library searches a bundled starter catalogue and matches moods locally.
 
-Vercel builds use its native Next.js adapter. Self-hosted builds produce a standalone server; containers run the pinned Prisma migrations before starting it.
+Builds produce a standalone server; containers run the pinned Prisma migrations before starting it.
 
 All skins fill the browser viewport. Wiki deployments default to the lowercase `folio` skin. Set `NEXT_PUBLIC_ARKIVEL_SKIN=wiki` to make the classic wiki skin the site default; `editorial` adds warm paper tones and serif reading typography; `compact` adds a denser workspace with a narrow sidebar. Readers can override the default from the appearance section in settings. Press `⌘K` / `Ctrl+K` anywhere for the command palette.
 
@@ -28,9 +28,9 @@ Every route under `/api` is the interface's own surface and accepts a personal a
 - categories, tags, keyword search, and recent changes
 - revision history, diff, blame, restore, redirects, and draft share links
 - Markdown, JSON, ZIP, Notion, and Obsidian import/export paths
-- asset uploads through Vercel Blob
+- asset uploads to local disk or a private S3-compatible bucket
 - local credentials, optional OAuth, sessions, roles, and audit logs
-- maintenance/read-only controls and health endpoints
+- health endpoints
 - a versioned `/api/v1` contract with generated OpenAPI
 
 ## local setup
@@ -61,15 +61,14 @@ Create the first administrator using [owner setup](docs/authentication.md). Regi
 
 ```dotenv
 DATABASE_URL=postgresql://user:password@host:5432/database
-ADMIN_SECRET=replace-me
 NEXT_PUBLIC_BASE_URL=https://wiki.example.com
 ARKIVEL_SITE_MODE=wiki
 ARKIVEL_REGISTRATION=closed
 ```
 
-Optional variables include OAuth credentials, `BLOB_READ_WRITE_TOKEN`, and public brand assets. See [.env.example](.env.example).
+Optional variables include OAuth credentials, S3 storage, and public brand assets. See [.env.example](.env.example).
 
-Set `ARKIVEL_SITE_MODE` and every `NEXT_PUBLIC_*` value before building. Public URLs, branding, the default skin, and generated metadata must use the same values at build time and runtime. Rebuild after changing them. Database credentials, `ADMIN_SECRET`, module selection, upload credentials, and OAuth secrets remain runtime settings. GitHub OAuth uses `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`; outside Compose, set `NEXTAUTH_URL` to the public origin when enabling OAuth.
+Set `ARKIVEL_SITE_MODE` and every `NEXT_PUBLIC_*` value before building. Public URLs, branding, the default skin, and generated metadata must use the same values at build time and runtime. Rebuild after changing them. Database credentials, module selection, storage settings, and OAuth secrets remain runtime settings. GitHub OAuth uses `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`; outside Compose, set `NEXTAUTH_URL` to the public origin when enabling OAuth.
 
 ## docker compose
 

@@ -127,7 +127,6 @@ describe("starter kit admin API", () => {
     it("applies the kit with sample items by default and returns the report", async () => {
       const report = {
         kit: "notes-and-tasks",
-        skin: "folio",
         modulesEnabled: ["collections", "graph"],
         collectionsCreated: ["tasks", "reading-list"],
         collectionsSkipped: [],

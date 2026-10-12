@@ -23,21 +23,7 @@ describe("mergePreferences", () => {
     expect(mergePreferences(saved({ skin: null })).skin).toBe("");
   });
 
-  it("fills missing keys and preserves other saved values", () => {
-    const merged = mergePreferences({ editorMode: "markdown", skin: "wiki" });
-
-    expect(merged.editorMode).toBe("markdown");
-    expect(merged.skin).toBe("wiki");
-    expect(merged.locale).toBe(DEFAULT_PREFERENCES.locale);
-    expect(merged.dashboardWidgets).toEqual(DEFAULT_PREFERENCES.dashboardWidgets);
-  });
-
-  it("restores the default widgets when the saved list is malformed", () => {
-    expect(mergePreferences(saved({ dashboardWidgets: "welcome" })).dashboardWidgets).toEqual(
-      DEFAULT_PREFERENCES.dashboardWidgets,
-    );
-    expect(mergePreferences({ dashboardWidgets: [] }).dashboardWidgets).toEqual(
-      DEFAULT_PREFERENCES.dashboardWidgets,
-    );
+  it("drops keys that are no longer preferences", () => {
+    expect(mergePreferences(saved({ skin: "wiki", editorMode: "markdown" }))).toEqual({ skin: "wiki" });
   });
 });

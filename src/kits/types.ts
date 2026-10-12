@@ -1,6 +1,6 @@
 /**
  * Starter kits (docs/modules-and-collections.md): a preset of enabled modules
- * plus seeded collections and a recommended skin. Kits are applied from
+ * plus seeded collections. Kits are applied from
  * `/admin/kits`; there is no marketplace and no third-party plugin surface.
  */
 import type { PropertyValues } from "@/modules/collections/properties";
@@ -8,9 +8,6 @@ import type { TemplateId } from "@/modules/collections/templates";
 import type { ModuleId } from "@/modules/types";
 
 export type KitId = "documentation" | "wiki" | "notes-and-tasks" | "team-knowledge-base" | "course-workspace" | "watchlist";
-
-/** Skins are chosen per user (or by `NEXT_PUBLIC_ARKIVEL_SKIN`); a kit only recommends one. */
-export type KitSkin = import("@/lib/config").WikiSkin;
 
 export type KitViewKind = "table" | "board" | "list" | "calendar";
 
@@ -40,15 +37,12 @@ export type KitDefinition = {
   name: string;
   description: string;
   modules: ModuleId[];
-  skin: KitSkin;
   collections: KitCollection[];
 };
 
 /** What `applyKit` did. Collections are reported by slug. */
 export type ApplyKitReport = {
   kit: KitId;
-  /** The kit's recommended skin; not written anywhere — skins are env/per-user. */
-  skin: KitSkin;
   modulesEnabled: ModuleId[];
   collectionsCreated: string[];
   collectionsSkipped: string[];
@@ -62,7 +56,6 @@ export type KitStatus = {
   id: KitId;
   name: string;
   description: string;
-  skin: KitSkin;
   modules: ModuleId[];
   /** The kit's modules that are enabled right now. */
   modulesEnabled: ModuleId[];

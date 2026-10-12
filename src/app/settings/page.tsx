@@ -5,12 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   Button,
-  Field,
-  Input,
   Page,
   PageHeader,
   SectionPanel,
-  Select,
 } from "@/components/ui";
 import { useToast } from "@/components/Toast";
 import { config, type WikiSkin } from "@/lib/config";
@@ -41,19 +38,6 @@ function applySkinChoice(skin: SkinChoice) {
   document.cookie = `${SKIN_COOKIE}=; path=/; max-age=0; samesite=lax`;
   document.documentElement.setAttribute("data-skin", config.wikiSkin);
 }
-
-const LOCALES = [
-  { value: "en", label: "english" },
-  { value: "fr", label: "french" },
-  { value: "de", label: "german" },
-  { value: "es", label: "spanish" },
-  { value: "ar", label: "arabic" },
-  { value: "zh", label: "chinese" },
-  { value: "ja", label: "japanese" },
-  { value: "ko", label: "korean" },
-  { value: "pt", label: "portuguese" },
-  { value: "ru", label: "russian" },
-];
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -118,13 +102,7 @@ export default function SettingsPage() {
   }
 
   function handleReset() {
-    setPrefs((current) => ({
-      ...current,
-      skin: DEFAULT_PREFERENCES.skin,
-      editorMode: DEFAULT_PREFERENCES.editorMode,
-      articlesPerPage: DEFAULT_PREFERENCES.articlesPerPage,
-      locale: DEFAULT_PREFERENCES.locale,
-    }));
+    setPrefs({ ...DEFAULT_PREFERENCES });
     applySkinChoice(DEFAULT_PREFERENCES.skin);
     router.refresh();
   }
@@ -178,82 +156,6 @@ export default function SettingsPage() {
               ))}
             </div>
           </fieldset>
-        </SectionPanel>
-
-        <SectionPanel title="editor" bodyClassName="space-y-3">
-          <fieldset>
-            <legend className="ui-label mb-1.5">default editor mode</legend>
-            <div className="flex items-center gap-4">
-              <label className="flex items-center gap-1.5 text-[13px] cursor-pointer">
-                <input
-                  type="radio"
-                  name="editorMode"
-                  value="rich"
-                  checked={prefs.editorMode === "rich"}
-                  onChange={() =>
-                    setPrefs((p) => ({ ...p, editorMode: "rich" }))
-                  }
-                  className="accent-accent"
-                />
-                rich text
-              </label>
-              <label className="flex items-center gap-1.5 text-[13px] cursor-pointer">
-                <input
-                  type="radio"
-                  name="editorMode"
-                  value="markdown"
-                  checked={prefs.editorMode === "markdown"}
-                  onChange={() =>
-                    setPrefs((p) => ({ ...p, editorMode: "markdown" }))
-                  }
-                  className="accent-accent"
-                />
-                markdown
-              </label>
-            </div>
-          </fieldset>
-        </SectionPanel>
-
-        <SectionPanel title="display" bodyClassName="space-y-3">
-          <Field htmlFor="articlesPerPage" label="articles per page">
-            <Input
-              id="articlesPerPage"
-              type="number"
-              min={5}
-              max={100}
-              step={5}
-              value={prefs.articlesPerPage}
-              onChange={(e) =>
-                setPrefs((p) => ({
-                  ...p,
-                  articlesPerPage: Math.max(
-                    5,
-                    Math.min(100, parseInt(e.target.value) || 20)
-                  ),
-                }))
-              }
-              className="w-20"
-            />
-          </Field>
-        </SectionPanel>
-
-        <SectionPanel title="locale">
-          <Field htmlFor="locale" label="language">
-            <Select
-              id="locale"
-              value={prefs.locale}
-              onChange={(e) =>
-                setPrefs((p) => ({ ...p, locale: e.target.value }))
-              }
-              className="w-48"
-            >
-              {LOCALES.map((loc) => (
-                <option key={loc.value} value={loc.value}>
-                  {loc.label}
-                </option>
-              ))}
-            </Select>
-          </Field>
         </SectionPanel>
 
         <SectionPanel title="sessions" bodyClassName="text-[13px]">

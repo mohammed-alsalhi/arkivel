@@ -59,30 +59,23 @@ describe("getSession with a personal access token", () => {
 describe("isAdmin", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubEnv("ADMIN_SECRET", undefined);
     vi.stubEnv("NODE_ENV", "production");
     vi.mocked(cookies).mockResolvedValue({ get: () => undefined } as never);
   });
   afterEach(() => vi.unstubAllEnvs());
 
-  it("denies anonymous production requests when no admin secret is configured", async () => {
+  it("denies anonymous requests", async () => {
     expect(await isAdmin()).toBe(false);
   });
 
-  it.each(["admin", "editor"])("checks the authenticated %s role even without a production admin secret", async (role) => {
+  it.each(["admin", "editor"])("checks the authenticated %s role", async (role) => {
     vi.mocked(cookies).mockResolvedValue({ get: () => ({ value: "example-session" }) } as never);
     vi.mocked(prisma.session.findUnique).mockResolvedValue({ expiresAt: new Date(Date.now() + 60_000), user: { role } } as never);
     expect(await isAdmin()).toBe(role === "admin");
   });
 
-  it("allows the no-secret bypass only in explicit development mode", async () => {
+  it("has no development bypass", async () => {
     vi.stubEnv("NODE_ENV", "development");
-    expect(await isAdmin()).toBe(true);
-    expect(cookies).not.toHaveBeenCalled();
-    vi.stubEnv("NODE_ENV", "test");
-    expect(await isAdmin()).toBe(false);
-    vi.stubEnv("NODE_ENV", "development");
-    vi.stubEnv("ADMIN_SECRET", "configured");
     expect(await isAdmin()).toBe(false);
   });
 });

@@ -74,7 +74,10 @@ export async function PUT(request: NextRequest) {
         ? (existing.data as Record<string, unknown>)
         : {};
 
-    const merged = { ...currentData, ...sanitized };
+    // Keys from retired preferences are dropped on the next save.
+    const merged = Object.fromEntries(
+      Object.entries({ ...currentData, ...sanitized }).filter(([key]) => allowedKeys.has(key)),
+    );
 
     await prisma.userPreference.upsert({
       where: { userId: session.id },
