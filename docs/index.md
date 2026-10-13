@@ -2,7 +2,7 @@
 
 Using the app:
 
-- the in-app [help](/help) and [features](/features) pages describe the interface and list what each enabled module adds
+- the in-app `/help` and `/features` pages describe the interface and list what each enabled module adds
 - [api v1](api.md): the public read endpoints, the contract, and the generated reference
 - [documentation mode](documentation-mode.md): versioned reading indexes over published articles
 

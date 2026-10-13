@@ -26,7 +26,7 @@ Stop writers, then run from a source checkout with dependencies installed and Po
 npm run backup -- /secure/backups/arkivel-2026-09-20
 ```
 
-The destination must not exist yet. The backup holds a custom-format PostgreSQL dump, local uploads, table counts, and SHA-256 checksums; a missing upload directory is an error rather than a silent omission, and a failed run leaves an `INCOMPLETE` marker. Credentials come from the environment, never arguments. With S3 storage, pass `--database-only` and rely on bucket versioning for objects.
+The destination must not exist yet. The backup holds a custom-format PostgreSQL dump, local uploads, table counts, and SHA-256 checksums; a missing upload directory is an error rather than a silent omission, and a failed run leaves an `INCOMPLETE` marker. Credentials come from the environment, never arguments. With S3 storage, pass `--database-only`: the command never copies remote objects, so enable and verify bucket versioning or another object backup first, or a restore cannot recover uploaded files.
 
 With Compose the uploads live in a Docker volume, so run the tool in a one-off container that mounts it, with the app stopped and PostgreSQL running:
 

@@ -19,7 +19,11 @@ Usernames are 3 to 30 characters of letters, numbers, and underscores. Passwords
 With Compose, run the same command inside the app container:
 
 ```bash
+printf 'Owner password: '
+IFS= read -r -s owner_password
+printf '\n'
 printf '%s' "$owner_password" | docker compose -f deploy/docker/compose.yml exec -T app node scripts/bootstrap-owner.mjs --username owner --email owner@example.com
+unset owner_password
 ```
 
 Setup takes a database lock before checking for an existing administrator, so two concurrent runs cannot both create an owner. It refuses to replace an existing administrator, overwrite a password, or promote an existing account.

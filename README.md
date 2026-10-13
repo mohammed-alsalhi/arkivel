@@ -103,6 +103,6 @@ npm run seed:demo
 - [maintainer guide](docs/maintainer-guide.md)
 - [architecture](docs/architecture.md)
 
-Every instance also serves a user guide at `/help`, the feature list at `/features`, and the generated api reference at `/api-docs`. The full index is [docs/index.md](docs/index.md).
+Every instance also serves a user guide at `/help` and the feature list at `/features`; the generated api reference at `/api-docs` is there when the `api` module is enabled. The full index is [docs/index.md](docs/index.md).
 
 License: MIT.
