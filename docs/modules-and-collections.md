@@ -1,20 +1,12 @@
 # modules and collections
 
-Design record for making one Arkivel codebase serve very different deployments — a personal wiki, a team knowledge base, notes-plus-tasks, world-building — without growing a table per feature again.
-
-## decision
-
-Arkivel is configurable at three levels, in this order of preference:
+How one Arkivel codebase serves different deployments without a new table per feature. Arkivel is configurable at three levels, in this order of preference:
 
 1. **the core is fixed.** Articles, wiki links, spaces (categories), tags, search, revisions, users, sessions, audit, admin, settings. Every deployment has it. It is not a module.
-2. **collections are the engine.** One small generic data model — a collection with a typed property schema, items, and views — covers tasks, reading lists, CRMs, trackers, and whatever comes next as *templates*, not code. This is how Notion gets its range from a tiny model.
+2. **collections are the engine.** One small generic data model — a collection with a typed property schema, items, and views — covers tasks, reading lists, CRMs, trackers, and whatever comes next as *templates*, not code.
 3. **modules are for genuinely different code paths.** Graph, assets, import, export, the public API, feeds, share links, and later collections itself. A module is a folder that declares its routes, navigation, palette commands, docs, settings, and schema, and a deployment enables a set of them.
 
-Starter kits (a preset of enabled modules plus seeded collections and a skin) replace the idea of a marketplace. There are no third-party plugins.
-
-## why not features
-
-**Tables scale with engines, not with features.** Before adding a model, ask whether a collection template covers it.
+Starter kits (a preset of enabled modules plus seeded collections) replace the idea of a marketplace. There are no third-party plugins.
 
 ## modules
 
@@ -197,8 +189,6 @@ Repeated input is a no-op. A record with an older `generated_at` than its stored
 Reads are public like a wiki; every write requires a signed-in collection editor, so the library's `health` reports `can_edit` and the pages hide their controls when it is false. Kit rows carry `sample: true` until they are edited, which is what "remove sample titles" deletes. The mode forces the `collections` and `media` modules on regardless of `ARKIVEL_MODULES`.
 
 Backup restore uses a single collection transaction, preserves the original added time and exact watched timestamps, and imports saved descriptive metadata without requiring TMDB. Existing titles keep their fields; missing episode marks are added. Older watchlist kits gain the `watched_at` and `release_date` properties during restore. Watched timestamps fall back to the edited date if a collection editor changes the day. The library is shared within one deployment; reads are public and writes require an editor account. Very large backups still perform individual inserts and may reach the transaction timeout; failure rolls the entire restore back.
-
-For a hosted library, set `ARKIVEL_SITE_MODE=media`, `NEXT_PUBLIC_ARKIVEL_NAME="My library"`, `NEXT_PUBLIC_BASE_URL` to its deployment origin, and its own `DATABASE_URL` and authentication configuration before building. Apply migrations explicitly, create the administrator account, and apply the watchlist kit. Keep independently operated instances and their credentials isolated. Provider keys are optional; without TMDB, discovery uses the bundled catalogue and restored titles remain viewable from saved metadata.
 
 ## documentation mode
 

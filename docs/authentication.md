@@ -1,10 +1,10 @@
 # authentication and owner setup
 
-Arkivel stores users, roles, and sessions in its own PostgreSQL database. Database hosting and identity hosting are independent choices: a Supabase PostgreSQL connection works as a database without enabling Supabase Auth. The shipped identity methods are local passwords and optional GitHub/Google OAuth. Clerk, Supabase Auth, invitations, and authenticated account linking are not implemented yet.
+Arkivel keeps users, roles, and sessions in its own PostgreSQL database. Sign-in methods are local passwords and optional GitHub or Google OAuth. Roles are viewer, editor, and admin.
 
 ## create the first owner
 
-Apply migrations with `npm run db:deploy`, then run the operator command against that instance's `DATABASE_URL` (loaded from `.env`). Public registration never creates an administrator, even on an empty database.
+Apply migrations with `npm run db:deploy`, then run the setup command against that instance's `DATABASE_URL` (loaded from `.env`). Public registration never creates an administrator, even on an empty database.
 
 ```bash
 printf 'Owner password: '
@@ -14,9 +14,9 @@ printf '%s' "$owner_password" | npm run setup:owner -- --username owner --email 
 unset owner_password
 ```
 
-Use a 3–30 character username containing letters, numbers, and underscores. The password must have at least 12 characters and at most 72 UTF-8 bytes (bcrypt's input limit). The password travels through stdin, not command arguments or shell history. Sign in at `/login` afterward.
+Usernames are 3 to 30 characters of letters, numbers, and underscores. Passwords need at least 12 characters and at most 72 UTF-8 bytes. The password is read from stdin so it stays out of command arguments and shell history. Sign in at `/login` afterwards.
 
-For Compose, use the running application's database configuration:
+With Compose, run the same command inside the app container:
 
 ```bash
 printf 'Owner password: '
@@ -26,26 +26,22 @@ printf '%s' "$owner_password" | docker compose -f deploy/docker/compose.yml exec
 unset owner_password
 ```
 
-Setup acquires a PostgreSQL transaction lock before checking for an existing administrator. Concurrent setup attempts cannot create multiple initial owners. It refuses to replace an existing administrator, overwrite a password, or promote an existing matching username/email. Operators with an existing admin account should use that account. No schema migration is needed for this change.
+Setup takes a database lock before checking for an existing administrator, so two concurrent runs cannot both create an owner. It refuses to replace an existing administrator, overwrite a password, or promote an existing account.
+
+To add members without opening registration, use `npm run setup:user -- --username teammate --email teammate@example.com --role viewer` the same way (or `node scripts/bootstrap-owner.mjs --member ...` in the container).
 
 ## registration
 
-`ARKIVEL_REGISTRATION=closed` is the default. Existing users can still log in. Set it to exactly `open` and restart the application to permit new local or OAuth users after an owner exists. New users always receive the viewer role; an administrator manages roles in the existing users screen. Unknown values stay closed. The login, register, and account menu reflect the same policy as the API.
+`ARKIVEL_REGISTRATION=closed` is the default; any value other than `open` stays closed. Existing users can always log in. Set it to `open` and restart to let new local or OAuth users register once an owner exists. New users get the viewer role; administrators change roles on the users screen.
 
-This controls account creation, not document visibility. Anonymous read routes remain public by default. Set `ARKIVEL_ACCESS=private` to require sign-in for content independently of registration. See [private self-hosting](private-self-hosting.md), including the existing-public-attachment migration caveat.
+Registration controls account creation, not content visibility. Anonymous read routes stay public unless `ARKIVEL_ACCESS=private` is set; see [private instances](private-self-hosting.md).
 
-## OAuth
+## oauth
 
-Set `NEXTAUTH_SECRET`, `NEXTAUTH_URL` to the instance's public origin, and the chosen provider's client ID/secret from `.env.example`. Providers appear on the login page only when fully configured. Configure callback URLs as `https://your-wiki.example/api/auth/callback/github` or `/google`.
+Set `NEXTAUTH_SECRET`, `NEXTAUTH_URL` (the instance's public origin), and the provider's client ID and secret from `.env.example`. A provider appears on the login page only when it is fully configured. The callback URL is `https://your-wiki.example/api/auth/callback/github` or `/google`.
 
-An external identity is identified by its provider and provider account ID. An existing email match is never enough to link to a local account: use its existing login instead. Existing linked OAuth identities work when registration is closed; new identities follow the registration policy. New accounts and provider links are written atomically. Arkivel does not need or persist provider access/refresh tokens for login.
+An external identity is keyed by provider and provider account ID. A matching email is never enough to link to a local account; sign in with the local login instead. Existing linked identities keep working while registration is closed; new identities follow the registration policy. Arkivel does not store provider access or refresh tokens.
 
-Successful OAuth login creates an ordinary Arkivel database session. The encrypted NextAuth cookie carries only its opaque session reference, and shared server authorization reloads the current internal user and role. Password cookies and personal API tokens use the same internal roles. Role changes take effect immediately; deleting a session from settings revokes its access. Logout revokes both local and OAuth sessions and clears OAuth cookie chunks. OAuth sessions expire after 30 days and then require sign-in again.
+A successful OAuth login creates an ordinary Arkivel session. Role changes apply immediately, deleting a session from settings revokes it, logout clears both local and OAuth sessions, and OAuth sessions expire after 30 days.
 
-After upgrading, OAuth users must sign in again: old JWTs without an Arkivel session reference are intentionally rejected. Existing local sessions and password hashes remain valid. New registrations now require longer passwords; existing passwords continue to work.
-
-Administrator access always requires an authenticated admin session or token; there is no development bypass.
-
-## validation
-
-Unit tests cover registration policy, malformed requests, duplicate identities, signed/forged OAuth cookies, current database roles, and revocation. `scripts/check-owner-setup.mjs` exercises competing owner setup commands against an empty disposable database after migrations. Provider callback exchanges still require real per-instance provider credentials for an end-to-end deployment check.
+Administrator access always needs an authenticated admin session or token. There is no development bypass.

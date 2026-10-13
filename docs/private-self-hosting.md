@@ -1,42 +1,34 @@
-# Private instances and portable storage
+# private instances, storage, and backups
 
-Set `ARKIVEL_ACCESS=private` in the application's runtime environment and restart. The default is `public`; unrecognized values fail closed. This setting is independent of wiki/docs/media mode and the skin.
+## private access
 
-Private mode requires an active internal viewer, editor, or administrator for pages, APIs, search, feeds, share links, image optimization, and file routes. Login, registration policy, configured OAuth callbacks, static application assets, robots, and a minimal health endpoint remain accessible. The login shell contains no collection, category, article, or library navigation. Private responses are not publicly cacheable; robots disallows indexing. An expired, deleted, or revoked session no longer grants access. A database failure returns an error rather than opening access.
+Set `ARKIVEL_ACCESS=private` in the runtime environment and restart. The default is `public`; unrecognized values fail closed. The setting is independent of the site mode and skin.
 
-Registration and visibility are separate controls. Keep `ARKIVEL_REGISTRATION=closed` for an operator-managed instance. Use `npm run setup:owner` first, then add a member without opening registration:
+In private mode every page, API route, search, feed, share link, image optimization, and file route requires a signed-in viewer, editor, or administrator. Login, registration (per policy), configured OAuth callbacks, static assets, robots, and a minimal health endpoint stay reachable. Private responses are not publicly cacheable and robots disallows indexing. A revoked, expired, or deleted session loses access immediately, and a database failure returns an error rather than opening access.
 
-```sh
-printf 'Member password: '
-IFS= read -r -s member_password
-printf '\n'
-printf '%s' "$member_password" | npm run setup:user -- --username teammate --email teammate@example.com --role viewer
-unset member_password
-```
+Registration and visibility are separate controls. Keep `ARKIVEL_REGISTRATION=closed` and add members with `npm run setup:user`; see [authentication](authentication.md).
 
-The same command inside the app container is `node scripts/bootstrap-owner.mjs --member ...`. Roles are viewer, editor, or admin. Existing accounts are never overwritten. Invitation emails, Clerk, and Supabase Auth adapters are not included; local passwords and GitHub/Google OAuth remain available. Provider callbacks still require real provider credentials and a deployment-level sign-in check.
+Switching an instance to private does not recall exports or external image URLs that were already shared.
 
 ## storage
 
-`ARKIVEL_STORAGE=local` stores uploads outside the public directory, under `ARKIVEL_UPLOAD_DIR` (default `data/uploads`). Compose mounts a persistent uploads volume. Local storage requires persistent disk. Keep this directory backed up with PostgreSQL.
+`ARKIVEL_STORAGE=local` (the default) stores uploads outside the public directory under `ARKIVEL_UPLOAD_DIR` (default `data/uploads`). Compose mounts a persistent volume there. Back this directory up together with the database.
 
-`ARKIVEL_STORAGE=s3` uses the official AWS client and the standard AWS credential chain. Set `ARKIVEL_S3_BUCKET`, `ARKIVEL_S3_REGION`, and optionally `ARKIVEL_S3_ENDPOINT` for an S3-compatible service. Set `ARKIVEL_S3_FORCE_PATH_STYLE=true` if required by that service. Use a private bucket, a least-privilege identity limited to GetObject/PutObject for this instance, and HTTPS outside local tests. Do not configure public-read policies. Bucket provisioning and live provider verification require your own account credentials.
+`ARKIVEL_STORAGE=s3` uses the AWS SDK and the standard AWS credential chain. Set `ARKIVEL_S3_BUCKET`, `ARKIVEL_S3_REGION`, and for S3-compatible services `ARKIVEL_S3_ENDPOINT` and, if required, `ARKIVEL_S3_FORCE_PATH_STYLE=true`. Use a private bucket and an identity limited to GetObject and PutObject on it.
 
-Local and S3 uploads use `/api/files/...` URLs and pass through instance authorization. Raster images can display inline; other types, including HTML and SVG, download as attachments with sandbox and no-sniff headers. Uploads are limited to 20 MiB. Stable object keys allow moving local files into a bucket without rewriting those URLs; copy and verify objects before changing providers.
-
-Storage defaults to local when no provider is selected. **Changing instance visibility cannot revoke a previously distributed export.** External image URLs in articles are also outside Arkivel's access boundary.
+Both providers serve uploads through `/api/files/...` with the instance's access checks. Raster images display inline; everything else, including HTML and SVG, downloads as an attachment with sandbox and no-sniff headers. Uploads are limited to 20 MiB. Object keys are stable, so local files can be copied into a bucket without rewriting URLs; verify the copy before switching providers.
 
 ## backups
 
-Stop writers before taking a coordinated database/files snapshot. Run from a source checkout with dependencies installed and PostgreSQL client tools matching the server major version (or a supported newer version):
+Stop writers, then run from a source checkout with dependencies installed and PostgreSQL client tools matching the server major version:
 
 ```sh
 npm run backup -- /secure/backups/arkivel-2026-09-20
 ```
 
-The destination must not already exist. A full local backup requires an existing upload directory; a missing path is rejected instead of silently omitting attachments. The backup includes a custom-format PostgreSQL dump, local uploads, table counts, and SHA-256 checksums. An `INCOMPLETE` marker remains after failure. Connection credentials travel through the process environment, never command arguments. Direct PostgreSQL connections are preferred over transaction poolers for operational tooling.
+The destination must not exist yet. The backup holds a custom-format PostgreSQL dump, local uploads, table counts, and SHA-256 checksums; a missing upload directory is an error rather than a silent omission, and a failed run leaves an `INCOMPLETE` marker. Credentials come from the environment, never arguments. With S3 storage, pass `--database-only`: the command never copies remote objects, so enable and verify bucket versioning or another object backup first, or a restore cannot recover uploaded files.
 
-For Compose, the uploads live in a Docker volume, not the host checkout. Run the included tooling in a one-off container that mounts the same volume, with the app stopped and PostgreSQL still running:
+With Compose the uploads live in a Docker volume, so run the tool in a one-off container that mounts it, with the app stopped and PostgreSQL running:
 
 ```sh
 mkdir -p backups
@@ -49,25 +41,19 @@ $compose run --rm --no-deps --user 0 --entrypoint chown \
 $compose start app
 ```
 
-The temporary backup container runs as root to read the private volume and write the host backup; the web app continues to run as its unprivileged user. Keep `backups` off public serving paths and copy the result to protected off-host storage. Do not run the host backup command against an unrelated empty uploads directory when the app uses a Docker volume.
+The dump contains password hashes, sessions, and all content: store it off-host, encrypted, with restricted access. Nothing here installs a schedule.
 
-For S3, `--database-only` explicitly produces a database-only backup. Enable bucket versioning/backup separately; remote objects are not copied by this command. Store backups off-host with encryption and restricted access: the dump contains account password hashes, sessions, and application content. These commands do not install a backup schedule.
-
-Rehearse into a disposable empty database and a new uploads directory:
+Rehearse a restore into a disposable empty database and a new uploads directory:
 
 ```sh
 RESTORE_DATABASE_URL=postgresql://user:password@localhost:5432/arkivel_restore_test \
   npm run backup:restore-check -- /secure/backups/arkivel-2026-09-20 /secure/restore-test/uploads
 ```
 
-Provide real credentials through a shell-local environment or secret manager rather than saving them in shell history. The command checks all backup hashes before restoring, refuses the source or any database containing user tables, runs pg_restore in one transaction without dropping existing objects, and verifies table counts and upload checksums. It retains the restored database for inspection. Do not point an app at it until inspection passes. Restore only trusted backups: PostgreSQL dumps can contain executable SQL.
+The check verifies every hash first, refuses the source database or any database that already has user tables, restores in one transaction without dropping anything, compares table counts and upload checksums, and keeps the restored database for inspection. Restore only backups you trust: a PostgreSQL dump can contain executable SQL. CI runs the same rehearsal on disposable fixtures.
 
-CI runs `scripts/check-backup.mjs` on disposable fixtures, comparing restored article content, account credentials, and upload bytes, and checking corruption and overwrite refusals. It drops only the uniquely named database it created.
+## published images
 
-## container releases
+Each release publishes `ghcr.io/mohammed-alsalhi/arkivel:vX.Y.Z`, an immutable commit tag, and a portable `arkivel-vX.Y.Z-linux-amd64.tar.gz` with its SHA-256 checksum (`sha256sum -c`, then `docker load -i`). The workflow checks that the tag matches `package.json`, is on `main`, runs as a non-root user, can write uploads, and has the Prisma and `pg_dump` tooling.
 
-Published releases build and publish `ghcr.io/mohammed-alsalhi/arkivel:vVERSION` and an immutable commit tag. The workflow validates that the tag matches package metadata and belongs to main, builds the image, and checks the non-root runtime, upload permissions, and Prisma tooling. Pull requests affecting the container build run the same image checks without publishing.
-
-The standard image uses default Arkivel public branding and the wiki build configuration. Build from source with `deploy/docker/Dockerfile` and its build arguments for custom public branding, canonical URL, or a different built default skin; Next.js embeds those public values at build time. Runtime access policy, database, OAuth credentials, and storage settings remain per instance. The initial published architecture is linux/amd64.
-
-Each release also includes a portable `arkivel-vVERSION-linux-amd64.tar.gz` image and its SHA-256 checksum. Verify it with `sha256sum -c`, then use `docker load -i` to import it. These public release downloads work independently of container-registry authentication. GitHub initially makes container packages private; the package owner must enable public visibility before anonymous `docker pull` works.
+The published image is built with the default public branding and wiki mode. Build from `deploy/docker/Dockerfile` with its build arguments for other public values, because Next.js compiles them into the bundle. Database, access policy, OAuth, and storage stay runtime settings.

@@ -5,6 +5,8 @@
 - remove leftover settings: user preferences other than skin, maintenance / read-only / background-task modes, the `ADMIN_SECRET` development bypass, the Vercel build and Blob storage paths, kit skin recommendations, and the unused `NEXT_PUBLIC_APP_VERSION`
 - define public branding defaults once in `src/lib/config.ts`; Compose and the Dockerfile only pass values through
 - drop the duplicate prisma seed, the unwired media release check, and the design qa screenshots
+- move deployment files under `deploy/`, the architecture note under `docs/`, and the design note under `.agents/`
+- rewrite the docs to describe the current behavior only; the in-app `/help` and `/features` pages replace `docs/help.md` and `docs/features.md`
 - move the Dockerfile and Compose stack under `deploy/docker/` and add vps, fly, railway, render, and vercel deployment configs next to them
 
 ## 1.1.0
