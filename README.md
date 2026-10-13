@@ -12,7 +12,7 @@ Choose a site mode for your instance:
 
 Each deployment keeps its own domains, environment variables, database, and storage.
 
-The media mode is the worked example of Arkivel serving a domain that is not a wiki. Set `NEXT_PUBLIC_ARKIVEL_NAME="My library"`, `ARKIVEL_SITE_MODE=media`, and `ARKIVEL_MODULES=collections,media,assets,export,import`, then apply the `watchlist` kit from `/admin/kits`. Optional keys: `TMDB_API_KEY` for the full catalogue, `OMDB_API_KEY` for IMDb and Rotten Tomatoes ratings, `ANTHROPIC_API_KEY` for Claude-assisted mood picks. Without keys the library searches a bundled starter catalogue and matches moods locally.
+Media mode is the same backend serving a film and series library. Set `NEXT_PUBLIC_ARKIVEL_NAME="My library"`, `ARKIVEL_SITE_MODE=media`, and `ARKIVEL_MODULES=collections,media,assets,export,import`, then apply the `watchlist` kit from `/admin/kits`. Optional keys: `TMDB_API_KEY` for the full catalogue, `OMDB_API_KEY` for IMDb and Rotten Tomatoes ratings, `ANTHROPIC_API_KEY` for Claude-assisted mood picks. Without keys the library searches a bundled starter catalogue and matches moods locally.
 
 Builds produce a standalone server; containers run the pinned Prisma migrations before starting it.
 
@@ -53,7 +53,7 @@ Pick which modules a deployment runs with `ARKIVEL_MODULES` (for example `graph,
 
 To populate a fresh local database with a realistic demo dataset (categories, tags, cross-linked articles, and semantic relations), run `npm run seed:demo`. The seed is idempotent — it upserts by slug and name, so re-running it is safe.
 
-The application opens at `http://localhost:3000`. The marketing website is deployed separately; this repository contains the self-hostable application and its documentation.
+The application opens at `http://localhost:3000`.
 
 Create the first administrator using [owner setup](docs/authentication.md). Registration is closed by default; opening it only creates viewers after an owner exists.
 
@@ -97,14 +97,12 @@ npm run seed:demo
 
 - [deploying](deploy/README.md)
 - [owner setup and authentication](docs/authentication.md)
-- [user guide](docs/help.md)
-- [feature boundary](docs/features.md)
-- [api v1 contract](docs/api.md)
+- [private instances, storage, and backups](docs/private-self-hosting.md)
+- [documentation mode](docs/documentation-mode.md)
+- [api v1](docs/api.md)
 - [maintainer guide](docs/maintainer-guide.md)
 - [architecture](docs/architecture.md)
 
+Every instance also serves a user guide at `/help`, the feature list at `/features`, and the generated api reference at `/api-docs`. The full index is [docs/index.md](docs/index.md).
+
 License: MIT.
-
-See [documentation mode](docs/documentation-mode.md) for version navigation and authoring.
-
-For sign-in-only instances, local/S3 uploads, member setup, and verified backups, see [private self-hosting](docs/private-self-hosting.md).

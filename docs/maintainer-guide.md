@@ -2,39 +2,35 @@
 
 ## deploy
 
-Choose a site mode and configure your instance with its own domain and environment variables. The marketing website is a separate static application. Deployment files for Docker, a VPS, Fly, Railway, Render, and Vercel are under [deploy/](../deploy/README.md).
+Pick a site mode, give the instance its own domain, database, and environment, and follow [deploy/](../deploy/README.md).
+
+## migrations
+
+The schema is managed by Prisma Migrate. `prisma/migrations/0_baseline` creates the initial schema and later migrations extend it; a fresh database gets the whole chain.
+
+- change `prisma/schema.prisma`, then run `npm run db:migrate` against a branch database to generate and apply the migration
+- review the generated SQL and commit it with the code
+- `npm run db:status` shows what a database is missing; `npm run db:deploy` applies pending migrations (the container does this on start)
+- never run `prisma db push`, `--accept-data-loss`, or `DROP ... CASCADE` against an existing database
+- a migration that drops tables or columns needs a verified backup and a restore rehearsal first
 
 ## data safety
 
 Before schema or infrastructure work:
 
-1. stop the application or take it off the network so no writes land during the snapshot
-2. take a fresh custom-format PostgreSQL dump
-3. checksum it and inspect `pg_restore --list`
-4. restore it into an isolated database
-5. rehearse the exact SQL and smoke the retained core
-6. cut over only after retained row counts and relationships match
-
-Never use `--accept-data-loss` or `DROP ... CASCADE`. Review schema changes against the data your instance stores.
-
-## migrations
-
-The schema is managed by Prisma Migrate. `prisma/migrations/0_baseline` creates the initial application schema; subsequent migrations extend it. Apply the full migration chain to a fresh database.
-
-- change `prisma/schema.prisma`, then `npm run db:migrate` against a branch database to generate and apply the migration locally
-- review the generated SQL, commit it with the code
-- `npm run db:status` shows what a database is missing; `npm run db:deploy` applies pending migrations (the Docker image runs it on start; other hosts run it explicitly)
-- a migration that drops tables or columns needs a verified backup and a restore rehearsal first
+1. stop the application so no writes land during the snapshot
+2. take a custom-format PostgreSQL dump (`npm run backup` does this together with uploads and checksums)
+3. restore it into an isolated database and rehearse the exact change there
+4. cut over only after row counts and relationships match
 
 ## checks
 
 ```bash
 npx prisma validate
-npx prisma generate
 npm run lint
 npm test
 npm run build
 npm run release:docs-sync
 ```
 
-Builds do not run database migrations. Verify each deployment runs its intended Git SHA.
+CI runs the same checks, the Playwright suite against every skin, and a backup restore rehearsal.

@@ -1,13 +1,20 @@
 # documentation
 
-- [help](help.md): using the wiki
-- [features](features.md): supported product boundary
-- [api v1](api.md): public read endpoints
-- [maintainer guide](maintainer-guide.md): setup, deploy, backup, and recovery
-- [modules and collections](modules-and-collections.md): how one codebase serves different deployments — modules, the collections engine, starter kits
+Using the app:
 
-Every instance serves installation docs at `/docs` and the generated API reference at `/api-docs`. `npm run api:reference` exports database-free reference JSON for external documentation sites.
+- the in-app [help](/help) and [features](/features) pages describe the interface and list what each enabled module adds
+- [api v1](api.md): the public read endpoints, the contract, and the generated reference
+- [documentation mode](documentation-mode.md): versioned reading indexes over published articles
 
+Running an instance:
+
+- [deploying](../deploy/README.md): Docker, a VPS, Fly, Railway, Render, Vercel
 - [owner setup and authentication](authentication.md)
-- [architecture](architecture.md): how the application, modes, and deployments fit together
-- [design](design.md): the interface rules the four skins follow
+- [private instances, storage, and backups](private-self-hosting.md)
+- [maintainer guide](maintainer-guide.md): migrations, data safety, checks
+
+Working on the code:
+
+- [architecture](architecture.md)
+- [modules and collections](modules-and-collections.md): the configurability model
+- [AGENTS.md](../AGENTS.md) and [.agents/](../.agents/design.md): rules and notes for contributors and coding agents

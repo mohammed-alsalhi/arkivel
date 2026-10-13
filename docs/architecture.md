@@ -1,29 +1,25 @@
 # architecture
 
-Arkivel is a self-hostable Next.js application with wiki and media interfaces selected by `ARKIVEL_SITE_MODE`. Each instance has one PostgreSQL database, its own accounts, and its own configuration. The marketing website and managed-hosting operations are deployed separately.
+Arkivel is one Next.js application with a wiki, a docs, and a media interface, selected by `ARKIVEL_SITE_MODE`. An instance has one PostgreSQL database, its own accounts, and its own configuration.
 
 ## application
 
-Server components and route handlers access PostgreSQL through `src/lib/prisma.ts`. Core data includes articles, revisions, links, categories, tags, users, sessions, audit logs, assets, and settings. Collections provide typed records and views; modules and starter kits compose additional workflows. Media mode presents the watchlist collections through a dedicated shell.
+Server components and route handlers reach PostgreSQL through Prisma (`src/lib/prisma.ts`). The core tables are articles, revisions, links, categories, tags, users, sessions, audit logs, assets, and settings. Collections add typed records and views on three generic tables; modules and starter kits compose workflows on top. See [modules and collections](modules-and-collections.md).
 
-Uploads go to local disk or a private S3-compatible bucket; database hosting and authentication provider selection remain separate concerns.
+Uploads go to local disk (`ARKIVEL_STORAGE=local`) or an S3-compatible bucket (`ARKIVEL_STORAGE=s3`) and are served through `/api/files/...` with the instance's access checks.
 
 ## presentation
 
-`NEXT_PUBLIC_ARKIVEL_SKIN` selects the default wiki skin. The request resolves skin from the reader cookie, then the saved user preference, then the environment default. The shared components render both folio and wiki. Skins own presentation; editors, permission checks, and collection behavior stay shared. Media mode owns its shell.
+The request resolves the skin from the reader cookie, then the saved user preference, then `NEXT_PUBLIC_ARKIVEL_SKIN`. The four skins share components, editors, permission checks, and collection behavior and differ only in presentation. Media mode has its own shell.
 
-Branding uses build-time `NEXT_PUBLIC_*` settings whose defaults live in `src/lib/config.ts`.
+Branding comes from build-time `NEXT_PUBLIC_*` values; their defaults live in `src/lib/config.ts`.
 
-## identity and permissions
+## identity
 
-The application owns its user IDs, content ownership, and viewer/editor/admin permissions. Local credentials create database sessions; API tokens resolve to the same user. Existing OAuth callbacks use a separate NextAuth session and still need unification with application session lookup. Clerk and Supabase Auth integrations are planned. A hosted service must not bypass instance permission checks.
+Local passwords and optional GitHub or Google OAuth both create an Arkivel database session. Personal access tokens resolve to the same user and role. Roles are viewer, editor, and admin. See [authentication](authentication.md).
 
-## deployment boundary
+## build and deploy
 
-The public repository owns migrations, generic Docker/Node setup, the API contract, and self-hosting documentation. A hosting service owns customer billing, domain verification, provisioning, deployment credentials, backups, and release rollout. It deploys a pinned application version rather than duplicating application logic.
+Builds generate the Prisma client and compile Next.js to a standalone server. They never migrate a database. The container runs `prisma migrate deploy` on start; other hosts run `npm run db:deploy` before serving traffic. See [deploy/](../deploy/README.md).
 
-Start managed hosting with an isolated application and database per customer. There is no shared-database tenant isolation in the current schema. Custom domains must be verified and routed only to their registered instance, with instance-specific authentication callbacks.
-
-`npm run api:reference` produces a static reference from the API contract with version and commit provenance. External websites consume that artifact; the application never imports their code.
-
-Builds generate Prisma and compile Next.js. They do not migrate production. Containers apply pending migrations before starting; other hosts must run `npm run db:deploy` explicitly. Removing product mode requires moving the marketing deployment before merging this change; the old mode now fails configuration validation rather than falling through to wiki mode.
+`npm run api:reference` exports the API contract, OpenAPI document, and route inventory as JSON with the version and commit, for documentation sites that live outside this repository.
